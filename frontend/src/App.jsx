@@ -16,7 +16,7 @@ function App() {
             <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Logout</NavLink>
           </div>
 
-          <div className="tab-content flex-grow-1 w-100" id="v-pills-tabContent" style={{minWidth: 0}}>
+          <div className="tab-content flex-grow-1 w-100 vh-100" id="v-pills-tabContent" style={{minWidth: 0}}>
             <Routes>
               <Route path="/" element={<Navigate to="/calendar" replace />} />
               <Route path="/calendar" element={<CalendarPage />} />

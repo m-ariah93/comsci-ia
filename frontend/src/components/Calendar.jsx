@@ -1,23 +1,27 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from '@fullcalendar/interaction';
+
 
 export default function Calendar() {
   return (
-    <div style={{width: '100%'}}>
+    <div className="h-100">
       <FullCalendar
-        plugins={[dayGridPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         // aspectRatio={1.5}
+        height="100%"
         firstDay={1}
         droppable={true}
+        editable={true}
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,dayGridWeek,dayGridDay'
+          right: 'dayGridMonth,dayGridWeek'
         }}
       />
     </div>
-    
+
   );
-  
+
 }

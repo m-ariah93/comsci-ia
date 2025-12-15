@@ -7,7 +7,10 @@ export default function Calendar() {
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
+        aspectRatio={1.5}
       />
     </div>
+    
   );
+  
 }

@@ -1,5 +1,5 @@
 import Calendar from "../components/Calendar";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Draggable } from "@fullcalendar/interaction";
 
 export default function CalendarPage() {
@@ -18,6 +18,10 @@ export default function CalendarPage() {
             });
         }
     }, []);
+
+    // track which calendar is open 
+    // all project view is 0
+    const [project, setProject] = useState(0);
 
     const events = [
         "Excavator",
@@ -67,13 +71,13 @@ export default function CalendarPage() {
                 <div className="col-9">
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">All</a>
+                            <a className="nav-link active" aria-current="page" href="#" onClick={() => setProject(0)}>All</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">House 1</a>
+                            <a className="nav-link" href="#" onClick={() => setProject(1)}>House 1</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">House 2</a>
+                            <a className="nav-link" href="#" onClick={() => setProject(2)}>House 2</a>
                         </li>
                     </ul>
                 </div>

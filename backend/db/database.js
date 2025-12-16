@@ -13,4 +13,6 @@ db.prepare(`
   )
 `).run();
 
+// need to add house text not null field later
+
 export default db;

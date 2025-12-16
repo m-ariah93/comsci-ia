@@ -18,6 +18,49 @@ export default function CalendarPage() {
             });
         }
     }, []);
+
+    const events = [
+        "Excavator",
+        "Retaining walls",
+        "Site set out",
+        "Plumber drainer",
+        "Plumber rough in",
+        "Plumber fit off",
+        "Bobcat",
+        "Pier inspection",
+        "Concreter",
+        "Termite protection",
+        "Slab inspection",
+        "Concrete pump",
+        "Electrician U/Power",
+        "Electrician rough in",
+        "Electrician fit off",
+        "Electrician AC",
+        "Crane truss lift",
+        "Frame inspection",
+        "Edge protection",
+        "Carpenter frame",
+        "Carpenter rough in",
+        "Carpenter soffits",
+        "Carpenter fix out",
+        "Carpenter finish out",
+        "Bricklayer",
+        "Garage door",
+        "Tiler",
+        "Painter",
+        "Concrete kerb cut",
+        "Drive/concreter",
+        "Dividing fencing",
+        "Fencing",
+        "Bobcat clean",
+        "TV antenna",
+        "Garden kerbing",
+        "Insulation/ceiling",
+        "Final inspection",
+        "Cleaning",
+        "Silicon sealer"
+    ];
+
     return (
         <div className="container-fluid d-flex flex-column vh-100">
             <div className="row my-2">
@@ -38,23 +81,19 @@ export default function CalendarPage() {
                     <input type="text" className="form-control" placeholder="search" />
                 </div>
             </div>
-            {/* <div className="row h-100"> */}
-            <div className="row h-100">
-
-                <div className="col-9">
-                    <Calendar />
+            <div className="row h-100 overflow-hidden">
+                <div className="col-9 d-flex flex-column h-100 pb-2"> 
+                    <Calendar style={{ flex: 1 }} />
                 </div>
 
-                <div className="col-3" id="draggable-events">
+                <div className="col-3 mh-100" id="draggable-events">
                     <h4>Key bookings</h4>
-                    <div className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable'>
-                        <div className='fc-event-main'>Plumber</div>
-                    </div>
-                    <div className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable'>
-                        <div className='fc-event-main'>Bricklayer</div>
-                    </div>
-                    <div className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable'>
-                        <div className='fc-event-main'>Painter</div>
+                    <div className="overflow-auto h-50">
+                        {events.map((event) => (
+                            <div className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1'>
+                                <div key={event.id} className='fc-event-main'>{event}</div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

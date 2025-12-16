@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import db from "./db/database.js";
-import { format } from "date-fns";
 
 const app = express();
 
@@ -10,15 +9,7 @@ app.use(express.json());
 
 app.get("/events", (req, res) => {
     const events = db.prepare("SELECT * FROM events").all();
-
-    // Format dates to YYYY-MM-DD
-    const formattedEvents = events.map(event => ({
-        ...event,
-        start: format(new Date(event.start), "yyyy-MM-dd"),
-        end: event.end ? format(new Date(event.end), "yyyy-MM-dd") : null
-    }));
-
-    res.json(formattedEvents);
+    res.json(events);
 });
 
 app.post("/events", (req, res) => {
@@ -32,7 +23,7 @@ app.post("/events", (req, res) => {
         const stmt = db.prepare("INSERT INTO events (title, start, end) VALUES (?, ?, ?)");
         const result = stmt.run(title, start, end);
 
-        res.json({ id: result.lastInsertRowid, title, start: format(new Date(start), "yyyy-MM-dd"), end: end ? format(new Date(end), "yyyy-MM-dd") : null });
+        res.json({ id: result.lastInsertRowid, title, start, end });
     } catch (error) {
         console.error("Error inserting event:", error);
         res.json({ error: "Failed to insert event" });
@@ -55,7 +46,7 @@ app.put("/events/:id", (req, res) => {
             return res.json({ error: "Event not found" });
         }
 
-        res.json({ id, start: format(new Date(start), "yyyy-MM-dd"), end: end ? format(new Date(end), "yyyy-MM-dd") : null });
+        res.json({ id, start, end });
     } catch (error) {
         console.error("Error updating event:", error);
         res.json({ error: "Failed to update event" });

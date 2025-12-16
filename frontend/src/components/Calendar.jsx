@@ -12,7 +12,9 @@ export default function Calendar() {
     fetch("http://localhost:3001/events")
       .then((res) => res.json())
       .then((data) => {
-        setEvents(data);
+        // make all events allDay = true
+        const allDayEvents = data.map(event => ({ ...event, allDay: true }));
+        setEvents(allDayEvents);
       })
       .catch(console.error);
   }, []);
@@ -22,10 +24,8 @@ export default function Calendar() {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        // start: info.event.start.toISOString().split("T")[0],
-        // end: info.event.end ? info.event.end.toISOString().split("T")[0] : null,
-        start: info.event.start.toISOString(),
-        end: info.event.end ? info.event.end.toISOString() : null,
+        start: info.event.startStr,
+        end: info.event.endStr || null,
       })
     });
   }
@@ -36,15 +36,13 @@ export default function Calendar() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: info.event.title,
-        // start: info.event.start.toISOString().split("T")[0],
-        // end: info.event.end ? info.event.end.toISOString().split("T")[0] : null,
-        start: info.event.start.toISOString(),
-        end: info.event.end ? info.event.end.toISOString() : null,
+        start: info.event.startStr,
+        end: info.event.endStr || null,
       })
     })
       .then((res) => res.json())
       .then((newEvent) => {
-        setEvents((prev) => [...prev, newEvent]);
+        setEvents((prev) => [...prev, { ...newEvent, allDay: true }]);
       });
   }
 
@@ -53,10 +51,8 @@ export default function Calendar() {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        // start: info.event.start.toISOString().split("T")[0],
-        // end: info.event.end ? info.event.end.toISOString().split("T")[0] : null,
-        start: info.event.start.toISOString(),
-        end: info.event.end ? info.event.end.toISOString() : null,
+        start: info.event.startStr,
+        end: info.event.endStr || null,
       })
     });
   }
@@ -66,7 +62,6 @@ export default function Calendar() {
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
-        // aspectRatio={1.5}
         height="100%"
         firstDay={1}
         droppable={true}

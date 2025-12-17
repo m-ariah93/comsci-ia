@@ -62,6 +62,24 @@ app.get("/projects", (req, res) => {
     res.json(projects);
 });
 
+app.post("/projects", (req, res) => {
+    const { title, address, startMonth } = req.body;
+
+    if (!title || !address || !startMonth) {
+        return res.json({ error: "All fields are required" });
+    }
+
+    try {
+        const stmt = db.prepare("INSERT INTO projects (title, address, startMonth) VALUES (?, ?, ?)");
+        const result = stmt.run(title, address, startMonth);
+
+        res.json({ id: result.lastInsertRowid, title, address, startMonth });
+    } catch (error) {
+        console.error("Error inserting event:", error);
+        res.json({ error: "Failed to insert event" });
+    }
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`);

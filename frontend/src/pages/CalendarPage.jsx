@@ -21,7 +21,16 @@ export default function CalendarPage() {
 
     // track which calendar is open 
     // all project view is 0
-    const [project, setProject] = useState(0);
+    const [currentProject, setCurrentProject] = useState(0);
+
+    // get projects from db
+    const [projects, setProjects] = useState([]);
+    useEffect(() => {
+        fetch("http://localhost:3001/projects")
+            .then((res) => res.json())
+            .then((data) => setProjects(data))
+            .catch(console.error);
+    }, []);
 
     const events = [
         "Excavator",
@@ -71,14 +80,19 @@ export default function CalendarPage() {
                 <div className="col-9">
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
-                            <a className={`nav-link ${project === 0 ? 'active' : ''}`} href="#" onClick={() => setProject(0)}>All</a>
+                            <a className={`nav-link ${currentProject === 0 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(0)}>All</a>
+                        </li>
+                        {/* <li className="nav-item">
+                            <a className={`nav-link ${currentProject === 1 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(1)}>House 1</a>
                         </li>
                         <li className="nav-item">
-                            <a className={`nav-link ${project === 1 ? 'active' : ''}`} href="#" onClick={() => setProject(1)}>House 1</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className={`nav-link ${project === 2 ? 'active' : ''}`} href="#" onClick={() => setProject(2)}>House 2</a>
-                        </li>
+                            <a className={`nav-link ${currentProject === 2 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(2)}>House 2</a>
+                        </li> */}
+                        {projects.map((project) => (
+                            <li className="nav-item">
+                                <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
+                            </li>
+                        ))}
                     </ul>
                 </div>
                 <div className="col-3">

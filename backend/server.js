@@ -7,6 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+// events table methods
 app.get("/events", (req, res) => {
     const events = db.prepare("SELECT * FROM events").all();
     res.json(events);
@@ -51,6 +53,13 @@ app.put("/events/:id", (req, res) => {
         console.error("Error updating event:", error);
         res.json({ error: "Failed to update event" });
     }
+});
+
+
+// projects table methods
+app.get("/projects", (req, res) => {
+    const projects = db.prepare("SELECT * FROM projects").all();
+    res.json(projects);
 });
 
 const PORT = 3001;

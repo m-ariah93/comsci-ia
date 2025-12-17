@@ -71,13 +71,13 @@ export default function CalendarPage() {
                 <div className="col-9">
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#" onClick={() => setProject(0)}>All</a>
+                            <a className={`nav-link ${project === 0 ? 'active' : ''}`} href="#" onClick={() => setProject(0)}>All</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#" onClick={() => setProject(1)}>House 1</a>
+                            <a className={`nav-link ${project === 1 ? 'active' : ''}`} href="#" onClick={() => setProject(1)}>House 1</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#" onClick={() => setProject(2)}>House 2</a>
+                            <a className={`nav-link ${project === 2 ? 'active' : ''}`} href="#" onClick={() => setProject(2)}>House 2</a>
                         </li>
                     </ul>
                 </div>
@@ -86,7 +86,7 @@ export default function CalendarPage() {
                 </div>
             </div>
             <div className="row h-100 overflow-hidden">
-                <div className="col-9 d-flex flex-column h-100 pb-2"> 
+                <div className="col-9 d-flex flex-column h-100 pb-2">
                     <Calendar style={{ flex: 1 }} />
                 </div>
 

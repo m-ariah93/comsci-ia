@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { formatMonth } from "/src/utils/DateUtils";
+import { archiveProject } from "/src/utils/ProjectDbUtils";
 
 export default function ProjectsList() {
     // const projects = [
@@ -37,7 +38,7 @@ export default function ProjectsList() {
                             <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary">
                                 Edit
                             </Link>
-                            <button type="button" className="btn btn-secondary">Archive</button>
+                            <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive</button>
                             <button type="button" className="btn btn-danger">Delete</button>
                         </div>
                     </div>

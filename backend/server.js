@@ -63,21 +63,21 @@ app.get("/projects", (req, res) => {
 });
 
 app.get("/projects/:id", (req, res) => {
-  const { id } = req.params;
+    const { id } = req.params;
 
-  try {
-    const stmt = db.prepare("SELECT * FROM projects WHERE id = ?");
-    const project = stmt.get(id);
+    try {
+        const stmt = db.prepare("SELECT * FROM projects WHERE id = ?");
+        const project = stmt.get(id);
 
-    if (!project) {
-      return res.json({ error: "Project not found" });
+        if (!project) {
+            return res.json({ error: "Project not found" });
+        }
+
+        res.json(project);
+    } catch (error) {
+        console.error("Error fetching project:", error);
+        res.json({ error: "Failed to fetch project" });
     }
-
-    res.json(project);
-  } catch (error) {
-    console.error("Error fetching project:", error);
-    res.json({ error: "Failed to fetch project" });
-  }
 });
 
 app.post("/projects", (req, res) => {
@@ -95,6 +95,32 @@ app.post("/projects", (req, res) => {
     } catch (error) {
         console.error("Error inserting event:", error);
         res.json({ error: "Failed to insert event" });
+    }
+});
+
+app.put("/projects/:id", (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!updates || Object.keys(updates).length === 0) {
+        return res.json({ error: "No fields given" });
+    }
+
+    const setClauses = Object.keys(updates).map(key => `${key} = ?`).join(", ");
+    const values = Object.values(updates);
+
+    try {
+        const stmt = db.prepare(`UPDATE projects SET ${setClauses} WHERE id = ?`);
+        const result = stmt.run(...values, id);
+
+        if (result.changes === 0) {
+            return res.json({ error: "Project not found" });
+        }
+
+        res.json({ id, ...updates });
+    } catch (error) {
+        console.error("Error updating project: ", error);
+        res.json({ error: "Failed to update project" });
     }
 });
 

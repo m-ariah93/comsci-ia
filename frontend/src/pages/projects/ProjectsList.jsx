@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { formatMonth } from "/src/utils/DateUtils";
 
 export default function ProjectsList() {
     // const projects = [
@@ -32,6 +33,7 @@ export default function ProjectsList() {
                         <div className="card-body">
                             <h4 className="card-title">{project.title}</h4>
                             <p className="card-text">{project.address}</p>
+                            <p className="card-text">Started: {formatMonth(project.startMonth)}</p>
                             <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary">
                                 Edit
                             </Link>

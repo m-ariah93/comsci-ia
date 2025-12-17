@@ -62,6 +62,24 @@ app.get("/projects", (req, res) => {
     res.json(projects);
 });
 
+app.get("/projects/:id", (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const stmt = db.prepare("SELECT * FROM projects WHERE id = ?");
+    const project = stmt.get(id);
+
+    if (!project) {
+      return res.json({ error: "Project not found" });
+    }
+
+    res.json(project);
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    res.json({ error: "Failed to fetch project" });
+  }
+});
+
 app.post("/projects", (req, res) => {
     const { title, address, startMonth } = req.body;
 

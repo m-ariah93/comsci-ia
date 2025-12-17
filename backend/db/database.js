@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import path from "path";
 
-const dbPath = path.resolve("database", "calendar.db");
+const dbPath = path.resolve("database", "app.db");
 const db = new Database(dbPath);
 // create table if not already there
 db.prepare(`

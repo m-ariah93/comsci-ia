@@ -7,7 +7,7 @@ export default function ProjectsList() {
     //     { id: 2, title: "House 2", address: "2 abc street" },
     //     { id: 3, title: "House 3", address: "3 abc street" }
     // ];
-    
+
     const [projects, setProjects] = useState([]);
     useEffect(() => {
         fetch("http://localhost:3001/projects")
@@ -15,6 +15,14 @@ export default function ProjectsList() {
             .then((data) => setProjects(data))
             .catch(console.error);
     }, []);
+
+    if (projects.length === 0) {
+        return (
+            <div className="alert alert-primary text-center mx-auto" role="alert">
+                No projects found :( Create one <Link to="/projects/add" className="alert-link">here</Link>.
+            </div>
+        )
+    }
 
     return (
         <div className="row">

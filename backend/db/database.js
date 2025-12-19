@@ -20,8 +20,8 @@ db.prepare(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     address TEXT NOT NULL,
-    startMonth TEXT NOT NULL,
-    archived INTEGER DEFAULT 0
+    startMonth TEXT NOT NULL CHECK (length(startMonth)=7),
+    archived INTEGER DEFAULT 0 CHECK (archived=0 OR archived=1)
   )
 `).run();
 

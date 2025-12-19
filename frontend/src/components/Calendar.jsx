@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { useState, useEffect } from "react";
 
 
-export default function Calendar() {
+export default function Calendar({currentProject}) {
 
   const [events, setEvents] = useState([]);
 
@@ -38,12 +38,14 @@ export default function Calendar() {
         title: info.event.title,
         start: info.event.startStr,
         end: info.event.endStr || null,
+        project_id: currentProject === 0 ? null : currentProject,
       })
     })
       .then((res) => res.json())
       .then((newEvent) => {
         setEvents((prev) => [...prev, { ...newEvent, allDay: true }]);
-      });
+      })
+      .then(console.log(`event added, title: ${info.event.title}, id: ${currentProject}`));
   }
 
   function handleEventResize(info) {

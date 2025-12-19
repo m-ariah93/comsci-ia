@@ -15,17 +15,17 @@ app.get("/events", (req, res) => {
 });
 
 app.post("/events", (req, res) => {
-    const { title, start, end } = req.body;
+    const { title, start, end, project_id } = req.body;
 
     if (!title || !start) {
         return res.json({ error: "Title and start date are required" });
     }
 
     try {
-        const stmt = db.prepare("INSERT INTO events (title, start, end) VALUES (?, ?, ?)");
-        const result = stmt.run(title, start, end);
+        const stmt = db.prepare("INSERT INTO events (title, start, end, project_id) VALUES (?, ?, ?, ?)");
+        const result = stmt.run(title, start, end, project_id);
 
-        res.json({ id: result.lastInsertRowid, title, start, end });
+        res.json({ id: result.lastInsertRowid, title, start, end, project_id });
     } catch (error) {
         console.error("Error inserting event:", error);
         res.json({ error: "Failed to insert event" });

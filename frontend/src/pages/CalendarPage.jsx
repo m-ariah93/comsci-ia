@@ -101,7 +101,7 @@ export default function CalendarPage() {
             </div>
             <div className="row h-100 overflow-hidden">
                 <div className="col-9 d-flex flex-column h-100 pb-2">
-                    <Calendar style={{ flex: 1 }} />
+                    <Calendar style={{ flex: 1 }} key={currentProject} currentProject={currentProject}/>
                 </div>
 
                 <div className="col-3 mh-100" id="draggable-events">
@@ -112,6 +112,9 @@ export default function CalendarPage() {
                                 <div key={event.id} className='fc-event-main'>{event}</div>
                             </div>
                         ))}
+                    </div>
+                    <div className="d-grid gap-2 my-3">
+                        <button className="btn btn-primary" type="button">New custom event</button>
                     </div>
                 </div>
             </div>

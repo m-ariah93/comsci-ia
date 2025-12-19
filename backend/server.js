@@ -10,8 +10,21 @@ app.use(express.json());
 
 // events table methods
 app.get("/events", (req, res) => {
-    const events = db.prepare("SELECT * FROM events").all();
-    res.json(events);
+    const projectId = req.query.project_id;
+    try {
+        let events;
+        if (projectId) { // if project_id is not null or zero
+            const stmt = db.prepare("SELECT * FROM events WHERE project_id = ?");
+            events = stmt.all(projectId); // projectId parameter goes into stmt placeholder (?)
+        } else {
+            const stmt = db.prepare("SELECT * FROM events");
+            events = stmt.all();
+        }
+        res.json(events);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch events" });
+    }
 });
 
 app.post("/events", (req, res) => {

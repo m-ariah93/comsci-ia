@@ -54,9 +54,6 @@ function DeleteModal() {
                         Are you sure you want to delete this project?
                     </div>
                     <div className="modal-footer">
-                        <button className="btn btn-secondary" data-bs-dismiss="modal">
-                            Close
-                        </button>
                         <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive instead</button>
                         <button className="btn btn-danger">Yes, delete</button>
                     </div>

@@ -10,6 +10,7 @@ export default function AddProject() {
     const navigate = useNavigate();
 
     function addProject() {
+        // need to add form validation: character limit on title
         fetch("http://localhost:3001/projects", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

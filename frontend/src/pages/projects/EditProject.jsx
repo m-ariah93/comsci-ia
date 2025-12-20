@@ -44,7 +44,7 @@ export default function EditProject() {
             .then((res) => res.json())
             .then((data) => {
                 console.log("Saved project:", data);
-                navigate("/projects"); // go back to projects list
+                navigate("/projects", {state: {updated: true}}); // go back to projects list
             })
             .catch(console.error);
     }

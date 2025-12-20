@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { useState, useEffect } from "react";
 
 
-export default function Calendar({currentProject}) {
+export default function Calendar({ currentProject }) {
 
   const [events, setEvents] = useState([]);
 
@@ -44,7 +44,7 @@ export default function Calendar({currentProject}) {
     })
       .then((res) => res.json())
       .then((newEvent) => {
-        setEvents((prev) => [...prev, { ...newEvent, allDay: true, extendedProps: {project_id: currentProject} }]);
+        setEvents((prev) => [...prev, { ...newEvent, allDay: true, extendedProps: { project_id: currentProject } }]);
       })
       .then(console.log(`event added, title: ${info.event.title}, id: ${currentProject}`));
   }

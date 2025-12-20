@@ -1,4 +1,5 @@
 import CalendarPage from "./pages/CalendarPage";
+import ChecklistPage from "./pages/ChecklistPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
@@ -15,6 +16,7 @@ function App() {
       <div className="d-flex align-items-start fixed-top my-2 ms-2">
           <div className="nav flex-column nav-pills me-3 flex-shrink-0" role="tablist" aria-orientation="vertical">
             <NavLink to="/calendar" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Calendar</NavLink>
+            <NavLink to="/checklist" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Checklist</NavLink>
             <NavLink to="/projects" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Projects</NavLink>
             <NavLink to="/settings" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Settings</NavLink>
             <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Logout</NavLink>
@@ -24,6 +26,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/calendar" replace />} />
               <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/checklist" element={<ChecklistPage />} />
               <Route path="/projects" element={<ProjectsPage />}>
                 <Route index element={<ProjectsList />} />
                 <Route path="edit/:id" element={<EditProject />} />

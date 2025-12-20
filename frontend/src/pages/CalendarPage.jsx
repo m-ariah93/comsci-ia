@@ -100,7 +100,7 @@ export default function CalendarPage() {
                 </div>
             </div>
             <div className="row h-100 overflow-hidden">
-                <div className="col-9 d-flex flex-column h-100 pb-2">
+                <div className="col-9 d-flex flex-column h-100 pb-4">
                     <Calendar style={{ flex: 1 }} key={currentProject} currentProject={currentProject}/>
                 </div>
 

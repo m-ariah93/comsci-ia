@@ -137,6 +137,23 @@ app.put("/projects/:id", (req, res) => {
     }
 });
 
+app.delete("/projects/:id", (req, res) => {
+    const { id } = req.params;
+    try {
+        const stmt = db.prepare("DELETE FROM projects WHERE id = ?");
+        const result = stmt.run(id);
+
+        if (result.changes === 0) {
+            return res.json({ error: "Project not found" });
+        }
+
+        res.json({ deletedId: id });
+    } catch (error) {
+        console.error("Error deleting project:", error);
+        res.json({ error: "Failed to delete project" });
+    }
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`);

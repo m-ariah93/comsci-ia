@@ -10,7 +10,7 @@ db.prepare(`
     title TEXT NOT NULL,
     start TEXT NOT NULL,
     end TEXT,
-    project_id INTEGER REFERENCES projects(id)
+    project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE
   )
 `).run();
 

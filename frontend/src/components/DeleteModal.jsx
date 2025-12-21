@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { archiveProject } from "/src/utils/ProjectDbUtils";
+import { archiveProject, deleteProject } from "/src/utils/ProjectDbUtils";
 
 export default function DeleteModal({projectId}) {
     return createPortal(
@@ -19,7 +19,7 @@ export default function DeleteModal({projectId}) {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" onClick={() => archiveProject(projectId)}>Archive instead</button>
-                        <button className="btn btn-danger">Yes, delete</button>
+                        <button className="btn btn-danger" data-bs-dismiss="modal" onClick={() => deleteProject(projectId)}>Yes, delete</button>
                     </div>
                 </div>
             </div>

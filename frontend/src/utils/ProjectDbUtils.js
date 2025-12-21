@@ -35,5 +35,9 @@ export function saveProject(id, title, address, startMonth) {
 }
 
 export function deleteProject(id) {
-    // needs writing
+    console.log("Attempting to delete project " + id)
+    return fetch(`http://localhost:3001/projects/${id}`, {
+        method: "DELETE",
+    })
+    .catch(err => console.error("DELETE error:", err));
 }

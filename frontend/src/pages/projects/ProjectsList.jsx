@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { formatMonth } from "/src/utils/DateUtils";
 import { archiveProject } from "/src/utils/ProjectDbUtils";
+import DeleteModal from "../../components/DeleteModal";
 
 export default function ProjectsList() {
     // const projects = [
@@ -17,6 +18,8 @@ export default function ProjectsList() {
             .then((data) => setProjects(data))
             .catch(console.error);
     }, []);
+
+    const [selectedProject, setSelectedProject] = useState(null);
 
     const location = useLocation();
     const showToast = location.state?.updated;
@@ -64,11 +67,12 @@ export default function ProjectsList() {
                                         Edit
                                     </Link>
                                     <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive</button>
-                                    <button type="button" className="btn btn-danger">Delete</button>
+                                    <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                 </div>
                             </div>
                         </div>
                     ))}
+                    <DeleteModal projectId={selectedProject}/>
                 </div>
             )}
         </div>

@@ -1,12 +1,47 @@
 import express from "express";
 import cors from "cors";
 import db from "./db/database.js";
+import bcrypt from "bcrypt";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// user authentication methods
+
+app.post("/login", (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const stmt = db.prepare("SELECT * FROM users WHERE username = ?");
+        const user = stmt.get(username);
+
+        if (!user) {
+            return res.json({ success: false, message: "Invalid credentials" });
+        }
+
+        const passwordMatches = bcrypt.compareSync(password, user.password);
+
+        if (!passwordMatches) {
+            return res.json({ success: false, message: "Incorrect password" });
+        }
+
+        // successful login
+        res.json({
+            success: true,
+            user: {
+                id: user.id,
+                username: user.username
+            }
+        });
+
+    } catch (error) {
+        console.error("Login error:", error);
+        res.json({ success: false, message: "Server error" });
+    }
+
+});
 
 // events table methods
 app.get("/events", (req, res) => {
@@ -23,7 +58,7 @@ app.get("/events", (req, res) => {
         res.json(events);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Failed to fetch events" });
+        res.json({ error: "Failed to fetch events" });
     }
 });
 

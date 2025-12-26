@@ -1,6 +1,8 @@
 import Calendar from "../components/Calendar";
 import { useEffect, useRef, useState } from "react";
 import { Draggable } from "@fullcalendar/interaction";
+import plusIcon from "../assets/plus-lg.svg";
+import { Link } from "react-router-dom";
 
 export default function CalendarPage() {
     const draggableRef = useRef(null);
@@ -93,6 +95,8 @@ export default function CalendarPage() {
                                 <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                             </li>
                         ))}
+                        <Link to="/projects/add" className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
+                        {/* todo: make it redirect back to calendar after adding (instead of projects list) */}
                     </ul>
                 </div>
                 <div className="col-3">

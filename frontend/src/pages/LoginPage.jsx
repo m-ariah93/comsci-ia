@@ -37,7 +37,7 @@ export default function LoginPage() {
         {showError && (
           <div className="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Uh oh!</strong> Your details are incorrect.
-            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" className="btn-close" onClick={() => setShowError(false)} data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         )}
 

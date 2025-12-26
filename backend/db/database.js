@@ -18,7 +18,7 @@ db.prepare(`
 db.prepare(`
   CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
+    title TEXT NOT NULL CHECK (length(title)<=30),
     address TEXT NOT NULL,
     startMonth TEXT NOT NULL CHECK (length(startMonth)=7),
     colour TEXT NOT NULL CHECK (length(colour)=7),

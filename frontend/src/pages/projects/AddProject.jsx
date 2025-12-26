@@ -8,6 +8,8 @@ export default function AddProject() {
     const [startMonth, setStartMonth] = useState("");
     const [colour, setColour] = useState("#000000");
 
+    const TITLE_MAX_LENGTH = 30;
+
     const navigate = useNavigate();
 
     function addProject(e) {
@@ -18,8 +20,13 @@ export default function AddProject() {
             return;
         }
 
-        // need to add form validation: character limit on title
         if (!title.trim() || !address.trim() || !startMonth.trim()) {
+            form.classList.add("was-validated");
+            return;
+        }
+
+        if (title.length > TITLE_MAX_LENGTH) {
+            form.classList.add("was-validated");
             return;
         }
 
@@ -44,11 +51,12 @@ export default function AddProject() {
     return (
         <form className="needs-validation" onSubmit={addProject} noValidate>
             <h4>New project</h4>
-            <label htmlFor="titleInput" className="form-label">Title</label>
-            <input type="text" className="form-control" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <label htmlFor="titleInput" className="form-label">Title (max 30 characters)</label>
+            <input type="text" maxLength={TITLE_MAX_LENGTH} className="form-control" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} required />
             <div className="invalid-feedback">
                 Please enter a project title.
             </div>
+
             <label htmlFor="addressInput" className="form-label">Address</label>
             <input type="text" className="form-control" id="addressInput" value={address} onChange={(e) => setAddress(e.target.value)} required />
             <div className="invalid-feedback">

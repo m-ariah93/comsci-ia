@@ -42,7 +42,7 @@ export default function ChecklistPage() {
                 {checklist.map((item) => (
                     <li className='list-group-item'>
                         <input className="form-check-input me-2" type="checkbox" value="" id="firstCheckbox" />
-                        <label className="form-check-label" for="firstCheckbox">{item}</label>
+                        <label className="form-check-label" htmlFor="firstCheckbox">{item}</label>
                     </li>
                 ))}
             </ul>

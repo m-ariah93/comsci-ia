@@ -10,8 +10,19 @@ export default function AddProject() {
 
     const navigate = useNavigate();
 
-    function addProject() {
+    function addProject(e) {
+        e.preventDefault();
+        const form = e.target;
+        if (!form.checkValidity()) {
+            form.classList.add("was-validated");
+            return;
+        }
+
         // need to add form validation: character limit on title
+        if (!title.trim() || !address.trim() || !startMonth.trim()) {
+            return;
+        }
+
         fetch("http://localhost:3001/projects", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -23,9 +34,6 @@ export default function AddProject() {
             })
         })
             .then((res) => res.json())
-            // .then((newProject) => {
-            //     setEvents((prev) => [...prev, { ...newProject, allDay: true }]);
-            // });
             .then((data) => {
                 console.log("Created project:", data);
                 navigate("/projects"); // go back to projects list
@@ -34,17 +42,26 @@ export default function AddProject() {
     }
 
     return (
-        <div>
+        <form className="needs-validation" onSubmit={addProject} noValidate>
             <h4>New project</h4>
             <label htmlFor="titleInput" className="form-label">Title</label>
-            <input type="text" className="form-control" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <input type="text" className="form-control" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <div className="invalid-feedback">
+                Please enter a project title.
+            </div>
             <label htmlFor="addressInput" className="form-label">Address</label>
-            <input type="text" className="form-control" id="addressInput" value={address} onChange={(e) => setAddress(e.target.value)} />
+            <input type="text" className="form-control" id="addressInput" value={address} onChange={(e) => setAddress(e.target.value)} required />
+            <div className="invalid-feedback">
+                Please enter an address.
+            </div>
             <label htmlFor="startMonth" className="form-label">Start month:</label>
-            <input type="month" className="form-control w-25" id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)}></input>
+            <input type="month" className="form-control w-25" id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
+            <div className="invalid-feedback">
+                Please select the project's start month.
+            </div>
             <label htmlFor="colourInput" className="form-label">Colour (for calendar events)</label>
             <input type="color" className="form-control form-control-color" title="Choose your colour" id="colourInput" value={colour} onChange={(e) => setColour(e.target.value)}></input>
-            <button type="button" className="btn btn-primary" onClick={addProject}>Create project</button>
-        </div>
+            <button type="submit" className="btn btn-primary">Create project</button>
+        </form>
     );
 }

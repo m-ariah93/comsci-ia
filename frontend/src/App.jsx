@@ -13,8 +13,8 @@ function App() {
   return (
     <BrowserRouter>
 
-      <div className="d-flex align-items-start fixed-top my-2 ms-2">
-          <div className="nav flex-column nav-pills me-3 flex-shrink-0" role="tablist" aria-orientation="vertical">
+      <div className="d-flex align-items-start">
+          <div className="nav flex-column nav-pills me-3 mt-2" role="tablist" aria-orientation="vertical">
             <NavLink to="/calendar" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Calendar</NavLink>
             <NavLink to="/checklist" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Checklist</NavLink>
             <NavLink to="/projects" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Projects</NavLink>
@@ -22,7 +22,7 @@ function App() {
             <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Logout</NavLink>
           </div>
 
-          <div className="tab-content flex-grow-1 w-100 vh-100" id="v-pills-tabContent" style={{minWidth: 0}}>
+          <div className="tab-content w-100 vh-100" id="v-pills-tabContent" style={{minWidth: 0}}>
             <Routes>
               <Route path="/" element={<Navigate to="/calendar" replace />} />
               <Route path="/calendar" element={<CalendarPage />} />

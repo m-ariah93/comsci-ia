@@ -19,6 +19,8 @@ export default function ProjectsList() {
             .catch(console.error);
     }, []);
 
+    const [sortChoice, setSortChoice] = useState("Start, latest");
+
     const [selectedProject, setSelectedProject] = useState(null);
 
     const location = useLocation();
@@ -55,24 +57,45 @@ export default function ProjectsList() {
                     No projects found :( Create one <Link to="/projects/add" className="alert-link">here</Link>.
                 </div>
             ) : (
-                <div className="row">
-                    {projects.map((project) => (
-                        <div key={project.id} className="col-sm-6 mb-3">
-                            <div className="card">
-                                <div className="card-body">
-                                    <h4 className="card-title">{project.title}</h4>
-                                    <p className="card-text">{project.address}</p>
-                                    <p className="card-text">Started: {formatMonth(project.startMonth)}</p>
-                                    <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary">
-                                        Edit
-                                    </Link>
-                                    <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive</button>
-                                    <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
-                                </div>
+                <div>
+                    <div className="row mt-2 mb-3">
+                        <div className="col-10">
+                            <input type="text" className="form-control" placeholder="Search" />
+                        </div>
+                        <div className="col-2">
+                            <div className="dropdown">
+                                <button className="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sort: {sortChoice}
+                                </button>
+                                <ul className="dropdown-menu">
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Start, latest")}>Start, latest</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Start, earliest")}>Start, earliest</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Name, A-Z")}>Name, A-Z</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Name, Z-A")}>Name, Z-A</a></li>
+                                </ul>
                             </div>
                         </div>
-                    ))}
-                    <DeleteModal projectId={selectedProject}/>
+                    </div>
+
+                    <div className="row">
+                        {projects.map((project) => (
+                            <div key={project.id} className="col-sm-6 mb-3">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h4 className="card-title">{project.title}</h4>
+                                        <p className="card-text">{project.address}</p>
+                                        <p className="card-text">Started: {formatMonth(project.startMonth)}</p>
+                                        <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary">
+                                            Edit
+                                        </Link>
+                                        <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive</button>
+                                        <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        <DeleteModal projectId={selectedProject} />
+                    </div>
                 </div>
             )}
         </div>

@@ -17,6 +17,7 @@ export default function EditProject() {
                 setTitle(data.title);
                 setAddress(data.address);
                 setStartMonth(data.startMonth);
+                setColour(data.colour);
             });
     }, [id]);
 
@@ -27,11 +28,12 @@ export default function EditProject() {
     const [title, setTitle] = useState("");
     const [address, setAddress] = useState("");
     const [startMonth, setStartMonth] = useState("");
+    const [colour, setColour] = useState("");
 
     const navigate = useNavigate();
 
     function clickSave() {
-        saveProject(project.id, title, address, startMonth);
+        saveProject(project.id, title, address, startMonth, colour);
         console.log("Saved project");
         navigate("/projects", { state: { updated: true } }); // go back to projects list
     }
@@ -46,11 +48,13 @@ export default function EditProject() {
             <input type="text" className="form-control" id="addressInput" defaultValue={project.address} onChange={(e) => setAddress(e.target.value)} />
             <label htmlFor="startmonth" className="form-label">Start month:</label>
             <input type="month" className="form-control w-25" id="startmonth" defaultValue={project.startMonth} onChange={(e) => setStartMonth(e.target.value)} ></input>
+            <label htmlFor="colourInput" className="form-label">Colour (for calendar events)</label>
+            <input type="color" className="form-control form-control-color" title="Choose your colour" id="colourInput" defaultValue={project.colour} onChange={(e) => setColour(e.target.value)}></input>
             <button type="button" className="btn btn-primary" onClick={clickSave}>Save changes</button>
             <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive</button>
             <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation">Delete</button>
 
-            <DeleteModal projectId={project.id}/>
+            <DeleteModal projectId={project.id} />
         </div>
     );
 }

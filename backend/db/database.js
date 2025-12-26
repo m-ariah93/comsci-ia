@@ -21,6 +21,7 @@ db.prepare(`
     title TEXT NOT NULL,
     address TEXT NOT NULL,
     startMonth TEXT NOT NULL CHECK (length(startMonth)=7),
+    colour TEXT NOT NULL CHECK (length(colour)=7),
     archived INTEGER DEFAULT 0 CHECK (archived=0 OR archived=1)
   )
 `).run();

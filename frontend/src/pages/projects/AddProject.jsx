@@ -6,6 +6,7 @@ export default function AddProject() {
     const [title, setTitle] = useState("");
     const [address, setAddress] = useState("");
     const [startMonth, setStartMonth] = useState("");
+    const [colour, setColour] = useState("#000000");
 
     const navigate = useNavigate();
 
@@ -18,6 +19,7 @@ export default function AddProject() {
                 title,
                 address,
                 startMonth,
+                colour,
             })
         })
             .then((res) => res.json())
@@ -40,6 +42,8 @@ export default function AddProject() {
             <input type="text" className="form-control" id="addressInput" value={address} onChange={(e) => setAddress(e.target.value)} />
             <label htmlFor="startMonth" className="form-label">Start month:</label>
             <input type="month" className="form-control w-25" id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)}></input>
+            <label htmlFor="colourInput" className="form-label">Colour (for calendar events)</label>
+            <input type="color" className="form-control form-control-color" title="Choose your colour" id="colourInput" value={colour} onChange={(e) => setColour(e.target.value)}></input>
             <button type="button" className="btn btn-primary" onClick={addProject}>Create project</button>
         </div>
     );

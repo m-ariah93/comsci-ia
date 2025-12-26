@@ -19,7 +19,7 @@ export function unarchiveProject(id) {
     });
 }
 
-export function saveProject(id, title, address, startMonth) {
+export function saveProject(id, title, address, startMonth, colour) {
     // need to add form validation: character limit on title
     fetch(`http://localhost:3001/projects/${id}`, {
         method: "PUT",
@@ -28,6 +28,7 @@ export function saveProject(id, title, address, startMonth) {
             title,
             address,
             startMonth,
+            colour,
         })
     })
         .then((res) => res.json())

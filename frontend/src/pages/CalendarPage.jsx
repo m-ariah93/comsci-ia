@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Draggable } from "@fullcalendar/interaction";
 import plusIcon from "../assets/plus-lg.svg";
 import { Link } from "react-router-dom";
+import { useProjects } from "../contexts/ProjectsContext";
 
 export default function CalendarPage() {
     const draggableRef = useRef(null);
@@ -25,14 +26,7 @@ export default function CalendarPage() {
     // all project view is 0
     const [currentProject, setCurrentProject] = useState(0);
 
-    // get projects from db
-    const [projects, setProjects] = useState([]);
-    useEffect(() => {
-        fetch("http://localhost:3001/projects")
-            .then((res) => res.json())
-            .then((data) => setProjects(data))
-            .catch(console.error);
-    }, []);
+    const { projects } = useProjects();
 
     const events = [
         "Excavator",

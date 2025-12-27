@@ -12,32 +12,35 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthLayout from "./pages/layouts/AuthLayout";
 import AppLayout from "./pages/layouts/AppLayout";
 
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProjectsProvider } from "./contexts/ProjectsContext";
 
 function App() {
   return (
     <BrowserRouter>
-          <Routes>
-            <Route element={<AuthLayout />}>
-              <Route path="/" element={<LoginPage />} />
-            </Route>
+      <ProjectsProvider>
+        <Routes>
+          <Route element={<AuthLayout />}>
+            <Route path="/" element={<LoginPage />} />
+          </Route>
 
-            <Route element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }>
-              <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/checklist" element={<ChecklistPage />} />
-              <Route path="/projects" element={<ProjectsPage />}>
-                <Route index element={<ProjectsList />} />
-                <Route path="edit/:id" element={<EditProject />} />
-                <Route path="add" element={<AddProject />} />
-                <Route path="archive" element={<Archive />} />
-              </Route>
-              <Route path="/settings" element={<SettingsPage />} />
+          <Route element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }>
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/checklist" element={<ChecklistPage />} />
+            <Route path="/projects" element={<ProjectsPage />}>
+              <Route index element={<ProjectsList />} />
+              <Route path="edit/:id" element={<EditProject />} />
+              <Route path="add" element={<AddProject />} />
+              <Route path="archive" element={<Archive />} />
             </Route>
-          </Routes>
+            <Route path="/settings" element={<SettingsPage />} />
+          </Route>
+        </Routes>
+      </ProjectsProvider>
     </BrowserRouter>
   );
 }

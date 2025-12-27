@@ -73,7 +73,7 @@ export default function EditProject() {
                 <div className="invalid-feedback">
                     Please enter an address.
                 </div>
-                <label htmlFor="startMonth" className="form-label">Start month:</label>
+                <label htmlFor="startMonthInput" className="form-label">Start month:</label>
                 <input type="month" className="form-control w-25" id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
                 <div className="invalid-feedback">
                     Please select the project's start month.

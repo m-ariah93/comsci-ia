@@ -3,21 +3,11 @@ import { useEffect, useState } from "react";
 import { formatMonth } from "/src/utils/DateUtils";
 import { archiveProject } from "/src/utils/ProjectDbUtils";
 import DeleteModal from "../../components/DeleteModal";
+import { useProjects } from "../../contexts/ProjectsContext";
 
 export default function ProjectsList() {
-    // const projects = [
-    //     { id: 1, title: "House 1", address: "1 abc street" },
-    //     { id: 2, title: "House 2", address: "2 abc street" },
-    //     { id: 3, title: "House 3", address: "3 abc street" }
-    // ];
 
-    const [projects, setProjects] = useState([]);
-    useEffect(() => {
-        fetch("http://localhost:3001/projects?archived=0")
-            .then((res) => res.json())
-            .then((data) => setProjects(data))
-            .catch(console.error);
-    }, []);
+    const { projects } = useProjects();
 
     const [sortChoice, setSortChoice] = useState("Start, latest");
 

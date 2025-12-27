@@ -8,6 +8,8 @@ import { useProjects } from "../contexts/ProjectsContext";
 export default function CalendarPage() {
     const draggableRef = useRef(null);
     useEffect(() => {
+
+        // event dragging
         const containerEl = document.getElementById("draggable-events");
         if (containerEl && !draggableRef.current) {
             // store the Draggable instance in the ref
@@ -20,7 +22,15 @@ export default function CalendarPage() {
                 },
             });
         }
-    }, []);
+
+        // horizontal instead of vertical scrolling on navbar
+        let horizontal = document.getElementById("navTabsHorizontal");
+        horizontal.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            horizontal.scrollLeft += e.deltaY * 0.2;
+        });
+
+    }, []); // runs once on page load
 
     // track which calendar is open 
     // all project view is 0
@@ -75,24 +85,19 @@ export default function CalendarPage() {
     return (
         <div className="container-fluid d-flex flex-column vh-100">
             <div className="row my-2">
-                <div className="col-9">
-                    <ul className="nav nav-tabs">
+                <div className="col-9 d-flex flex-nowrap">
+                    <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap" id="navTabsHorizontal">
                         <li className="nav-item">
                             <a className={`nav-link ${currentProject === 0 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(0)}>All</a>
                         </li>
-                        {/* <li className="nav-item">
-                            <a className={`nav-link ${currentProject === 1 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(1)}>House 1</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className={`nav-link ${currentProject === 2 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(2)}>House 2</a>
-                        </li> */}
                         {projects.map((project) => (
-                            <li className="nav-item">
+                            <li className="nav-item" key={project.id}>
                                 <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                             </li>
                         ))}
-                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
+                        
                     </ul>
+                    <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary"><img src={plusIcon} /></Link>
                 </div>
                 <div className="col-3">
                     <input type="text" className="form-control" placeholder="search" />
@@ -107,8 +112,8 @@ export default function CalendarPage() {
                     <h4>Key bookings</h4>
                     <div className="overflow-auto h-50">
                         {events.map((event) => (
-                            <div className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1'>
-                                <div key={event.id} className='fc-event-main'>{event}</div>
+                            <div key={event.id} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1'>
+                                <div className='fc-event-main'>{event}</div>
                             </div>
                         ))}
                     </div>

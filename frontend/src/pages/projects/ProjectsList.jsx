@@ -13,7 +13,7 @@ export default function ProjectsList() {
 
     const [projects, setProjects] = useState([]);
     useEffect(() => {
-        fetch("http://localhost:3001/projects")
+        fetch("http://localhost:3001/projects?archived=0")
             .then((res) => res.json())
             .then((data) => setProjects(data))
             .catch(console.error);

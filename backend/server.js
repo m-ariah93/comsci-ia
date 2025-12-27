@@ -106,8 +106,21 @@ app.put("/events/:id", (req, res) => {
 
 // projects table methods
 app.get("/projects", (req, res) => {
-    const projects = db.prepare("SELECT * FROM projects").all();
-    res.json(projects);
+    const { archived } = req.query;
+    try {
+        let projects;
+        if (archived === undefined) {
+            projects = db.prepare("SELECT * FROM projects").all();
+        } else {
+            const stmt = db.prepare("SELECT * FROM projects WHERE archived = ?");
+            projects = stmt.all(archived);
+            console.log("fetching filtered projects");
+        }
+        res.json(projects);
+    } catch {
+        console.error(err);
+        res.json({ error: "Failed to fetch projects" });
+    }
 });
 
 app.get("/projects/:id", (req, res) => {

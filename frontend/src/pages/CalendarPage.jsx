@@ -2,7 +2,7 @@ import Calendar from "../components/Calendar";
 import { useEffect, useRef, useState } from "react";
 import { Draggable } from "@fullcalendar/interaction";
 import plusIcon from "../assets/plus-lg.svg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
 
 export default function CalendarPage() {
@@ -27,6 +27,8 @@ export default function CalendarPage() {
     const [currentProject, setCurrentProject] = useState(0);
 
     const { projects } = useProjects();
+
+    const location = useLocation();
 
     const events = [
         "Excavator",
@@ -89,8 +91,7 @@ export default function CalendarPage() {
                                 <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                             </li>
                         ))}
-                        <Link to="/projects/add" className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
-                        {/* todo: make it redirect back to calendar after adding (instead of projects list) */}
+                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
                     </ul>
                 </div>
                 <div className="col-3">
@@ -99,7 +100,7 @@ export default function CalendarPage() {
             </div>
             <div className="row h-100 overflow-hidden">
                 <div className="col-9 d-flex flex-column h-100 pb-4">
-                    <Calendar style={{ flex: 1 }} key={currentProject} currentProject={currentProject}/>
+                    <Calendar style={{ flex: 1 }} key={currentProject} currentProject={currentProject} />
                 </div>
 
                 <div className="col-3 mh-100" id="draggable-events">

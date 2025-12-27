@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AddProject() {
 
@@ -11,6 +11,8 @@ export default function AddProject() {
     const TITLE_MAX_LENGTH = 30;
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const fromLocation = location.state?.from;
 
     function addProject(e) {
         e.preventDefault();
@@ -43,7 +45,11 @@ export default function AddProject() {
             .then((res) => res.json())
             .then((data) => {
                 console.log("Created project:", data);
-                navigate("/projects"); // go back to projects list
+                if (fromLocation) {
+                    navigate(fromLocation.pathname); // if coming from the calendar page
+                } else {
+                    navigate("/projects"); // go back to projects list
+                }
             })
             .catch(console.error);
     }

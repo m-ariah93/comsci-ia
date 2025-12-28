@@ -27,7 +27,7 @@ export default function Archive() {
                     No projects found in archive. View active projects <Link to="/projects" className="alert-link">here</Link>.
                 </div>
             ) : (
-                <div>
+                <>
                     <div className="row mt-2 mb-3">
                         <div className="col-10">
                             <input type="text" className="form-control" placeholder="Search" />
@@ -63,7 +63,7 @@ export default function Archive() {
                         ))}
                         <DeleteModal projectId={selectedProject} inArchive={true} />
                     </div>
-                </div>
+                </>
             )}
         </div>
     );

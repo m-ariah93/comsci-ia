@@ -59,7 +59,7 @@ export default function EditProject() {
 
     if (!project) return <p>Loading...</p>;
     return (
-        <div>
+        <>
             <form className="needs-validation" onSubmit={clickSave} noValidate>
                 <h4>Edit project</h4>
                 <label htmlFor="titleInput" className="form-label">Title (max 30 characters)</label>
@@ -85,6 +85,6 @@ export default function EditProject() {
                 <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation">Delete</button>
             </form>
             <DeleteModal projectId={project.id} />
-        </div>
+        </>
     );
 }

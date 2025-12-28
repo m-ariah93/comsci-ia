@@ -29,7 +29,7 @@ export default function ProjectsList() {
     }, [showToast]);
 
     return (
-        <div>
+        <>
             <div className="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="projectSavedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
                     <div className="d-flex">
@@ -47,7 +47,7 @@ export default function ProjectsList() {
                     No projects found :( Create one <Link to="/projects/add" className="alert-link">here</Link>.
                 </div>
             ) : (
-                <div>
+                <>
                     <div className="row mt-2 mb-3">
                         <div className="col-10">
                             <input type="text" className="form-control" placeholder="Search" />
@@ -86,8 +86,8 @@ export default function ProjectsList() {
                         ))}
                         <DeleteModal projectId={selectedProject} />
                     </div>
-                </div>
+                </>
             )}
-        </div>
+        </>
     );
 }

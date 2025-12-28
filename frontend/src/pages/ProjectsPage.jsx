@@ -2,7 +2,7 @@ import { Outlet, NavLink, useParams } from "react-router-dom";
 
 export default function ProjectsPage() {
     return (
-        <div>
+        <>
             <div className="container-fluid d-flex flex-column vh-100">
                 <div className="row h-100">
                     <div className="d-flex flex-column col-2 gap-2 mx-auto">
@@ -15,6 +15,6 @@ export default function ProjectsPage() {
                     </main>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

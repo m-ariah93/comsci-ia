@@ -62,6 +62,25 @@ app.get("/events", (req, res) => {
     }
 });
 
+app.get("/events/next", (req, res) => {
+    try {
+        let event;
+        const stmt = db.prepare(`
+            SELECT events.*, projects.title AS project_title
+            FROM events
+            LEFT JOIN projects ON events.project_id = projects.id
+            WHERE date(events.start) >= date('now')
+            ORDER BY date(events.start) ASC
+            LIMIT 1
+        `);
+        event = stmt.get();
+        res.json(event);
+    } catch (err) {
+        console.error(err);
+        res.json({ error: "Failed to fetch next event"});
+    }
+});
+
 app.post("/events", (req, res) => {
     const { title, start, end, project_id } = req.body;
 

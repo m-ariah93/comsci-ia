@@ -4,9 +4,12 @@ import { Draggable } from "@fullcalendar/interaction";
 import plusIcon from "../assets/plus-lg.svg";
 import { Link, useLocation } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
+import { formatDate, subtractDay } from "/src/utils/DateUtils";
 
 export default function CalendarPage() {
     const draggableRef = useRef(null);
+    const [nextEvent, setNextEvent] = useState(null);
+
     useEffect(() => {
 
         // event dragging
@@ -37,6 +40,18 @@ export default function CalendarPage() {
     const [currentProject, setCurrentProject] = useState(0);
 
     const { projects } = useProjects();
+
+    useEffect(() => {
+        // fetch next event
+        fetch("http://localhost:3001/events/next")
+            .then(res => res.json())
+            .then(data => {
+                console.log("events/next response:", data)
+                setNextEvent(data)
+            })
+            .catch(() => setNextEvent(null));
+
+    }, []); // figure out how to make this run every time an event changes
 
     const location = useLocation();
 
@@ -95,7 +110,6 @@ export default function CalendarPage() {
                                 <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                             </li>
                         ))}
-                        
                     </ul>
                     <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary"><img src={plusIcon} /></Link>
                 </div>
@@ -107,16 +121,49 @@ export default function CalendarPage() {
                 <div className="col-9 d-flex flex-column h-100 pb-4">
                     <Calendar style={{ flex: 1 }} key={currentProject} currentProject={currentProject} />
                 </div>
-
                 <div className="col-3 mh-100" id="draggable-events">
-                    <h4>Key bookings</h4>
-                    <div className="overflow-auto h-50">
-                        {events.map((event) => (
-                            <div key={event.id} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1'>
-                                <div className='fc-event-main'>{event}</div>
+                    {currentProject !== 0 ? (
+                        <>
+                            <h4>Key bookings</h4>
+                            <div className="overflow-auto h-50">
+                                {events.map((event) => (
+                                    <div key={event} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1'>
+                                        <div className='fc-event-main'>{event}</div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
+                        </>
+                    ) : (
+                        // next upcoming event
+                        <>
+                            <h4>Next up</h4>
+                            <div className="h-50 pt-2">
+                                {nextEvent ? (
+                                    <div className="card p-2">
+                                        <div className="card-body">
+                                            <h5 className="fw-bold">{nextEvent.title}</h5>
+                                            <div className="">{nextEvent.project_title || "No associated project"}</div>
+                                        </div>
+                                        <hr className="m-0" />
+                                        <div className="card-body">
+                                            <div className="">{nextEvent.end && "Start: "}{formatDate(nextEvent.start)}</div>
+                                            {nextEvent.end && (
+                                                <div className="small">End: {formatDate(subtractDay(nextEvent.end))}</div>
+                                            )}
+                                        </div>
+                                        <hr className="m-0" />
+                                        <div className="card-body">
+                                            <a href="#" class="btn btn-secondary btn-sm me-2">Request confirmation</a>
+                                            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-secondary">No upcoming events :(</div>
+                                )}
+
+                            </div>
+                        </>
+                    )}
                     <div className="d-grid gap-2 my-3">
                         <button className="btn btn-primary" type="button">New custom event</button>
                     </div>

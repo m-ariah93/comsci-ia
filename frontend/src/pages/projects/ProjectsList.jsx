@@ -78,10 +78,10 @@ export default function ProjectsList() {
                                         <h4 className="card-title">{project.title}</h4>
                                         <p className="card-text">{project.address}</p>
                                         <p className="card-text">Started: {formatMonth(project.startMonth)}</p>
-                                        <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary">
+                                        <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary me-2">
                                             Edit
                                         </Link>
-                                        <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive</button>
+                                        <button type="button" className="btn btn-secondary me-2" onClick={() => archiveProject(project.id)}>Archive</button>
                                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                     </div>
                                 </div>

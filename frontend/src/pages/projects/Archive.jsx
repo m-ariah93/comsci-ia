@@ -58,7 +58,7 @@ export default function Archive() {
                                         <h4 className="card-title">{project.title}</h4>
                                         <p className="card-text">{project.address}</p>
                                         <p className="card-text">Started: {formatMonth(project.startMonth)}</p>
-                                        <button type="button" className="btn btn-secondary" onClick={() => unarchiveProject(project.id)}>Unarchive</button>
+                                        <button type="button" className="btn btn-secondary me-2" onClick={() => unarchiveProject(project.id)}>Unarchive</button>
                                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                     </div>
                                 </div>

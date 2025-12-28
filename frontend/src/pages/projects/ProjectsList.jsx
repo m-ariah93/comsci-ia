@@ -44,7 +44,7 @@ export default function ProjectsList() {
             {/* if no projects, show message */}
             {projects.length === 0 ? (
                 <div className="alert alert-primary text-center mx-auto" role="alert">
-                    No projects found :( Create one <Link to="/projects/add" className="alert-link">here</Link>.
+                    No projects found :( Create one <Link to="/projects/add" className="alert-link text-reset">here</Link>.
                 </div>
             ) : (
                 <>

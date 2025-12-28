@@ -111,7 +111,7 @@ export default function CalendarPage() {
                             </li>
                         ))}
                     </ul>
-                    <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary"><img src={plusIcon} /></Link>
+                    <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
                 </div>
                 <div className="col-3">
                     <input type="text" className="form-control" placeholder="search" />

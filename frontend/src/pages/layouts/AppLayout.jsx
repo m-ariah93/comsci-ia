@@ -11,6 +11,7 @@ export default function AppLayout() {
                 <NavLink to="/checklist" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Checklist</NavLink>
                 <NavLink to="/projects" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Projects</NavLink>
                 <NavLink to="/settings" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Settings</NavLink>
+                <hr/>
                 <button className="nav-link text-start" onClick={logout}>Logout</button>
             </div>
 

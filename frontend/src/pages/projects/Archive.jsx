@@ -24,7 +24,7 @@ export default function Archive() {
             {/* if no projects, show message */}
             {projects.length === 0 ? (
                 <div className="alert alert-primary text-center mx-auto" role="alert">
-                    No projects found in archive. View active projects <Link to="/projects" className="alert-link">here</Link>.
+                    No projects found in archive. View active projects <Link to="/projects" className="alert-link text-reset">here</Link>.
                 </div>
             ) : (
                 <>

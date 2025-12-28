@@ -4,12 +4,15 @@ import { formatMonth } from "/src/utils/DateUtils";
 import { archiveProject } from "/src/utils/ProjectDbUtils";
 import DeleteModal from "../../components/DeleteModal";
 import { useProjects } from "../../contexts/ProjectsContext";
+import { sortProjects } from "/src/utils/SortProjects";
 
 export default function ProjectsList() {
 
     const { projects } = useProjects();
 
     const [sortChoice, setSortChoice] = useState("Start, latest");
+
+    const sortedProjects = sortProjects(projects, sortChoice);
 
     const [selectedProject, setSelectedProject] = useState(null);
 
@@ -58,17 +61,17 @@ export default function ProjectsList() {
                                     Sort: {sortChoice}
                                 </button>
                                 <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Start, latest")}>Start, latest</a></li>
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Start, earliest")}>Start, earliest</a></li>
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Name, A-Z")}>Name, A-Z</a></li>
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => setSortChoice("Name, Z-A")}>Name, Z-A</a></li>
+                                    <li><button className="dropdown-item" onClick={() => setSortChoice("Start, latest")}>Start, latest</button></li>
+                                    <li><button className="dropdown-item" onClick={() => setSortChoice("Start, earliest")}>Start, earliest</button></li>
+                                    <li><button className="dropdown-item" onClick={() => setSortChoice("Name, A-Z")}>Name, A-Z</button></li>
+                                    <li><button className="dropdown-item" onClick={() => setSortChoice("Name, Z-A")}>Name, Z-A</button></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
                     <div className="row">
-                        {projects.map((project) => (
+                        {sortedProjects.map((project) => (
                             <div key={project.id} className="col-sm-6 mb-3">
                                 <div className="card">
                                     <div className="card-body">

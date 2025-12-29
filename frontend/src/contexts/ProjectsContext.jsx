@@ -7,15 +7,19 @@ export function ProjectsProvider({ children }) {
     const [projects, setProjects] = useState([]);
     const location = useLocation();
 
-    useEffect(() => {
+    const refreshProjects = () => {
         fetch("http://localhost:3001/projects?archived=0") // only unarchived projects
             .then((res) => res.json())
             .then((data) => setProjects(data))
             .catch(console.error);
+    }
+
+    useEffect(() => {
+        refreshProjects();
     }, [location]);
 
     return (
-        <ProjectsContext.Provider value={{ projects }}>
+        <ProjectsContext.Provider value={{ projects, refreshProjects }}>
             {children}
         </ProjectsContext.Provider>
     );

@@ -8,7 +8,7 @@ import { sortProjects } from "/src/utils/SortProjects";
 
 export default function ProjectsList() {
 
-    const { projects } = useProjects();
+    const { projects, refreshProjects } = useProjects();
 
     const [sortChoice, setSortChoice] = useState("Start, latest");
 
@@ -81,7 +81,7 @@ export default function ProjectsList() {
                                         <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary me-2">
                                             Edit
                                         </Link>
-                                        <button type="button" className="btn btn-secondary me-2" onClick={() => archiveProject(project.id)}>Archive</button>
+                                        <button type="button" className="btn btn-secondary me-2" onClick={() => {archiveProject(project.id).then(() => {refreshProjects();})}}>Archive</button>
                                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                     </div>
                                 </div>

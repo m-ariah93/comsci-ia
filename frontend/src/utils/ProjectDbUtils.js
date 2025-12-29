@@ -1,6 +1,6 @@
 export function archiveProject(id) {
     console.log("Attempting to archive project " + id)
-    fetch(`http://localhost:3001/projects/${id}`, {
+    return fetch(`http://localhost:3001/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -10,7 +10,7 @@ export function archiveProject(id) {
 }
 
 export function unarchiveProject(id) {
-    fetch(`http://localhost:3001/projects/${id}`, {
+    return fetch(`http://localhost:3001/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

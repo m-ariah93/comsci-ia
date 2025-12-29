@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useProjects } from "../contexts/ProjectsContext";
+import plusIcon from "../assets/plus-lg.svg";
+
 export default function ChecklistPage() {
 
     const checklist = [
@@ -34,11 +39,25 @@ export default function ChecklistPage() {
         "Covenant bond refund"
     ];
 
+    const { activeProjects } = useProjects();
+    const [currentProject, setCurrentProject] = useState();
+
+    const location = useLocation();
 
     return (
         <div className="container-fluid d-flex flex-column vh-100 pe-4" style={{ minHeight: 0 }}>
+            <div className="d-flex flex-nowrap my-2">
+                <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap" id="navTabsHorizontal">
+                    {activeProjects.map((project) => (
+                        <li className="nav-item" key={project.id}>
+                            <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
+                        </li>
+                    ))}
+                </ul>
+                <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
+            </div>
             <h4>Order checklist</h4>
-            <ul className="list-group overflow-auto flex-grow-1" style={{ minHeight: 0 }}>
+            <ul className="list-group overflow-auto flex-grow-1 pb-4" style={{ minHeight: 0 }}>
                 {checklist.map((item, i) => (
                     <li key={`check-${i}`} className='list-group-item position-relative'>
                         <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} />

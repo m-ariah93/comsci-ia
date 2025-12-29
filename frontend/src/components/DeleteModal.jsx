@@ -1,9 +1,8 @@
-import { archiveProject, deleteProject } from "/src/utils/ProjectDbUtils";
 import { useProjects } from "../contexts/ProjectsContext";
 
 export default function DeleteModal({ projectId, inArchive }) {
 
-    const { refreshProjects } = useProjects();
+    const { archiveProject, deleteProject } = useProjects();
 
     return (
         <div className="modal fade" id="deleteConfirmation" tabIndex="-1">
@@ -24,10 +23,10 @@ export default function DeleteModal({ projectId, inArchive }) {
                         {inArchive ? (
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         ) : (
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => {archiveProject(projectId).then(() => {refreshProjects();})}}>Archive instead</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => archiveProject(projectId)}>Archive instead</button>
                         )}
 
-                        <button className="btn btn-danger" data-bs-dismiss="modal" onClick={() => {deleteProject(projectId).then(() => {refreshProjects();})}}>Yes, delete</button>
+                        <button className="btn btn-danger" data-bs-dismiss="modal" onClick={() => deleteProject(projectId)}>Yes, delete</button>
                     </div>
                 </div>
             </div>

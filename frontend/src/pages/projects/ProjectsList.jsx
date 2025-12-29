@@ -1,18 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { formatMonth } from "/src/utils/DateUtils";
-import { archiveProject } from "/src/utils/ProjectDbUtils";
 import DeleteModal from "../../components/DeleteModal";
 import { useProjects } from "../../contexts/ProjectsContext";
 import { sortProjects } from "/src/utils/SortProjects";
 
 export default function ProjectsList() {
 
-    const { projects, refreshProjects } = useProjects();
+    const { activeProjects, archiveProject } = useProjects();
 
     const [sortChoice, setSortChoice] = useState("Start, latest");
 
-    const sortedProjects = sortProjects(projects, sortChoice);
+    const sortedProjects = sortProjects(activeProjects, sortChoice);
 
     const [selectedProject, setSelectedProject] = useState(null);
 
@@ -45,7 +44,7 @@ export default function ProjectsList() {
             </div>
 
             {/* if no projects, show message */}
-            {projects.length === 0 ? (
+            {activeProjects.length === 0 ? (
                 <div className="alert alert-primary text-center mx-auto" role="alert">
                     No projects found :( Create one <Link to="/projects/add" className="alert-link text-reset">here</Link>.
                 </div>
@@ -81,7 +80,7 @@ export default function ProjectsList() {
                                         <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary me-2">
                                             Edit
                                         </Link>
-                                        <button type="button" className="btn btn-secondary me-2" onClick={() => {archiveProject(project.id).then(() => {refreshProjects();})}}>Archive</button>
+                                        <button type="button" className="btn btn-secondary me-2" onClick={() => archiveProject(project.id)}>Archive</button>
                                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                     </div>
                                 </div>

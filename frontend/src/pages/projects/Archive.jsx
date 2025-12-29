@@ -1,31 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { formatMonth } from "/src/utils/DateUtils";
-import { unarchiveProject } from "/src/utils/ProjectDbUtils";
 import DeleteModal from "../../components/DeleteModal";
 import { sortProjects } from "/src/utils/SortProjects";
+import { useProjects } from "../../contexts/ProjectsContext";
 
 export default function Archive() {
 
-    const [projects, setProjects] = useState([]);
-
-    useEffect(() => {
-        fetch("http://localhost:3001/projects?archived=1") // only archived projects
-            .then((res) => res.json())
-            .then((data) => setProjects(data))
-            .catch(console.error);
-    }, []);
+    const { archivedProjects, unarchiveProject } = useProjects();
 
     const [sortChoice, setSortChoice] = useState("Start, latest");
 
-    const sortedProjects = sortProjects(projects, sortChoice);
+    const sortedProjects = sortProjects(archivedProjects, sortChoice);
 
     const [selectedProject, setSelectedProject] = useState(null);
 
     return (
         <div>
             {/* if no projects, show message */}
-            {projects.length === 0 ? (
+            {archivedProjects.length === 0 ? (
                 <div className="alert alert-primary text-center mx-auto" role="alert">
                     No projects found in archive. View active projects <Link to="/projects" className="alert-link text-reset">here</Link>.
                 </div>

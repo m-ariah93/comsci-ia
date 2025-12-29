@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { archiveProject, saveProject } from "/src/utils/ProjectDbUtils";
+import { useProjects } from "../../contexts/ProjectsContext";
 import DeleteModal from "../../components/DeleteModal";
 
 export default function EditProject() {
@@ -8,6 +8,8 @@ export default function EditProject() {
     const { id } = useParams();
 
     const [project, setProject] = useState(null);
+
+    const { archiveProject, saveProject } = useProjects();
 
     useEffect(() => {
         fetch(`http://localhost:3001/projects/${id}`)
@@ -51,7 +53,7 @@ export default function EditProject() {
             form.classList.add("was-validated");
             return;
         }
-        
+
         saveProject(project.id, title, address, startMonth, colour);
         console.log("Saved project");
         navigate("/projects", { state: { updated: true } }); // go back to projects list
@@ -80,9 +82,10 @@ export default function EditProject() {
                 </div>
                 <label htmlFor="colourInput" className="form-label">Colour (for calendar events)</label>
                 <input type="color" className="form-control form-control-color" title="Choose your colour" id="colourInput" value={colour} onChange={(e) => setColour(e.target.value)}></input>
-                <button type="submit" className="btn btn-primary">Save changes</button>
-                <button type="button" className="btn btn-secondary" onClick={() => archiveProject(project.id)}>Archive</button>
+                <button type="submit" className="btn btn-primary me-2">Save changes</button>
+                <button type="button" className="btn btn-secondary me-2" onClick={() => archiveProject(project.id)}>Archive</button>
                 <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation">Delete</button>
+                {/* the archive and delete buttons work but need to redirect back to projects list */}
             </form>
             <DeleteModal projectId={project.id} />
         </>

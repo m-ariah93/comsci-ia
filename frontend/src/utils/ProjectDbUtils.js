@@ -21,7 +21,7 @@ export function unarchiveProject(id) {
 
 export function saveProject(id, title, address, startMonth, colour) {
     // need to add form validation: character limit on title
-    fetch(`http://localhost:3001/projects/${id}`, {
+    return fetch(`http://localhost:3001/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -39,7 +39,7 @@ export default function CalendarPage() {
     // all project view is 0
     const [currentProject, setCurrentProject] = useState(0);
 
-    const { projects } = useProjects();
+    const { activeProjects } = useProjects();
 
     useEffect(() => {
         // fetch next event
@@ -105,7 +105,7 @@ export default function CalendarPage() {
                         <li className="nav-item">
                             <a className={`nav-link ${currentProject === 0 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(0)}>All</a>
                         </li>
-                        {projects.map((project) => (
+                        {activeProjects.map((project) => (
                             <li className="nav-item" key={project.id}>
                                 <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                             </li>
@@ -153,14 +153,13 @@ export default function CalendarPage() {
                                         </div>
                                         <hr className="m-0" />
                                         <div className="card-body">
-                                            <a href="#" class="btn btn-secondary btn-sm me-2">Request confirmation</a>
-                                            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                            <a href="#" className="btn btn-secondary btn-sm me-2">Request confirmation</a>
+                                            <a href="#" className="btn btn-danger btn-sm">Delete</a>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="text-secondary">No upcoming events :(</div>
                                 )}
-
                             </div>
                         </>
                     )}

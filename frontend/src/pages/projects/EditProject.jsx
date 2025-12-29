@@ -83,9 +83,15 @@ export default function EditProject() {
                 <label htmlFor="colourInput" className="form-label">Colour (for calendar events)</label>
                 <input type="color" className="form-control form-control-color" title="Choose your colour" id="colourInput" value={colour} onChange={(e) => setColour(e.target.value)}></input>
                 <button type="submit" className="btn btn-primary me-2">Save changes</button>
-                <button type="button" className="btn btn-secondary me-2" onClick={() => archiveProject(project.id)}>Archive</button>
+                <button type="button" className="btn btn-secondary me-2" onClick={() => {
+                    archiveProject(project.id).then(() => {
+                        navigate("/projects", { state: { archived: true } });
+                    })
+                }}>
+                    Archive
+                </button>
                 <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation">Delete</button>
-                {/* the archive and delete buttons work but need to redirect back to projects list */}
+                {/* todo: the delete modal needs to redirect back to projects list */}
             </form>
             <DeleteModal projectId={project.id} />
         </>

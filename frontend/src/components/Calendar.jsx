@@ -18,7 +18,7 @@ export default function Calendar({ currentProject }) {
         setEvents(allDayEvents);
       })
       .catch(console.error);
-  }, [currentProject]);
+  }, [currentProject, handleEventReceive]);
 
   function handleEventDrop(info) {
     fetch(`http://localhost:3001/events/${info.event.id}`, {

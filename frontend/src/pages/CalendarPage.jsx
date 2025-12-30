@@ -35,11 +35,22 @@ export default function CalendarPage() {
 
     }, []); // runs once on page load
 
+    const { activeProjects } = useProjects();
+
     // track which calendar is open 
     // all project view is 0
     const [currentProject, setCurrentProject] = useState(0);
 
-    const { activeProjects } = useProjects();
+    const [currentProjectColour, setCurrentProjectColour] = useState(null);
+
+    // store current project colour for draggable events
+    useEffect(() => {
+        fetch(`http://localhost:3001/projects/${currentProject}`)
+            .then(res => res.json())
+            .then(data => {
+                setCurrentProjectColour(data.colour);
+            });
+    }, [currentProject]);
 
     useEffect(() => {
         // fetch next event
@@ -103,11 +114,11 @@ export default function CalendarPage() {
                 <div className="col-9 d-flex flex-nowrap">
                     <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap" id="navTabsHorizontal">
                         <li className="nav-item">
-                            <a className={`nav-link ${currentProject === 0 ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(0)}>All</a>
+                            <a className={`nav-link ${currentProject === 0 ? 'active fw-semibold' : ''}`} href="#" onClick={() => setCurrentProject(0)}>All</a>
                         </li>
                         {activeProjects.map((project) => (
                             <li className="nav-item" key={project.id}>
-                                <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProject(project.id)}>{project.title}</a>
+                                <a className={`nav-link ${currentProject === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                             </li>
                         ))}
                     </ul>
@@ -127,7 +138,7 @@ export default function CalendarPage() {
                             <h4>Key bookings</h4>
                             <div className="overflow-auto h-50">
                                 {events.map((event) => (
-                                    <div key={event} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1'>
+                                    <div key={event} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1' style={{ backgroundColor: currentProjectColour, borderColor: currentProjectColour }}>
                                         <div className='fc-event-main'>{event}</div>
                                     </div>
                                 ))}

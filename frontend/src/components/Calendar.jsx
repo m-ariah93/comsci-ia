@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { useState, useEffect } from "react";
 
 
-export default function Calendar({ currentProject }) {
+export default function Calendar({ currentProject, onEventsChanged }) {
 
   const [events, setEvents] = useState([]);
 
@@ -39,7 +39,8 @@ export default function Calendar({ currentProject }) {
         start: info.event.startStr,
         end: info.event.endStr || null,
       })
-    });
+    })
+      .then(handleEventsChanged);
   }
 
   function handleEventReceive(info) {
@@ -57,6 +58,7 @@ export default function Calendar({ currentProject }) {
       .then((newEvent) => {
         setEvents((prev) => [...prev, { ...newEvent, allDay: true, extendedProps: { project_id: currentProject } }]);
       })
+      .then(handleEventsChanged)
       .then(console.log(`event added, title: ${info.event.title}, id: ${currentProject}`));
   }
 
@@ -68,8 +70,14 @@ export default function Calendar({ currentProject }) {
         start: info.event.startStr,
         end: info.event.end - info.event.start === (1000 * 60 * 60 * 24) ? null : info.event.endStr || null
       })
-    });
+    })
+      .then(handleEventsChanged);
   }
+
+  const handleEventsChanged = () => {
+    if (onEventsChanged) onEventsChanged();
+  };
+
 
   return (
     <div className="h-100">

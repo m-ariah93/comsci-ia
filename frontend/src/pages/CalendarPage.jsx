@@ -130,7 +130,17 @@ export default function CalendarPage() {
             </div>
             <div className="row h-100 overflow-hidden">
                 <div className="col-9 d-flex flex-column h-100 pb-4">
-                    <Calendar style={{ flex: 1 }} key={currentProject} currentProject={currentProject} />
+                    <Calendar
+                        style={{ flex: 1 }}
+                        key={currentProject}
+                        currentProject={currentProject}
+                        onEventsChanged={() => {
+                            fetch("http://localhost:3001/events/next")
+                                .then(res => res.json())
+                                .then(data => setNextEvent(data))
+                                .catch(() => setNextEvent(null));
+                        }} // run callback to refresh next up event card
+                    />
                 </div>
                 <div className="col-3 mh-100" id="draggable-events">
                     {currentProject !== 0 ? (

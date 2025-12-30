@@ -8,7 +8,6 @@ import { formatDate, subtractDay } from "/src/utils/DateUtils";
 
 export default function CalendarPage() {
     const draggableRef = useRef(null);
-    const [nextEvent, setNextEvent] = useState(null);
 
     useEffect(() => {
 
@@ -39,18 +38,20 @@ export default function CalendarPage() {
 
     // track which calendar is open 
     // all project view is 0
-    const [currentProject, setCurrentProject] = useState(0);
+    const [currentProjectId, setCurrentProjectId] = useState(0);
 
-    const [currentProjectColour, setCurrentProjectColour] = useState(null);
+    const [currentProject, setCurrentProject] = useState(null);
 
-    // store current project colour for draggable events
+    // store current project (for colour for draggable events, and passing to Calendar)
     useEffect(() => {
-        fetch(`http://localhost:3001/projects/${currentProject}`)
+        fetch(`http://localhost:3001/projects/${currentProjectId}`)
             .then(res => res.json())
             .then(data => {
-                setCurrentProjectColour(data.colour);
+                setCurrentProject(data);
             });
-    }, [currentProject]);
+    }, [currentProjectId]);
+
+    const [nextEvent, setNextEvent] = useState(null);
 
     useEffect(() => {
         // fetch next event
@@ -114,11 +115,11 @@ export default function CalendarPage() {
                 <div className="col-9 d-flex flex-nowrap">
                     <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap" id="navTabsHorizontal">
                         <li className="nav-item">
-                            <a className={`nav-link ${currentProject === 0 ? 'active fw-semibold' : ''}`} href="#" onClick={() => setCurrentProject(0)}>All</a>
+                            <a className={`nav-link ${currentProjectId === 0 ? 'active fw-semibold' : ''}`} href="#" onClick={() => setCurrentProjectId(0)}>All</a>
                         </li>
                         {activeProjects.map((project) => (
                             <li className="nav-item" key={project.id}>
-                                <a className={`nav-link ${currentProject === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProject(project.id)}>{project.title}</a>
+                                <a className={`nav-link ${currentProjectId === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProjectId(project.id)}>{project.title}</a>
                             </li>
                         ))}
                     </ul>
@@ -132,7 +133,8 @@ export default function CalendarPage() {
                 <div className="col-9 d-flex flex-column h-100 pb-4">
                     <Calendar
                         style={{ flex: 1 }}
-                        key={currentProject}
+                        // key={currentProjectId}
+                        currentProjectId={currentProjectId}
                         currentProject={currentProject}
                         onEventsChanged={() => {
                             fetch("http://localhost:3001/events/next")
@@ -143,12 +145,12 @@ export default function CalendarPage() {
                     />
                 </div>
                 <div className="col-3 mh-100" id="draggable-events">
-                    {currentProject !== 0 ? (
+                    {currentProjectId !== 0 ? (
                         <>
                             <h4>Key bookings</h4>
                             <div className="overflow-auto h-50">
                                 {events.map((event) => (
-                                    <div key={event} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1' style={{ backgroundColor: currentProjectColour, borderColor: currentProjectColour }}>
+                                    <div key={event} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1' style={{ backgroundColor: currentProject.colour, borderColor: currentProject.colour }}>
                                         <div className='fc-event-main'>{event}</div>
                                     </div>
                                 ))}

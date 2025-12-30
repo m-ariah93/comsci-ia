@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { useState, useEffect } from "react";
 
 
-export default function Calendar({ currentProject, onEventsChanged }) {
+export default function Calendar({ currentProjectId, currentProject, onEventsChanged }) {
 
   const [events, setEvents] = useState([]);
 
@@ -12,15 +12,15 @@ export default function Calendar({ currentProject, onEventsChanged }) {
 
   // store current project colour for draggable events
   useEffect(() => {
-    fetch(`http://localhost:3001/projects/${currentProject}`)
+    fetch(`http://localhost:3001/projects/${currentProjectId}`)
       .then(res => res.json())
       .then(data => {
         setCurrentProjectColour(data.colour);
       });
-  }, [currentProject]);
+  }, [currentProjectId]);
 
   useEffect(() => {
-    const url = currentProject === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProject}`;
+    const url = currentProjectId === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
@@ -29,7 +29,7 @@ export default function Calendar({ currentProject, onEventsChanged }) {
         setEvents(allDayEvents);
       })
       .catch(console.error);
-  }, [currentProject]);
+  }, [currentProjectId]);
 
   function handleEventDrop(info) {
     fetch(`http://localhost:3001/events/${info.event.id}`, {
@@ -51,15 +51,15 @@ export default function Calendar({ currentProject, onEventsChanged }) {
         title: info.event.title,
         start: info.event.startStr,
         end: info.event.endStr || null,
-        project_id: currentProject === 0 ? null : currentProject,
+        project_id: currentProjectId === 0 ? null : currentProjectId,
       })
     })
       .then((res) => res.json())
       .then((newEvent) => {
-        setEvents((prev) => [...prev, { ...newEvent, allDay: true, extendedProps: { project_id: currentProject } }]);
+        setEvents((prev) => [...prev, { ...newEvent, allDay: true, extendedProps: { project_id: currentProjectId } }]);
       })
       .then(handleEventsChanged)
-      .then(console.log(`event added, title: ${info.event.title}, id: ${currentProject}`));
+      .then(console.log(`event added, title: ${info.event.title}, id: ${currentProjectId}`));
   }
 
   function handleEventResize(info) {
@@ -97,7 +97,8 @@ export default function Calendar({ currentProject, onEventsChanged }) {
         eventDrop={handleEventDrop}
         eventReceive={handleEventReceive}
         eventResize={handleEventResize}
-        eventColor={currentProject != 0 ? currentProjectColour : null}
+        eventColor={currentProject ? currentProjectColour : null}
+        validRange={currentProject ? { start: `${currentProject.startMonth}-01` } : null}
       />
     </div>
 

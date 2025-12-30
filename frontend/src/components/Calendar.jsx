@@ -8,6 +8,17 @@ export default function Calendar({ currentProject }) {
 
   const [events, setEvents] = useState([]);
 
+  const [currentProjectColour, setCurrentProjectColour] = useState(null);
+
+  // store current project colour for draggable events
+  useEffect(() => {
+    fetch(`http://localhost:3001/projects/${currentProject}`)
+      .then(res => res.json())
+      .then(data => {
+        setCurrentProjectColour(data.colour);
+      });
+  }, [currentProject]);
+
   useEffect(() => {
     const url = currentProject === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProject}`;
     fetch(url)
@@ -18,7 +29,7 @@ export default function Calendar({ currentProject }) {
         setEvents(allDayEvents);
       })
       .catch(console.error);
-  }, [currentProject, handleEventReceive]);
+  }, [currentProject]);
 
   function handleEventDrop(info) {
     fetch(`http://localhost:3001/events/${info.event.id}`, {
@@ -55,7 +66,7 @@ export default function Calendar({ currentProject }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         start: info.event.startStr,
-        end: info.event.end-info.event.start === (1000 * 60 * 60 * 24) ? null : info.event.endStr || null
+        end: info.event.end - info.event.start === (1000 * 60 * 60 * 24) ? null : info.event.endStr || null
       })
     });
   }
@@ -78,6 +89,7 @@ export default function Calendar({ currentProject }) {
         eventDrop={handleEventDrop}
         eventReceive={handleEventReceive}
         eventResize={handleEventResize}
+        eventColor={currentProject != 0 ? currentProjectColour : null}
       />
     </div>
 

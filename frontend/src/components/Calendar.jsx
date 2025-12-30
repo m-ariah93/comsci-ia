@@ -55,7 +55,7 @@ export default function Calendar({ currentProject }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         start: info.event.startStr,
-        end: info.event.endStr || null,
+        end: info.event.end-info.event.start === (1000 * 60 * 60 * 24) ? null : info.event.endStr || null
       })
     });
   }

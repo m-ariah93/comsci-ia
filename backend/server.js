@@ -49,10 +49,19 @@ app.get("/events", (req, res) => {
     try {
         let events;
         if (projectId) { // if project_id is not null or zero
-            const stmt = db.prepare("SELECT * FROM events WHERE project_id = ?");
+            const stmt = db.prepare(`
+                SELECT events.*, projects.colour AS projectColour
+                FROM events
+                LEFT JOIN projects ON events.project_id = projects.id
+                WHERE events.project_id = ?
+            `);
             events = stmt.all(projectId); // projectId parameter goes into stmt placeholder (?)
         } else {
-            const stmt = db.prepare("SELECT * FROM events");
+            const stmt = db.prepare(`
+                SELECT events.*, projects.colour AS projectColour
+                FROM events
+                LEFT JOIN projects ON events.project_id = projects.id
+            `);
             events = stmt.all();
         }
         res.json(events);
@@ -66,7 +75,7 @@ app.get("/events/next", (req, res) => {
     try {
         let event;
         const stmt = db.prepare(`
-            SELECT events.*, projects.title AS project_title
+            SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
             FROM events
             LEFT JOIN projects ON events.project_id = projects.id
             WHERE date(events.start) >= date('now')
@@ -77,7 +86,7 @@ app.get("/events/next", (req, res) => {
         res.json(event);
     } catch (err) {
         console.error(err);
-        res.json({ error: "Failed to fetch next event"});
+        res.json({ error: "Failed to fetch next event" });
     }
 });
 

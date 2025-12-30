@@ -107,7 +107,7 @@ export default function CalendarPage() {
                         </li>
                         {activeProjects.map((project) => (
                             <li className="nav-item" key={project.id}>
-                                <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
+                                <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                             </li>
                         ))}
                     </ul>
@@ -142,7 +142,7 @@ export default function CalendarPage() {
                                     <div className="card p-2">
                                         <div className="card-body">
                                             <h5 className="fw-bold">{nextEvent.title}</h5>
-                                            <div className="">{nextEvent.project_title || "No associated project"}</div>
+                                            <div style={{ color: nextEvent.projectColour }}>{nextEvent.projectTitle || "No associated project"}</div>
                                         </div>
                                         <hr className="m-0" />
                                         <div className="card-body">

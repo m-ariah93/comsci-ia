@@ -14,7 +14,7 @@ export default function Calendar({ currentProject }) {
       .then((res) => res.json())
       .then((data) => {
         // make all events allDay = true
-        const allDayEvents = data.map(event => ({ ...event, allDay: true, extendedProps: { project_id: event.project_id } }));
+        const allDayEvents = data.map(event => ({ ...event, allDay: true, backgroundColor: event.projectColour, borderColor: event.projectColour, extendedProps: { project_id: event.project_id } }));
         setEvents(allDayEvents);
       })
       .catch(console.error);

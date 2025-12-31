@@ -44,6 +44,7 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
   }
 
   function handleEventReceive(info) {
+    const templateId = info.draggedEl.dataset.templateId;
     fetch("http://localhost:3001/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -57,6 +58,15 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
       .then((res) => res.json())
       .then((newEvent) => {
         setEvents((prev) => [...prev, { ...newEvent, allDay: true, extendedProps: { project_id: currentProjectId } }]);
+      })
+      .then(() => {
+        return fetch(`http://localhost:3001/projects/${currentProjectId}/bookings/${templateId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            used: 1,
+          })
+        });
       })
       .then(handleEventsChanged)
       .then(console.log(`event added, title: ${info.event.title}, id: ${currentProjectId}`));

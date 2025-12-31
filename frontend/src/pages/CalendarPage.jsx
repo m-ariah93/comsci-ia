@@ -16,7 +16,7 @@ export default function CalendarPage() {
         if (containerEl && !draggableRef.current) {
             // store the Draggable instance in the ref
             draggableRef.current = new Draggable(containerEl, {
-                itemSelector: ".fc-event",
+                itemSelector: ".fc-event-draggable",
                 eventData: function (eventEl) {
                     return {
                         title: eventEl.innerText,
@@ -63,51 +63,21 @@ export default function CalendarPage() {
             })
             .catch(() => setNextEvent(null));
 
-    }, []); // figure out how to make this run every time an event changes
+    }, []);
 
     const location = useLocation();
 
-    const events = [
-        "Excavator",
-        "Retaining walls",
-        "Site set out",
-        "Plumber drainer",
-        "Plumber rough in",
-        "Plumber fit off",
-        "Bobcat",
-        "Pier inspection",
-        "Concreter",
-        "Termite protection",
-        "Slab inspection",
-        "Concrete pump",
-        "Electrician U/Power",
-        "Electrician rough in",
-        "Electrician fit off",
-        "Electrician AC",
-        "Crane truss lift",
-        "Frame inspection",
-        "Edge protection",
-        "Carpenter frame",
-        "Carpenter rough in",
-        "Carpenter soffits",
-        "Carpenter fix out",
-        "Carpenter finish out",
-        "Bricklayer",
-        "Garage door",
-        "Tiler",
-        "Painter",
-        "Concrete kerb cut",
-        "Drive/concreter",
-        "Dividing fencing",
-        "Fencing",
-        "Bobcat clean",
-        "TV antenna",
-        "Garden kerbing",
-        "Insulation/ceiling",
-        "Final inspection",
-        "Cleaning",
-        "Silicon sealer"
-    ];
+    const [templateBookings, setTemplateBookings] = useState([]);
+
+    useEffect(() => {
+        if (currentProjectId === 0) {
+            return;
+        }
+        fetch(`http://localhost:3001/projects/${currentProjectId}/bookings`)
+            .then(res => res.json())
+            .then(data => setTemplateBookings(data));
+    }, [currentProjectId]);
+
 
     return (
         <div className="container-fluid d-flex flex-column vh-100">
@@ -141,7 +111,10 @@ export default function CalendarPage() {
                                 .then(res => res.json())
                                 .then(data => setNextEvent(data))
                                 .catch(() => setNextEvent(null));
-                        }} // run callback to refresh next up event card
+                            fetch(`http://localhost:3001/projects/${currentProjectId}/bookings`)
+                                .then(res => res.json())
+                                .then(data => setTemplateBookings(data));
+                        }} // run callback to refresh next up event card and draggable bookings
                     />
                 </div>
                 <div className="col-3 mh-100" id="draggable-events">
@@ -149,11 +122,18 @@ export default function CalendarPage() {
                         <>
                             <h4>Key bookings</h4>
                             <div className="overflow-auto h-50">
-                                {events.map((event) => (
-                                    <div key={event} className='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event fc-event-draggable my-1' style={{ backgroundColor: currentProject.colour, borderColor: currentProject.colour }}>
-                                        <div className='fc-event-main'>{event}</div>
+                                {templateBookings.map((event) => (
+                                    <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event my-1 ${event.used ? "opacity-50" : "fc-event-draggable"}`} style={{
+                                        backgroundColor: currentProject.colour,
+                                        borderColor: currentProject.colour,
+                                        cursor: event.used ? "auto" : "pointer"
+                                    }}
+                                        data-template-id={event.templateId}
+                                    >
+                                        <div className={`fc-event-main ${event.used && "text-decoration-line-through"}`}>{event.title}</div>
                                     </div>
                                 ))}
+                                {console.log("currentProject colour is: ", currentProject.colour)}
                             </div>
                         </>
                     ) : (

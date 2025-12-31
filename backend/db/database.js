@@ -27,6 +27,69 @@ db.prepare(`
 `).run();
 
 db.prepare(`
+  CREATE TABLE IF NOT EXISTS booking_templates (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL UNIQUE
+  )
+`).run();
+
+// seed booking templates from array
+
+db.prepare(`
+  INSERT OR IGNORE INTO booking_templates (title) VALUES
+    ('Excavator'),
+    ('Retaining walls'),
+    ('Site set out'),
+    ('Plumber drainer'),
+    ('Plumber rough in'),
+    ('Plumber fit off'),
+    ('Bobcat'),
+    ('Pier inspection'),
+    ('Concreter'),
+    ('Termite protection'),
+    ('Slab inspection'),
+    ('Concrete pump'),
+    ('Electrician U/Power'),
+    ('Electrician rough in'),
+    ('Electrician fit off'),
+    ('Electrician AC'),
+    ('Crane truss lift'),
+    ('Frame inspection'),
+    ('Edge protection'),
+    ('Carpenter frame'),
+    ('Carpenter rough in'),
+    ('Carpenter soffits'),
+    ('Carpenter fix out'),
+    ('Carpenter finish out'),
+    ('Bricklayer'),
+    ('Garage door'),
+    ('Tiler'),
+    ('Painter'),
+    ('Concrete kerb cut'),
+    ('Drive/concreter'),
+    ('Dividing fencing'),
+    ('Fencing'),
+    ('Bobcat clean'),
+    ('TV antenna'),
+    ('Garden kerbing'),
+    ('Insulation/ceiling'),
+    ('Final inspection'),
+    ('Cleaning'),
+    ('Silicon sealer');  
+`).run();
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS project_template_bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    used INTEGER DEFAULT 0 CHECK (used=0 OR used=1),
+    template_id INTEGER REFERENCES booking_templates(id),
+    project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
+    UNIQUE (project_id, template_id)
+  )
+`).run();
+// UNIQUE constraint ensures the project_id and template_id combination can't be repeated
+
+db.prepare(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,

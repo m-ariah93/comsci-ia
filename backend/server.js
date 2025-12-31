@@ -169,6 +169,48 @@ app.get("/projects/:id", (req, res) => {
     }
 });
 
+app.get("/projects/:id/bookings", (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const stmt = db.prepare(`
+            SELECT project_template_bookings.id AS bookingId, booking_templates.id AS templateId, booking_templates.title, project_template_bookings.used
+            FROM project_template_bookings
+            INNER JOIN booking_templates ON project_template_bookings.template_id = booking_templates.id
+            WHERE project_template_bookings.project_id = ?
+            ORDER BY booking_templates.id
+        `);
+        const bookings = stmt.all(id);
+        res.json(bookings);
+    } catch (error) {
+        console.error("Error fetching project template bookings:", error);
+        res.json({ error: "Failed to fetch project template bookings" });
+    }
+});
+
+app.put("/projects/:projectId/bookings/:templateId", (req, res) => {
+    const { projectId, templateId } = req.params;
+    const { used } = req.body;
+
+    if (!used) {
+        return res.json({ error: "No used value given" });
+    }
+
+    try {
+        const stmt = db.prepare("UPDATE project_template_bookings SET used = ? WHERE project_id = ? AND template_id = ?");
+        const result = stmt.run(used, projectId, templateId);
+
+        if (result.changes === 0) {
+            return res.json({ error: "Booking not found" });
+        }
+
+        res.json({ projectId, templateId, used });
+    } catch (error) {
+        console.error("Error updating used value of booking:", error);
+        res.json({ error: "Failed to update booking" });
+    }
+});
+
 app.post("/projects", (req, res) => {
     const { title, address, start_month, colour } = req.body;
 
@@ -180,7 +222,16 @@ app.post("/projects", (req, res) => {
         const stmt = db.prepare("INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)");
         const result = stmt.run(title, address, start_month, colour);
 
-        res.json({ id: result.lastInsertRowid, title, address, start_month, colour });
+        const projectId = result.lastInsertRowid;
+
+        // add new set of template bookings to project_template_bookings
+
+        db.prepare(`
+            INSERT INTO project_template_bookings (project_id, template_id)
+            SELECT ?, id FROM booking_templates
+        `).run(projectId);
+
+        res.json({ id: projectId, title, address, start_month, colour });
     } catch (error) {
         console.error("Error inserting event:", error);
         res.json({ error: "Failed to insert event" });

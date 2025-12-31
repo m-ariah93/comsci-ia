@@ -76,7 +76,7 @@ export default function ProjectsList() {
                                     <div className="card-body">
                                         <h4 className="card-title">{project.title}</h4>
                                         <p className="card-text">{project.address}</p>
-                                        <p className="card-text">Started: {formatMonth(project.startMonth)}</p>
+                                        <p className="card-text">Started: {formatMonth(project.start_month)}</p>
                                         <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary me-2">
                                             Edit
                                         </Link>

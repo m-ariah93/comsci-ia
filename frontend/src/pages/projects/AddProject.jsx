@@ -38,7 +38,7 @@ export default function AddProject() {
             body: JSON.stringify({
                 title,
                 address,
-                startMonth,
+                start_month: startMonth,
                 colour,
             })
         })

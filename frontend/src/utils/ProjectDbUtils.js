@@ -27,7 +27,7 @@ export function saveProject(id, title, address, startMonth, colour) {
         body: JSON.stringify({
             title,
             address,
-            startMonth,
+            start_month: startMonth,
             colour,
         })
     })

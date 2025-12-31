@@ -98,7 +98,7 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
         eventReceive={handleEventReceive}
         eventResize={handleEventResize}
         eventColor={currentProject ? currentProjectColour : null}
-        validRange={currentProject ? { start: `${currentProject.startMonth}-01` } : null}
+        validRange={currentProject ? { start: `${currentProject.start_month}-01` } : null}
       />
     </div>
 

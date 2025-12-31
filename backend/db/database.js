@@ -20,7 +20,7 @@ db.prepare(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL CHECK (length(title)<=30),
     address TEXT NOT NULL,
-    startMonth TEXT NOT NULL CHECK (length(startMonth)=7),
+    start_month TEXT NOT NULL CHECK (length(start_month)=7),
     colour TEXT NOT NULL CHECK (length(colour)=7),
     archived INTEGER DEFAULT 0 CHECK (archived=0 OR archived=1)
   )
@@ -28,9 +28,9 @@ db.prepare(`
 
 db.prepare(`
   CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE,
-  password TEXT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT
   )
 `).run();
 

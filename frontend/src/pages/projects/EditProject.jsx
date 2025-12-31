@@ -18,7 +18,7 @@ export default function EditProject() {
                 setProject(data);
                 setTitle(data.title);
                 setAddress(data.address);
-                setStartMonth(data.startMonth);
+                setStartMonth(data.start_month);
                 setColour(data.colour);
             });
     }, [id]);

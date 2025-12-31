@@ -170,17 +170,17 @@ app.get("/projects/:id", (req, res) => {
 });
 
 app.post("/projects", (req, res) => {
-    const { title, address, startMonth, colour } = req.body;
+    const { title, address, start_month, colour } = req.body;
 
-    if (!title || !address || !startMonth || !colour) {
+    if (!title || !address || !start_month || !colour) {
         return res.json({ error: "All fields are required" });
     }
 
     try {
-        const stmt = db.prepare("INSERT INTO projects (title, address, startMonth, colour) VALUES (?, ?, ?, ?)");
-        const result = stmt.run(title, address, startMonth, colour);
+        const stmt = db.prepare("INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)");
+        const result = stmt.run(title, address, start_month, colour);
 
-        res.json({ id: result.lastInsertRowid, title, address, startMonth, colour });
+        res.json({ id: result.lastInsertRowid, title, address, start_month, colour });
     } catch (error) {
         console.error("Error inserting event:", error);
         res.json({ error: "Failed to insert event" });

@@ -40,7 +40,7 @@ export default function ChecklistPage() {
     ];
 
     const { activeProjects } = useProjects();
-    const [currentProject, setCurrentProject] = useState();
+    const [currentProject, setCurrentProject] = useState(activeProjects[0].id);
 
     const location = useLocation();
 
@@ -50,7 +50,7 @@ export default function ChecklistPage() {
                 <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap" id="navTabsHorizontal">
                     {activeProjects.map((project) => (
                         <li className="nav-item" key={project.id}>
-                            <a className={`nav-link ${currentProject === project.id ? 'active' : ''}`} href="#" onClick={() => setCurrentProject(project.id)}>{project.title}</a>
+                            <a className={`nav-link ${currentProject === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProject(project.id)}>{project.title}</a>
                         </li>
                     ))}
                 </ul>

@@ -4,6 +4,7 @@ import { formatMonth } from "/src/utils/DateUtils";
 import DeleteModal from "../../components/DeleteModal";
 import { sortProjects } from "/src/utils/SortProjects";
 import { useProjects } from "../../contexts/ProjectsContext";
+import { filterProjects } from "/src/utils/FilterProjects";
 
 export default function Archive() {
 
@@ -14,6 +15,9 @@ export default function Archive() {
     const sortedProjects = sortProjects(archivedProjects, sortChoice);
 
     const [selectedProject, setSelectedProject] = useState(null);
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const filteredProjects = filterProjects(sortedProjects, searchQuery);
 
     return (
         <div>
@@ -26,7 +30,7 @@ export default function Archive() {
                 <>
                     <div className="row mt-2 mb-3">
                         <div className="col-10">
-                            <input type="text" className="form-control" placeholder="Search" />
+                            <input type="text" className="form-control" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
                         <div className="col-2">
                             <div className="dropdown">
@@ -42,9 +46,13 @@ export default function Archive() {
                             </div>
                         </div>
                     </div>
-
+                    {filteredProjects.length === 0 && (
+                        <div className="alert alert-secondary text-center">
+                            No projects match your search :(
+                        </div>
+                    )}
                     <div className="row">
-                        {sortedProjects.map((project) => (
+                        {filteredProjects.map((project) => (
                             <div key={project.id} className="col-sm-6 mb-3">
                                 <div className="card">
                                     <div className="card-body">

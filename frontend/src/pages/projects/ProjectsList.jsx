@@ -4,6 +4,7 @@ import { formatMonth } from "/src/utils/DateUtils";
 import DeleteModal from "../../components/DeleteModal";
 import { useProjects } from "../../contexts/ProjectsContext";
 import { sortProjects } from "/src/utils/SortProjects";
+import { filterProjects } from "/src/utils/FilterProjects";
 
 export default function ProjectsList() {
 
@@ -30,6 +31,9 @@ export default function ProjectsList() {
         }
     }, [showToast]);
 
+    const [searchQuery, setSearchQuery] = useState("");
+    const filteredProjects = filterProjects(sortedProjects, searchQuery);
+
     return (
         <>
             <div className="toast-container position-fixed bottom-0 end-0 p-3">
@@ -52,7 +56,7 @@ export default function ProjectsList() {
                 <>
                     <div className="row mt-2 mb-3">
                         <div className="col-10">
-                            <input type="text" className="form-control" placeholder="Search" />
+                            <input type="text" className="form-control" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
                         <div className="col-2">
                             <div className="dropdown">
@@ -68,9 +72,13 @@ export default function ProjectsList() {
                             </div>
                         </div>
                     </div>
-
+                    {filteredProjects.length === 0 && (
+                        <div className="alert alert-secondary text-center">
+                            No projects match your search :(
+                        </div>
+                    )}
                     <div className="row">
-                        {sortedProjects.map((project) => (
+                        {filteredProjects.map((project) => (
                             <div key={project.id} className="col-sm-6 mb-3">
                                 <div className="card">
                                     <div className="card-body">

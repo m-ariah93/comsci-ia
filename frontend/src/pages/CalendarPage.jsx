@@ -83,7 +83,7 @@ export default function CalendarPage() {
         <div className="container-fluid d-flex flex-column vh-100">
             <div className="row my-2">
                 <div className="col-9 d-flex flex-nowrap">
-                    <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap" id="navTabsHorizontal">
+                    <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap w-100" id="navTabsHorizontal">
                         <li className="nav-item">
                             <a className={`nav-link ${currentProjectId === 0 ? 'active fw-semibold' : ''}`} href="#" onClick={() => setCurrentProjectId(0)}>All</a>
                         </li>

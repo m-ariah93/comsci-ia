@@ -56,7 +56,7 @@ export default function ChecklistPage() {
             ) : (
                 <div className="container-fluid d-flex flex-column vh-100 pe-4" style={{ minHeight: 0 }}>
                     <div className="d-flex flex-nowrap my-2">
-                        <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap" id="navTabsHorizontal">
+                        <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap w-100" id="navTabsHorizontal">
                             {activeProjects.map((project) => (
                                 <li className="nav-item" key={project.id}>
                                     <a className={`nav-link ${currentProject === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProject(project.id)}>{project.title}</a>

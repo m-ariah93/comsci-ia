@@ -78,6 +78,8 @@ export default function CalendarPage() {
             .then(data => setTemplateBookings(data));
     }, [currentProjectId]);
 
+    const keyBookingsRef = useRef(null);
+
 
     return (
         <div className="container-fluid d-flex flex-column vh-100">
@@ -106,6 +108,7 @@ export default function CalendarPage() {
                         // key={currentProjectId}
                         currentProjectId={currentProjectId}
                         currentProject={currentProject}
+                        keyBookingsRef={keyBookingsRef}
                         onEventsChanged={() => {
                             fetch("http://localhost:3001/events/next")
                                 .then(res => res.json())
@@ -121,7 +124,7 @@ export default function CalendarPage() {
                     {currentProjectId !== 0 ? (
                         <>
                             <h4>Key bookings</h4>
-                            <div className="overflow-auto h-50">
+                            <div className="overflow-auto h-50" ref={keyBookingsRef}>
                                 {templateBookings.map((event) => (
                                     <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event my-1 ${event.used ? "opacity-50" : "fc-event-draggable"}`} style={{
                                         backgroundColor: currentProject.colour,
@@ -133,7 +136,7 @@ export default function CalendarPage() {
                                         <div className={`fc-event-main ${event.used && "text-decoration-line-through"}`}>{event.title}</div>
                                     </div>
                                 ))}
-                                {console.log("currentProject colour is: ", currentProject.colour)}
+                                {/* {console.log("currentProject colour is: ", currentProject.colour)} */}
                             </div>
                         </>
                     ) : (

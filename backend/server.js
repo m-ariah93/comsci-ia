@@ -131,6 +131,23 @@ app.put("/events/:id", (req, res) => {
     }
 });
 
+app.delete("/events/:id", (req, res) => {
+    const { id } = req.params;
+    try {
+        const stmt = db.prepare("DELETE FROM events WHERE id = ?");
+        const result = stmt.run(id);
+
+        if (result.changes === 0) {
+            return res.json({ error: "Event not found" });
+        }
+
+        res.json({ deletedId: id });
+    } catch (error) {
+        console.error("Error deleting event:", error);
+        res.json({ error: "Failed to delete event" });
+    }
+});
+
 
 // projects table methods
 app.get("/projects", (req, res) => {

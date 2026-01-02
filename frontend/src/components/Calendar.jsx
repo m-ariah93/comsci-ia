@@ -5,7 +5,7 @@ import listPlugin from '@fullcalendar/list';
 import { useState, useEffect } from "react";
 
 
-export default function Calendar({ currentProjectId, currentProject, onEventsChanged }) {
+export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, onEventsChanged }) {
 
   const [events, setEvents] = useState([]);
 
@@ -46,6 +46,8 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
 
   function handleEventReceive(info) {
     const templateId = info.draggedEl.dataset.templateId;
+    info.event.setExtendedProp("templateId", templateId); // extended prop for dragging back into list
+
     fetch("http://localhost:3001/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -89,6 +91,45 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
     if (onEventsChanged) onEventsChanged();
   };
 
+  function isOverElement(jsEvent, ref) {
+    const rectangle = ref.current?.getBoundingClientRect();
+    if (!rectangle) return false;
+
+    return (
+      jsEvent.clientX >= rectangle.left &&
+      jsEvent.clientX <= rectangle.right &&
+      jsEvent.clientY >= rectangle.top &&
+      jsEvent.clientY <= rectangle.bottom
+    );
+  }
+
+  function handleEventDragStop(info) {
+    if (isOverElement(info.jsEvent, keyBookingsRef)) {
+      const templateId = info.event.extendedProps.templateId;
+      console.log("template id is ", templateId);
+      const eventId = info.event.id;
+
+      info.event.remove();
+
+      fetch(`http://localhost:3001/events/${eventId}`, {
+        // delete event from events table
+        method: "DELETE",
+      })
+        .then(() => {
+          // make template booking unused
+          return fetch(
+            `http://localhost:3001/projects/${currentProjectId}/bookings/${templateId}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ used: 0 }),
+            }
+          );
+        })
+        .then(handleEventsChanged)
+        .then(console.log(`event removed, title: ${info.event.title}, id: ${currentProjectId}`));
+    }
+  }
 
   return (
     <div className="h-100">
@@ -108,6 +149,7 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
         eventDrop={handleEventDrop}
         eventReceive={handleEventReceive}
         eventResize={handleEventResize}
+        eventDragStop={handleEventDragStop}
         eventColor={currentProject ? currentProjectColour : null}
         validRange={currentProject ? { start: `${currentProject.start_month}-01` } : null}
       />

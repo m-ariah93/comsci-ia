@@ -21,8 +21,8 @@ export default function ChecklistPage() {
 
     const location = useLocation();
 
-    function onChecklistChange(templateId, checked) {
-        fetch(`http://localhost:3001/projects/${currentProjectId}/checklist/${templateId}`, {
+    function onChecklistChange(checklistId, checked) {
+        fetch(`http://localhost:3001/projects/${currentProjectId}/checklist/${checklistId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -54,7 +54,7 @@ export default function ChecklistPage() {
                     <ul className="list-group overflow-auto flex-grow-1 pb-4" style={{ minHeight: 0 }}>
                         {checklist.map((item, i) => (
                             <li key={`check-${i}`} className='list-group-item position-relative'>
-                                <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.templateId, e.target.checked)} checked={Boolean(item.done)} />
+                                <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
                                 <label className={`form-check-label ${item.done && "text-decoration-line-through"}`} htmlFor={`check-${i}`}>{item.title}</label>
                                 <label
                                     htmlFor={`check-${i}`}

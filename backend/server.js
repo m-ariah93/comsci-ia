@@ -91,17 +91,17 @@ app.get("/events/next", (req, res) => {
 });
 
 app.post("/events", (req, res) => {
-    const { title, start, end, project_id } = req.body;
+    const { title, start, end, project_id, template_id } = req.body;
 
     if (!title || !start) {
         return res.json({ error: "Title and start date are required" });
     }
 
     try {
-        const stmt = db.prepare("INSERT INTO events (title, start, end, project_id) VALUES (?, ?, ?, ?)");
-        const result = stmt.run(title, start, end, project_id);
+        const stmt = db.prepare("INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)");
+        const result = stmt.run(title, start, end, project_id, template_id);
 
-        res.json({ id: result.lastInsertRowid, title, start, end, project_id });
+        res.json({ id: result.lastInsertRowid, title, start, end, project_id, template_id });
     } catch (error) {
         console.error("Error inserting event:", error);
         res.json({ error: "Failed to insert event" });
@@ -186,45 +186,24 @@ app.get("/projects/:id", (req, res) => {
     }
 });
 
-app.get("/projects/:id/bookings", (req, res) => {
+app.get("/projects/:id/templates", (req, res) => {
     const { id } = req.params;
 
     try {
         const stmt = db.prepare(`
-            SELECT project_template_bookings.id AS bookingId, booking_templates.id AS templateId, booking_templates.title, project_template_bookings.used
-            FROM project_template_bookings
-            INNER JOIN booking_templates ON project_template_bookings.template_id = booking_templates.id
-            WHERE project_template_bookings.project_id = ?
-            ORDER BY booking_templates.id
+            SELECT 
+                booking_templates.id AS bookingId,
+                booking_templates.title,
+                CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
+            FROM booking_templates
+            LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
+            WHERE booking_templates.project_id = ?
         `);
-        const bookings = stmt.all(id);
-        res.json(bookings);
+        const templates = stmt.all(id);
+        res.json(templates);
     } catch (error) {
         console.error("Error fetching project template bookings:", error);
         res.json({ error: "Failed to fetch project template bookings" });
-    }
-});
-
-app.put("/projects/:projectId/bookings/:templateId", (req, res) => {
-    const { projectId, templateId } = req.params;
-    const { used } = req.body;
-
-    if (used === undefined) {
-        return res.json({ error: "No used value given" });
-    }
-
-    try {
-        const stmt = db.prepare("UPDATE project_template_bookings SET used = ? WHERE project_id = ? AND template_id = ?");
-        const result = stmt.run(used, projectId, templateId);
-
-        if (result.changes === 0) {
-            return res.json({ error: "Booking not found" });
-        }
-
-        res.json({ projectId, templateId, used });
-    } catch (error) {
-        console.error("Error updating used value of booking:", error);
-        res.json({ error: "Failed to update booking" });
     }
 });
 
@@ -233,22 +212,20 @@ app.get("/projects/:id/checklist", (req, res) => {
 
     try {
         const stmt = db.prepare(`
-            SELECT checklist.id AS bookingId, checklist_templates.id AS templateId, checklist_templates.title, checklist.done
+            SELECT id, title, done
             FROM checklist
-            INNER JOIN checklist_templates ON checklist.template_id = checklist_templates.id
             WHERE checklist.project_id = ?
-            ORDER BY checklist_templates.id
         `);
-        const bookings = stmt.all(id);
-        res.json(bookings);
+        const checklist = stmt.all(id);
+        res.json(checklist);
     } catch (error) {
         console.error("Error fetching project checklist:", error);
         res.json({ error: "Failed to fetch project checklist" });
     }
 });
 
-app.put("/projects/:projectId/checklist/:templateId", (req, res) => {
-    const { projectId, templateId } = req.params;
+app.put("/projects/:projectId/checklist/:checklistId", (req, res) => {
+    const { projectId, checklistId } = req.params;
     const { done } = req.body;
 
     if (done === undefined) {
@@ -256,8 +233,8 @@ app.put("/projects/:projectId/checklist/:templateId", (req, res) => {
     }
 
     try {
-        const stmt = db.prepare("UPDATE checklist SET done = ? WHERE project_id = ? AND template_id = ?");
-        const result = stmt.run(done, projectId, templateId);
+        const stmt = db.prepare("UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?");
+        const result = stmt.run(done, checklistId, projectId);
 
         if (result.changes === 0) {
             return res.json({ error: "Checklist not found" });
@@ -265,13 +242,15 @@ app.put("/projects/:projectId/checklist/:templateId", (req, res) => {
         console.log("checklist value set to", done);
 
 
-        res.json({ projectId, templateId, done });
+        res.json({ projectId, checklistId, done });
     } catch (error) {
         console.error("Error updating done value of checklist:", error);
         res.json({ error: "Failed to update checklist" });
     }
 });
 
+import bookingTemplate from "./templates/bookingTemplate.js";
+import checklistTemplate from "./templates/checklistTemplate.js";
 app.post("/projects", (req, res) => {
     const { title, address, start_month, colour } = req.body;
 
@@ -285,24 +264,26 @@ app.post("/projects", (req, res) => {
 
         const projectId = result.lastInsertRowid;
 
-        // add new set of template bookings to project_template_bookings
+        // insert new sets of template bookings and checklist tasks
 
-        db.prepare(`
-            INSERT INTO project_template_bookings (project_id, template_id)
-            SELECT ?, id FROM booking_templates
-        `).run(projectId);
+        const insertBookingTemplate = db.prepare(
+            "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)"
+        );
+        for (const title of bookingTemplate) {
+            insertBookingTemplate.run(projectId, title);
+        }
 
-        // add new set of checklist items to checklist
-
-        db.prepare(`
-            INSERT INTO checklist (project_id, template_id)
-            SELECT ?, id FROM checklist_templates
-        `).run(projectId);
+        const insertChecklistTemplate = db.prepare(
+            "INSERT INTO checklist (project_id, title) VALUES (?, ?)"
+        );
+        for (const task of checklistTemplate) {
+            insertChecklistTemplate.run(projectId, task);
+        }
 
         res.json({ id: projectId, title, address, start_month, colour });
     } catch (error) {
-        console.error("Error inserting event:", error);
-        res.json({ error: "Failed to insert event" });
+        console.error("Error creating project:", error);
+        res.json({ error: "Failed to insert project" });
     }
 });
 

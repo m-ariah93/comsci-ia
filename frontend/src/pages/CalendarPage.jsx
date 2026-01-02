@@ -73,7 +73,7 @@ export default function CalendarPage() {
         if (currentProjectId === 0) {
             return;
         }
-        fetch(`http://localhost:3001/projects/${currentProjectId}/bookings`)
+        fetch(`http://localhost:3001/projects/${currentProjectId}/templates`)
             .then(res => res.json())
             .then(data => setTemplateBookings(data));
     }, [currentProjectId]);
@@ -114,7 +114,7 @@ export default function CalendarPage() {
                                 .then(res => res.json())
                                 .then(data => setNextEvent(data))
                                 .catch(() => setNextEvent(null));
-                            fetch(`http://localhost:3001/projects/${currentProjectId}/bookings`)
+                            fetch(`http://localhost:3001/projects/${currentProjectId}/templates`)
                                 .then(res => res.json())
                                 .then(data => setTemplateBookings(data));
                         }} // run callback to refresh next up event card and draggable bookings
@@ -126,17 +126,16 @@ export default function CalendarPage() {
                             <h4>Key bookings</h4>
                             <div className="overflow-auto h-50" ref={keyBookingsRef}>
                                 {templateBookings.map((event) => (
-                                    <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event my-1 ${event.used ? "opacity-50" : "fc-event-draggable"}`} style={{
+                                    <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event my-1 ${event.used ? "opacity-50 user-select-none" : "fc-event-draggable"}`} style={{
                                         backgroundColor: currentProject.colour,
                                         borderColor: currentProject.colour,
                                         cursor: event.used ? "auto" : "pointer"
                                     }}
-                                        data-template-id={event.templateId}
+                                        data-template-id={event.bookingId}
                                     >
                                         <div className={`fc-event-main ${event.used && "text-decoration-line-through"}`}>{event.title}</div>
                                     </div>
                                 ))}
-                                {/* {console.log("currentProject colour is: ", currentProject.colour)} */}
                             </div>
                         </>
                     ) : (

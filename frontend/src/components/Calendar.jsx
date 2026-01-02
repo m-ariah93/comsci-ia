@@ -24,11 +24,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     const url = currentProjectId === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
     fetch(url)
       .then((res) => res.json())
-      .then((data) => {
-        // make all events allDay = true
-        const allDayEvents = data.map(event => ({ ...event, allDay: true, backgroundColor: event.projectColour, borderColor: event.projectColour, extendedProps: { project_id: event.project_id } }));
-        setEvents(allDayEvents);
-      })
+      .then(handleEventsChanged)
       .catch(console.error);
   }, [currentProjectId]);
 
@@ -46,8 +42,6 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
   function handleEventReceive(info) {
     const templateId = info.draggedEl.dataset.templateId;
-    info.event.setExtendedProp("templateId", templateId); // extended prop for dragging back into list
-
     fetch("http://localhost:3001/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,21 +50,10 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         start: info.event.startStr,
         end: info.event.endStr || null,
         project_id: currentProjectId === 0 ? null : currentProjectId,
+        template_id: templateId
       })
     })
       .then((res) => res.json())
-      .then((newEvent) => {
-        setEvents((prev) => [...prev, { ...newEvent, allDay: true, extendedProps: { project_id: currentProjectId } }]);
-      })
-      .then(() => {
-        return fetch(`http://localhost:3001/projects/${currentProjectId}/bookings/${templateId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            used: 1,
-          })
-        });
-      })
       .then(handleEventsChanged)
       .then(console.log(`event added, title: ${info.event.title}, id: ${currentProjectId}`));
   }
@@ -89,6 +72,19 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
   const handleEventsChanged = () => {
     if (onEventsChanged) onEventsChanged();
+    const url = currentProjectId === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const allDayEvents = data.map(event => ({
+          ...event,
+          // allDay: true,
+          backgroundColor: event.projectColour,
+          borderColor: event.projectColour,
+          extendedProps: { project_id: event.project_id }
+        }));
+        setEvents(allDayEvents);
+      });
   };
 
   function isOverElement(jsEvent, ref) {
@@ -105,8 +101,6 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
   function handleEventDragStop(info) {
     if (isOverElement(info.jsEvent, keyBookingsRef)) {
-      const templateId = info.event.extendedProps.templateId;
-      console.log("template id is ", templateId);
       const eventId = info.event.id;
 
       info.event.remove();
@@ -115,17 +109,6 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         // delete event from events table
         method: "DELETE",
       })
-        .then(() => {
-          // make template booking unused
-          return fetch(
-            `http://localhost:3001/projects/${currentProjectId}/bookings/${templateId}`,
-            {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ used: 0 }),
-            }
-          );
-        })
         .then(handleEventsChanged)
         .then(console.log(`event removed, title: ${info.event.title}, id: ${currentProjectId}`));
     }
@@ -150,6 +133,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         eventReceive={handleEventReceive}
         eventResize={handleEventResize}
         eventDragStop={handleEventDragStop}
+        dragRevertDuration={0}
         eventColor={currentProject ? currentProjectColour : null}
         validRange={currentProject ? { start: `${currentProject.start_month}-01` } : null}
       />

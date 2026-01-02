@@ -90,6 +90,59 @@ db.prepare(`
 // UNIQUE constraint ensures the project_id and template_id combination can't be repeated
 
 db.prepare(`
+  CREATE TABLE IF NOT EXISTS checklist_templates (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL UNIQUE
+  )
+`).run();
+
+// seed checklist templates
+db.prepare(`
+  INSERT OR IGNORE INTO checklist_templates (title) VALUES
+    ('Retaining walls order'),
+    ('Crusher dust'),
+    ('Concrete'),
+    ('Steel/reo'),
+    ('Pods'),
+    ('WC hire'),
+    ('Bolts tie down'),
+    ('Gas fitter rough in'),
+    ('Gas fitter fit off'),
+    ('Phone rough in'),
+    ('Hardware: rough in'),
+    ('Hardware: fit off'),
+    ('Hardware: FC'),
+    ('Hardware: sink'),
+    ('Hardware: PC'),
+    ('Hardware: steel lintels'),
+    ('Bricks'),
+    ('Lights'),
+    ('Water tank and pump'),
+    ('Tile order'),
+    ('Turf'),
+    ('Landscaping'),
+    ('Disconnect power'),
+    ('Gas connection'),
+    ('Oven'),
+    ('Cooktop'),
+    ('White goods'),
+    ('Book gas fitter'),
+    ('Hand over folder'),
+    ('NBN connection'),
+    ('Covenant bond refund');
+`).run();
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS checklist (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    done INTEGER DEFAULT 0 CHECK (done=0 OR done=1),
+    template_id INTEGER REFERENCES checklist_templates(id),
+    project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
+    UNIQUE (project_id, template_id)
+  )
+`).run();
+
+db.prepare(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,

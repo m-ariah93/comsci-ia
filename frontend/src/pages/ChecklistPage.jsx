@@ -1,50 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
 import plusIcon from "../assets/plus-lg.svg";
 
 export default function ChecklistPage() {
 
-    const checklist = [
-        "Retaining walls order",
-        "Crusher dust",
-        "Concrete",
-        "Steel/reo",
-        "Pods",
-        "WC hire",
-        "Bolts tie down",
-        "Gas fitter rough in",
-        "Gas fitter fit off",
-        "Phone rough in",
-        "Hardware: rough in",
-        "Hardware: fit off",
-        "Hardware: FC",
-        "Hardware: sink",
-        "Hardware: PC",
-        "Hardware: steel lintels",
-        "Bricks",
-        "Lights",
-        "Water tank and pump",
-        "Tile order",
-        "Turf",
-        "Landscaping",
-        "Disconnect power",
-        "Gas connection",
-        "Oven",
-        "Cooktop",
-        "White goods",
-        "Book gas fitter",
-        "Hand over folder",
-        "NBN connection",
-        "Covenant bond refund"
-    ];
-
     const { activeProjects } = useProjects();
-    const [currentProject, setCurrentProject] = useState(
+    const [currentProjectId, setCurrentProjectId] = useState(
         activeProjects.length > 0 ? activeProjects[0].id : null
     );
 
+    const [checklist, setChecklist] = useState([]);
+
+    useEffect(() => {
+        if (!currentProjectId) return;
+        fetch(`http://localhost:3001/projects/${currentProjectId}/checklist`)
+            .then(res => res.json())
+            .then(data => setChecklist(data));
+    }, [currentProjectId, onChecklistChange]);
+
     const location = useLocation();
+
+    function onChecklistChange(templateId, checked) {
+        fetch(`http://localhost:3001/projects/${currentProjectId}/checklist/${templateId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                done: checked ? 1 : 0,
+            })
+        });
+    }
 
     return (
         <>
@@ -59,7 +44,7 @@ export default function ChecklistPage() {
                         <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap w-100" id="navTabsHorizontal">
                             {activeProjects.map((project) => (
                                 <li className="nav-item" key={project.id}>
-                                    <a className={`nav-link ${currentProject === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProject(project.id)}>{project.title}</a>
+                                    <a className={`nav-link ${currentProjectId === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProjectId(project.id)}>{project.title}</a>
                                 </li>
                             ))}
                         </ul>
@@ -69,8 +54,8 @@ export default function ChecklistPage() {
                     <ul className="list-group overflow-auto flex-grow-1 pb-4" style={{ minHeight: 0 }}>
                         {checklist.map((item, i) => (
                             <li key={`check-${i}`} className='list-group-item position-relative'>
-                                <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} />
-                                <label className="form-check-label" htmlFor={`check-${i}`}>{item}</label>
+                                <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.templateId, e.target.checked)} checked={Boolean(item.done)} />
+                                <label className="form-check-label" htmlFor={`check-${i}`}>{item.title}</label>
                                 <label
                                     htmlFor={`check-${i}`}
                                     className="stretched-link"
@@ -80,7 +65,7 @@ export default function ChecklistPage() {
                         ))}
                     </ul>
                 </div>
-            )};
+            )}
         </>
     );
 }

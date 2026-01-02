@@ -192,7 +192,7 @@ app.put("/projects/:projectId/bookings/:templateId", (req, res) => {
     const { projectId, templateId } = req.params;
     const { used } = req.body;
 
-    if (!used) {
+    if (used === undefined) {
         return res.json({ error: "No used value given" });
     }
 
@@ -208,6 +208,50 @@ app.put("/projects/:projectId/bookings/:templateId", (req, res) => {
     } catch (error) {
         console.error("Error updating used value of booking:", error);
         res.json({ error: "Failed to update booking" });
+    }
+});
+
+app.get("/projects/:id/checklist", (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const stmt = db.prepare(`
+            SELECT checklist.id AS bookingId, checklist_templates.id AS templateId, checklist_templates.title, checklist.done
+            FROM checklist
+            INNER JOIN checklist_templates ON checklist.template_id = checklist_templates.id
+            WHERE checklist.project_id = ?
+            ORDER BY checklist_templates.id
+        `);
+        const bookings = stmt.all(id);
+        res.json(bookings);
+    } catch (error) {
+        console.error("Error fetching project checklist:", error);
+        res.json({ error: "Failed to fetch project checklist" });
+    }
+});
+
+app.put("/projects/:projectId/checklist/:templateId", (req, res) => {
+    const { projectId, templateId } = req.params;
+    const { done } = req.body;
+
+    if (done === undefined) {
+        return res.json({ error: "No done value given" });
+    }
+
+    try {
+        const stmt = db.prepare("UPDATE checklist SET done = ? WHERE project_id = ? AND template_id = ?");
+        const result = stmt.run(done, projectId, templateId);
+
+        if (result.changes === 0) {
+            return res.json({ error: "Checklist not found" });
+        }
+        console.log("checklist value set to", done);
+
+
+        res.json({ projectId, templateId, done });
+    } catch (error) {
+        console.error("Error updating done value of checklist:", error);
+        res.json({ error: "Failed to update checklist" });
     }
 });
 
@@ -229,6 +273,13 @@ app.post("/projects", (req, res) => {
         db.prepare(`
             INSERT INTO project_template_bookings (project_id, template_id)
             SELECT ?, id FROM booking_templates
+        `).run(projectId);
+
+        // add new set of checklist items to checklist
+
+        db.prepare(`
+            INSERT INTO checklist (project_id, template_id)
+            SELECT ?, id FROM checklist_templates
         `).run(projectId);
 
         res.json({ id: projectId, title, address, start_month, colour });

@@ -55,7 +55,7 @@ export default function ChecklistPage() {
                         {checklist.map((item, i) => (
                             <li key={`check-${i}`} className='list-group-item position-relative'>
                                 <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.templateId, e.target.checked)} checked={Boolean(item.done)} />
-                                <label className="form-check-label" htmlFor={`check-${i}`}>{item.title}</label>
+                                <label className={`form-check-label ${item.done && "text-decoration-line-through"}`} htmlFor={`check-${i}`}>{item.title}</label>
                                 <label
                                     htmlFor={`check-${i}`}
                                     className="stretched-link"

@@ -1,6 +1,7 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
 import { useState, useEffect } from "react";
 
 
@@ -92,7 +93,7 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
   return (
     <div className="h-100">
       <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
         initialView="dayGridMonth"
         height="100%"
         firstDay={1}
@@ -101,7 +102,7 @@ export default function Calendar({ currentProjectId, currentProject, onEventsCha
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridWeek,dayGridMonth'
+          right: 'dayGridWeek,dayGridMonth,listMonth'
         }}
         events={events}
         eventDrop={handleEventDrop}

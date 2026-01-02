@@ -15,7 +15,6 @@ db.prepare(`
   )
 `).run();
 
-
 db.prepare(`
   CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +29,7 @@ db.prepare(`
 db.prepare(`
   CREATE TABLE IF NOT EXISTS booking_templates (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
     project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE
   )
 `).run();
@@ -38,7 +37,7 @@ db.prepare(`
 db.prepare(`
   CREATE TABLE IF NOT EXISTS checklist (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
     done INTEGER DEFAULT 0 CHECK (done=0 OR done=1),
     project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE
   )

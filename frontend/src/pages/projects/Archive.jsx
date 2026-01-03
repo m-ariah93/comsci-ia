@@ -23,16 +23,20 @@ export default function Archive() {
         <div>
             {/* if no projects, show message */}
             {archivedProjects.length === 0 ? (
-                <div className="alert alert-primary text-center mx-auto" role="alert">
-                    No projects found in archive. View active projects <Link to="/projects" className="alert-link text-reset">here</Link>.
+                <div className="row mt-2 gy-2">
+                    <div className="col-12">
+                        <div className="alert alert-primary text-center mx-auto" role="alert">
+                            No projects found in archive. View active projects <Link to="/projects" className="alert-link text-reset">here</Link>.
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <>
-                    <div className="row mt-2 mb-3">
-                        <div className="col-10">
+                    <div className="row mt-2 mb-3 gy-2">
+                        <div className="col-sm-12 col-md-8 col-lg-9 col-xxl-10">
                             <input type="text" className="form-control" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
-                        <div className="col-2">
+                        <div className="col-sm-7 col-md-4 col-lg-3 col-xxl-2">
                             <div className="dropdown">
                                 <button className="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Sort: {sortChoice}
@@ -53,7 +57,7 @@ export default function Archive() {
                     )}
                     <div className="row">
                         {filteredProjects.map((project) => (
-                            <div key={project.id} className="col-sm-6 mb-3">
+                            <div key={project.id} className="col-sm-12 col-md-12 col-lg-6 mb-3">
                                 <div className="card">
                                     <div className="card-body">
                                         <h4 className="card-title">{project.title}</h4>

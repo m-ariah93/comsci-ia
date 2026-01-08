@@ -11,6 +11,9 @@ export default function CustomEventModal() {
         // write this
     }
 
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
     return (
         <div className="modal fade" id="customEventModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
@@ -40,7 +43,7 @@ export default function CustomEventModal() {
 
                                 <div className="col-6">
                                     <label htmlFor="endDateInput" className="form-label">End date</label>
-                                    <input type="date" className="form-control mb-3 w-100" style={{ width: 200 }} id="endDateInput" value={startDate} onChange={(e) => setStartDate(e.target.value)}></input>
+                                    <input type="date" className="form-control mb-3 w-100" style={{ width: 200 }} id="endDateInput" data-bs-toggle="tooltip" data-bs-placement="top" title="Leave blank for one-day event." value={endDate} onChange={(e) => setEndDate(e.target.value)}></input>
                                 </div>
 
                             </div>

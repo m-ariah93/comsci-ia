@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
-import plusIcon from "../assets/plus-lg.svg";
 
 export default function ChecklistPage() {
 
@@ -48,7 +47,7 @@ export default function ChecklistPage() {
                                 </li>
                             ))}
                         </ul>
-                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
+                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><i class="bi bi-plus-lg"></i></Link>
                     </div>
                     <h4 className="py-2">Order checklist</h4>
                     <ul className="list-group overflow-auto flex-grow-1 pb-4" style={{ minHeight: 0 }}>

@@ -1,7 +1,6 @@
 import Calendar from "../components/Calendar";
 import { useEffect, useRef, useState } from "react";
 import { Draggable } from "@fullcalendar/interaction";
-import plusIcon from "../assets/plus-lg.svg";
 import { Link, useLocation } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
 import { formatDate, subtractDay } from "/src/utils/DateUtils";
@@ -96,7 +95,7 @@ export default function CalendarPage() {
                             </li>
                         ))}
                     </ul>
-                    <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
+                    <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><i className="bi bi-plus-lg"></i></Link>
                 </div>
                 <div className="col-3">
                     <input type="text" className="form-control" placeholder="search" />

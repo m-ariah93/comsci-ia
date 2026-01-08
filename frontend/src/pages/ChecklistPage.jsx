@@ -50,7 +50,7 @@ export default function ChecklistPage() {
                         </ul>
                         <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><img src={plusIcon} /></Link>
                     </div>
-                    <h4>Order checklist</h4>
+                    <h4 className="py-2">Order checklist</h4>
                     <ul className="list-group overflow-auto flex-grow-1 pb-4" style={{ minHeight: 0 }}>
                         {checklist.map((item, i) => (
                             <li key={`check-${i}`} className='list-group-item position-relative'>

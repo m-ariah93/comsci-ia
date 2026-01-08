@@ -13,7 +13,7 @@ export default function SettingsPage() {
 	return (
 		<>
 			<form className="needs-validation" onSubmit={null} noValidate>
-				<h4>Your details</h4>
+				<h4 className="pt-2">Your details</h4>
 				<label htmlFor="nameInput" className="form-label">Name</label>
 				<input type="text" className="form-control mb-3" id="nameInput" value={name} onChange={(e) => setName(e.target.value)} required />
 				<div className="invalid-feedback">
@@ -53,7 +53,7 @@ export default function SettingsPage() {
 				<div id="passwordHelpBlock" className="form-text mb-3">
 					Your password must be 8-20 characters long, and be a combination of letters, numbers, and symbols.
 				</div>
-				<button type="submit" className="btn btn-primary">Save changes</button>
+				<button type="submit" className="btn btn-primary mb-4">Save changes</button>
 			</form>
 		</>
 

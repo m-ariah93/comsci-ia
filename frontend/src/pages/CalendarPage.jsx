@@ -5,6 +5,7 @@ import plusIcon from "../assets/plus-lg.svg";
 import { Link, useLocation } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
 import { formatDate, subtractDay } from "/src/utils/DateUtils";
+import CustomEventModal from "../components/CustomEventModal";
 
 export default function CalendarPage() {
     const draggableRef = useRef(null);
@@ -169,11 +170,12 @@ export default function CalendarPage() {
                         </>
                     )}
                     <div className="d-grid gap-2 my-3">
-                        <button className="btn btn-primary" type="button">New custom event</button>
+                        <button className="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#customEventModal">New custom event</button>
                     </div>
+                    
                 </div>
             </div>
-
+            <CustomEventModal />            
         </div>
     );
 }

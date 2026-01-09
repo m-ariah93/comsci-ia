@@ -55,7 +55,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     })
       .then((res) => res.json())
       .then(handleEventsChanged)
-      .then(console.log(`event added, title: ${info.event.title}, id: ${currentProjectId}`));
+      .then(console.log(`event added, title: ${info.event.title}, project id: ${currentProjectId}`));
   }
 
   function handleEventResize(info) {

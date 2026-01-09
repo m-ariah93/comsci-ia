@@ -102,7 +102,7 @@ export default function CalendarPage() {
                 </div>
             </div>
             <div className="row h-100 overflow-hidden">
-                <div className="col-9 d-flex flex-column h-100 pb-4">
+                <div className="col-9 d-flex flex-column h-100 pb-4 mt-1">
                     <Calendar
                         style={{ flex: 1 }}
                         // key={currentProjectId}
@@ -147,7 +147,7 @@ export default function CalendarPage() {
                                     <div className="card p-2">
                                         <div className="card-body">
                                             <h5 className="fw-bold">{nextEvent.title}</h5>
-                                            <div style={{ color: nextEvent.projectColour }}>{nextEvent.projectTitle || "No associated project"}</div>
+                                            <div style={{ color: nextEvent.projectColour }}>{nextEvent.projectTitle || <em>No associated project</em>}</div>
                                         </div>
                                         <hr className="m-0" />
                                         <div className="card-body">
@@ -174,7 +174,7 @@ export default function CalendarPage() {
                     
                 </div>
             </div>
-            <CustomEventModal />            
+            <CustomEventModal projectId={currentProjectId}/>            
         </div>
     );
 }

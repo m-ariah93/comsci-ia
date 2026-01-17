@@ -46,8 +46,8 @@ export default function ChecklistPage() {
                                     <a className={`nav-link ${currentProjectId === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProjectId(project.id)}>{project.title}</a>
                                 </li>
                             ))}
+                            <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto py-1 px-2 mb-0 align-self-center"><i class="bi bi-plus-lg"></i></Link>
                         </ul>
-                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><i class="bi bi-plus-lg"></i></Link>
                     </div>
                     <h4 className="py-2">Order checklist</h4>
                     <ul className="list-group overflow-auto flex-grow-1 pb-4" style={{ minHeight: 0 }}>

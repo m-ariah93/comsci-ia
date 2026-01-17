@@ -94,8 +94,8 @@ export default function CalendarPage() {
                                 <a className={`nav-link ${currentProjectId === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProjectId(project.id)}>{project.title}</a>
                             </li>
                         ))}
+                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto py-1 px-2 mb-0 align-self-center"><i className="bi bi-plus-lg"></i></Link>
                     </ul>
-                    <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto"><i className="bi bi-plus-lg"></i></Link>
                 </div>
                 <div className="col-3">
                     <input type="text" className="form-control" placeholder="search" />
@@ -171,10 +171,10 @@ export default function CalendarPage() {
                     <div className="d-grid gap-2 my-3">
                         <button className="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#customEventModal">New custom event</button>
                     </div>
-                    
+
                 </div>
             </div>
-            <CustomEventModal projectId={currentProjectId}/>            
+            <CustomEventModal projectId={currentProjectId} />
         </div>
     );
 }

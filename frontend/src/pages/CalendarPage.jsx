@@ -94,7 +94,7 @@ export default function CalendarPage() {
                                 <a className={`nav-link ${currentProjectId === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProjectId(project.id)}>{project.title}</a>
                             </li>
                         ))}
-                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto py-1 px-2 mb-0 align-self-center"><i className="bi bi-plus-lg"></i></Link>
+                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto d-flex align-items-center justify-content-center p-0 mt-1" style={{ width: "32px", height: "32px" }}><i className="bi bi-plus fs-4"></i></Link>
                     </ul>
                 </div>
                 <div className="col-3">

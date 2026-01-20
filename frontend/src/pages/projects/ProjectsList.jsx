@@ -58,13 +58,13 @@ export default function ProjectsList() {
                 </div>
             ) : (
                 <>
-                    <div className="row mt-2 mb-3 gy-2">
-                        <div className="col-sm-12 col-md-8 col-lg-9 col-xxl-10">
+                    <div className="d-flex flex-wrap mb-4 column-gap-3 row-gap-2">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                             <input type="text" className="form-control" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
-                        <div className="col-sm-7 col-md-4 col-lg-3 col-xxl-2">
+                        <div style={{ width: "170px", maxWidth: "170px" }}>
                             <div className="dropdown">
-                                <button className="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button className="btn btn-light border dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Sort: {sortChoice}
                                 </button>
                                 <ul className="dropdown-menu">
@@ -88,7 +88,7 @@ export default function ProjectsList() {
                                     <div className="card-body">
                                         <h4 className="card-title" style={{ color: project.colour }} >{project.title}</h4>
                                         <p className="card-text">{project.address}</p>
-                                        <p className="card-text">Started: {formatMonth(project.start_month)}</p>
+                                        <p className="card-text">Start: {formatMonth(project.start_month)}</p>
                                         <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary me-2">
                                             Edit
                                         </Link>

@@ -82,9 +82,9 @@ export default function CalendarPage() {
 
 
     return (
-        <div className="container-fluid d-flex flex-column vh-100">
-            <div className="row my-2">
-                <div className="col-9 d-flex flex-nowrap">
+        <div className="container-fluid d-flex flex-column flex-grow-1 vh-100 ps-0" >
+            <div className="row mb-2 mt-3">
+                <div className="col-12 d-flex flex-nowrap">
                     <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap w-100" id="navTabsHorizontal">
                         <li className="nav-item">
                             <a className={`nav-link ${currentProjectId === 0 ? 'active fw-semibold' : ''}`} href="#" onClick={() => setCurrentProjectId(0)}>All</a>
@@ -94,15 +94,15 @@ export default function CalendarPage() {
                                 <a className={`nav-link ${currentProjectId === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProjectId(project.id)}>{project.title}</a>
                             </li>
                         ))}
-                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto d-flex align-items-center justify-content-center p-0 mt-1" style={{ width: "32px", height: "32px" }}><i className="bi bi-plus fs-4"></i></Link>
+                        <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-secondary ms-2 d-flex align-items-center justify-content-center p-0 mt-1" style={{ width: "30px", height: "30px" }}><i className="bi bi-plus fs-4"></i></Link>
                     </ul>
                 </div>
-                <div className="col-3">
+                {/* <div className="col-3">
                     <input type="text" className="form-control" placeholder="search" />
-                </div>
+                </div> */}
             </div>
-            <div className="row h-100 overflow-hidden">
-                <div className="col-9 d-flex flex-column h-100 pb-4 mt-1">
+            <div className="row d-flex flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
+                <div className="col-9 d-flex flex-column flex-grow-1 pb-4 mt-1" style={{ minHeight: 0 }}>
                     <Calendar
                         style={{ flex: 1 }}
                         // key={currentProjectId}
@@ -120,13 +120,13 @@ export default function CalendarPage() {
                         }} // run callback to refresh next up event card and draggable bookings
                     />
                 </div>
-                <div className="col-3 mh-100" id="draggable-events">
+                <div className="col-3 d-flex flex-column flex-grow-1 h-100 mt-2" style={{ minHeight: 0 }} id="draggable-events">
                     {currentProjectId !== 0 ? (
                         <>
                             <h4>Key bookings</h4>
-                            <div className="overflow-auto h-50" ref={keyBookingsRef}>
+                            <div className="overflow-auto border d-grid gap-0 row-gap-1 mt-2" ref={keyBookingsRef}>
                                 {templateBookings.map((event) => (
-                                    <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event my-1 ${event.used ? "opacity-50 user-select-none" : "fc-event-draggable"}`} style={{
+                                    <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event ${event.used ? "opacity-50 user-select-none" : "fc-event-draggable"}`} style={{
                                         backgroundColor: currentProject.colour,
                                         borderColor: currentProject.colour,
                                         cursor: event.used ? "auto" : "pointer"
@@ -168,7 +168,7 @@ export default function CalendarPage() {
                             </div>
                         </>
                     )}
-                    <div className="d-grid gap-2 my-3">
+                    <div className="d-grid gap-2 mt-4 mb-5">
                         <button className="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#customEventModal">New custom event</button>
                     </div>
 

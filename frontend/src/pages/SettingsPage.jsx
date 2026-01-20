@@ -12,8 +12,8 @@ export default function SettingsPage() {
 
 	return (
 		<>
-			<form className="needs-validation" onSubmit={null} noValidate>
-				<h4 className="pt-2">Your details</h4>
+			<form className="needs-validation pt-4 pe-4" onSubmit={null} noValidate>
+				<h4 className="">Your details</h4>
 				<label htmlFor="nameInput" className="form-label">Name</label>
 				<input type="text" className="form-control mb-3" id="nameInput" value={name} onChange={(e) => setName(e.target.value)} required />
 				<div className="invalid-feedback">

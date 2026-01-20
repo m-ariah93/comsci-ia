@@ -12,6 +12,15 @@ export default function ChecklistPage() {
     const [checklist, setChecklist] = useState([]);
 
     useEffect(() => {
+        // horizontal instead of vertical scrolling on navbar
+        let horizontal = document.getElementById("navTabsHorizontal");
+        horizontal.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            horizontal.scrollLeft += e.deltaY * 0.2;
+        });
+    }, [])
+
+    useEffect(() => {
         if (!currentProjectId) return;
         fetch(`http://localhost:3001/projects/${currentProjectId}/checklist`)
             .then(res => res.json())
@@ -38,15 +47,15 @@ export default function ChecklistPage() {
                     No projects found :( Create one <Link to="/projects/add" className="alert-link text-reset">here</Link>.
                 </div>
             ) : (
-                <div className="container-fluid d-flex flex-column vh-100 pe-4" style={{ minHeight: 0 }}>
-                    <div className="d-flex flex-nowrap my-2">
+                <div className="container-fluid d-flex flex-column vh-100 pe-4 ps-0" style={{ minHeight: 0 }}>
+                    <div className="d-flex flex-nowrap mt-3 mb-2">
                         <ul className="nav nav-tabs overflow-x-auto overflow-y-hidden flex-nowrap text-nowrap w-100" id="navTabsHorizontal">
                             {activeProjects.map((project) => (
                                 <li className="nav-item" key={project.id}>
                                     <a className={`nav-link ${currentProjectId === project.id ? 'active fw-semibold' : ''}`} href="#" style={{ color: project.colour }} onClick={() => setCurrentProjectId(project.id)}>{project.title}</a>
                                 </li>
                             ))}
-                            <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-primary ms-auto d-flex align-items-center justify-content-center p-0 mt-1" style={{ width: "32px", height: "32px" }}><i className="bi bi-plus fs-4"></i></Link>
+                            <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-secondary ms-2 d-flex align-items-center justify-content-center p-0 mt-1" style={{ width: "30px", height: "30px" }}><i className="bi bi-plus fs-4"></i></Link>
                         </ul>
                     </div>
                     <h4 className="py-2">Order checklist</h4>

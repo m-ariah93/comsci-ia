@@ -78,9 +78,8 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       .then(data => {
         const allDayEvents = data.map(event => ({
           ...event,
-          // allDay: true,
-          backgroundColor: event.projectColour,
-          borderColor: event.projectColour,
+          backgroundColor: event.projectColour || "#6F6D6B", // default color if projectColour is not defined
+          borderColor: event.projectColour || "#6F6D6B",
           extendedProps: { project_id: event.project_id }
         }));
         setEvents(allDayEvents);
@@ -115,7 +114,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
   }
 
   return (
-    <div className="h-100">
+    <div className="d-flex flex-column flex-grow-1">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
         initialView="dayGridMonth"
@@ -134,7 +133,6 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         eventResize={handleEventResize}
         eventDragStop={handleEventDragStop}
         dragRevertDuration={0}
-        eventColor={currentProject ? currentProjectColour : null}
         validRange={currentProject ? { start: `${currentProject.start_month}-01` } : null}
       />
     </div>

@@ -1,42 +1,18 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.fc .fc-button-primary {
+	background-color: #6F6D6B !important;
+	border-color: #6F6D6B !important;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.fc .fc-button-primary:not(:disabled):hover { /* darker for hover */
+	background-color: #5E5D5B !important; 
+	border-color: #5E5D5B !important; 
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.fc .fc-button-active { /* darker for hover */
+	background-color: #5E5D5B !important; 
+	border-color: #5E5D5B !important; 
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.fc .fc-button-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(94, 93, 91, 0.5) !important; /* focus ring colour */
 }

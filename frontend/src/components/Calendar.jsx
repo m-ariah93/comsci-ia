@@ -113,6 +113,38 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     }
   }
 
+  function handleEventClick(info) {
+    const existingPopover = bootstrap.Popover.getInstance(info.el);
+    if (existingPopover) {
+      existingPopover.dispose();
+    }
+
+    // button to go in popover
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "btn btn-danger btn-sm";
+    deleteButton.textContent = "Delete";
+    deleteButton.onclick = () => {
+      fetch(`http://localhost:3001/events/${info.event.id}`, {
+        method: "DELETE",
+      })
+        .then(() => {
+          console.log(`Event ${info.event.id} deleted`);
+          handleEventsChanged();
+        })
+        .catch(console.error);
+    };
+
+    // create popover
+    new bootstrap.Popover(info.el, {
+      html: true,
+      content: deleteButton,
+      placement: "top",
+      trigger: "focus",
+    });
+
+    info.el.focus();
+  }
+
   return (
     <div className="d-flex flex-column flex-grow-1">
       <FullCalendar
@@ -132,6 +164,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         eventReceive={handleEventReceive}
         eventResize={handleEventResize}
         eventDragStop={handleEventDragStop}
+        eventClick={handleEventClick}
         dragRevertDuration={0}
         validRange={currentProject ? { start: `${currentProject.start_month}-01` } : null}
       />

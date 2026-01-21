@@ -5,27 +5,10 @@ import listPlugin from '@fullcalendar/list';
 import { useState, useEffect } from "react";
 
 
-export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, onEventsChanged }) {
-
-  const [events, setEvents] = useState([]);
-
-  const [currentProjectColour, setCurrentProjectColour] = useState(null);
-
-  // store current project colour for draggable events
-  useEffect(() => {
-    fetch(`http://localhost:3001/projects/${currentProjectId}`)
-      .then(res => res.json())
-      .then(data => {
-        setCurrentProjectColour(data.colour);
-      });
-  }, [currentProjectId]);
+export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, events, onEventsChanged }) {
 
   useEffect(() => {
-    const url = currentProjectId === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
-    fetch(url)
-      .then((res) => res.json())
-      .then(handleEventsChanged)
-      .catch(console.error);
+    handleEventsChanged();
   }, [currentProjectId]);
 
   function handleEventDrop(info) {
@@ -70,20 +53,8 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       .then(handleEventsChanged);
   }
 
-  const handleEventsChanged = () => {
+  function handleEventsChanged() { // wrapper function
     if (onEventsChanged) onEventsChanged();
-    const url = currentProjectId === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        const allDayEvents = data.map(event => ({
-          ...event,
-          backgroundColor: event.projectColour || "#6F6D6B", // default color if projectColour is not defined
-          borderColor: event.projectColour || "#6F6D6B",
-          extendedProps: { project_id: event.project_id }
-        }));
-        setEvents(allDayEvents);
-      });
   };
 
   function isOverElement(jsEvent, ref) {
@@ -160,6 +131,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
           right: 'dayGridWeek,dayGridMonth,listMonth'
         }}
         events={events}
+        eventColor="#6F6D6B"
         eventDrop={handleEventDrop}
         eventReceive={handleEventReceive}
         eventResize={handleEventResize}

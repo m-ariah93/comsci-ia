@@ -80,6 +80,50 @@ export default function CalendarPage() {
 
     const keyBookingsRef = useRef(null);
 
+    const [events, setEvents] = useState([]);
+
+    // load events
+    useEffect(() => {
+        handleEventsChanged();
+    }, [currentProjectId]);
+
+    function refreshExternalEvents() {
+        // refresh next up event card and draggable bookings
+        fetch("http://localhost:3001/events/next")
+            .then(res => res.json())
+            .then(data => setNextEvent(data))
+            .catch(() => setNextEvent(null));
+        fetch(`http://localhost:3001/projects/${currentProjectId}/templates`)
+            .then(res => res.json())
+            .then(data => setTemplateBookings(data));
+    }
+
+    const handleEventsChanged = () => {
+        refreshExternalEvents();
+        const url = currentProjectId === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                const allDayEvents = data.map(event => ({
+                    ...event,
+                    backgroundColor: event.projectColour || "#6F6D6B", // default color if projectColour is not defined
+                    borderColor: event.projectColour || "#6F6D6B",
+                    extendedProps: { project_id: event.project_id }
+                }));
+                setEvents(allDayEvents);
+            });
+    };
+
+    function deleteNextEvent() {
+        fetch(`http://localhost:3001/events/${nextEvent.id}`, {
+            method: "DELETE",
+        })
+            .then(() => {
+                console.log(`Event ${nextEvent.id} deleted`);
+                handleEventsChanged();
+            })
+            .catch(console.error);
+    }
 
     return (
         <div className="container-fluid d-flex flex-column flex-grow-1 vh-100 ps-0" >
@@ -97,9 +141,6 @@ export default function CalendarPage() {
                         <Link to="/projects/add" state={{ from: location }} className="btn btn-outline-secondary ms-2 d-flex align-items-center justify-content-center p-0 mt-1" style={{ width: "30px", height: "30px" }}><i className="bi bi-plus fs-4"></i></Link>
                     </ul>
                 </div>
-                {/* <div className="col-3">
-                    <input type="text" className="form-control" placeholder="search" />
-                </div> */}
             </div>
             <div className="row d-flex flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
                 <div className="col-9 d-flex flex-column flex-grow-1 pb-4 mt-1" style={{ minHeight: 0 }}>
@@ -109,18 +150,11 @@ export default function CalendarPage() {
                         currentProjectId={currentProjectId}
                         currentProject={currentProject}
                         keyBookingsRef={keyBookingsRef}
-                        onEventsChanged={() => {
-                            fetch("http://localhost:3001/events/next")
-                                .then(res => res.json())
-                                .then(data => setNextEvent(data))
-                                .catch(() => setNextEvent(null));
-                            fetch(`http://localhost:3001/projects/${currentProjectId}/templates`)
-                                .then(res => res.json())
-                                .then(data => setTemplateBookings(data));
-                        }} // run callback to refresh next up event card and draggable bookings
+                        events={events}
+                        onEventsChanged={handleEventsChanged} // callback to update events
                     />
                 </div>
-                <div className="col-3 d-flex flex-column flex-grow-1 h-100 mt-2" style={{ minHeight: 0 }} id="draggable-events">
+                <div className="col-3 d-flex flex-column flex-grow-1 h-100 mt-2 pe-4" style={{ minHeight: 0 }} id="draggable-events">
                     {currentProjectId !== 0 ? (
                         <>
                             <h4>Key bookings</h4>
@@ -159,7 +193,7 @@ export default function CalendarPage() {
                                         <hr className="m-0" />
                                         <div className="card-body">
                                             <a href="#" className="btn btn-secondary btn-sm me-2">Request confirmation</a>
-                                            <a href="#" className="btn btn-danger btn-sm">Delete</a>
+                                            <a href="#" className="btn btn-danger btn-sm" onClick={deleteNextEvent}>Delete</a>
                                         </div>
                                     </div>
                                 ) : (

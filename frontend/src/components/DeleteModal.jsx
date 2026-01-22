@@ -1,6 +1,6 @@
 import { useProjects } from "../contexts/ProjectsContext";
 
-export default function DeleteModal({ projectId, inArchive, onDelete }) {
+export default function DeleteModal({ projectId, inArchive, onDelete, onArchive }) {
     const { archiveProject, deleteProject } = useProjects();
 
     return (
@@ -22,7 +22,7 @@ export default function DeleteModal({ projectId, inArchive, onDelete }) {
                         {inArchive ? (
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         ) : (
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => archiveProject(projectId)}>Archive instead</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => { archiveProject(projectId); if (onArchive) onArchive(); }}>Archive instead</button>
                         )}
 
                         <button className="btn btn-danger" data-bs-dismiss="modal" onClick={() => { deleteProject(projectId); if (onDelete) onDelete(); }}>Yes, delete</button>

@@ -136,7 +136,7 @@ export default function ProjectsList() {
                                 </div>
                             </div>
                         ))}
-                        <DeleteModal projectId={selectedProject} onDelete={showDeleteToast} />
+                        <DeleteModal projectId={selectedProject} onDelete={showDeleteToast} onArchive={showArchiveToast} />
                     </div>
                 </>
             )}

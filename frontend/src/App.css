@@ -16,3 +16,15 @@
 .fc .fc-button-primary:focus {
     box-shadow: 0 0 0 0.25rem rgba(94, 93, 91, 0.5) !important; /* focus ring colour */
 }
+
+.fc-event-title {
+	font-weight: 500;
+}
+
+.gochi-hand-regular {
+  font-family: "Gochi Hand", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 70px;
+  letter-spacing: 1px;
+}

@@ -33,7 +33,7 @@ export default function LoginPage() {
 		<>
 			<div className="d-flex flex-column justify-content-center align-items-center h-100">
 				<div className="text-center mb-5">
-					<h1 className="text-white">Build Diary</h1>
+					<h1 className="text-white gochi-hand-regular">BUILD DIARY</h1>
 				</div>
 				<div className="card p-5 bg-body">
 

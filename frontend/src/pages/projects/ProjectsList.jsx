@@ -17,19 +17,35 @@ export default function ProjectsList() {
     const [selectedProject, setSelectedProject] = useState(null);
 
     const location = useLocation();
-    const showToast = location.state?.updated;
-    console.log("showToast:", showToast);
+    const showUpdatedToast = location.state?.updated;
+    console.log("showToast:", showUpdatedToast);
     console.log("location.state:", location.state);
 
     useEffect(() => {
-        if (showToast) {
+        if (showUpdatedToast) {
             const toast = document.getElementById("projectSavedToast");
             if (toast) {
                 const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
                 bsToast.show();
             }
         }
-    }, [showToast]);
+    }, [showUpdatedToast]);
+
+    function showArchiveToast() {
+        const toast = document.getElementById("projectArchivedToast");
+        if (toast) {
+            const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+            bsToast.show();
+        }
+    }
+
+    function showDeleteToast() {
+        const toast = document.getElementById("projectDeletedToast");
+        if (toast) {
+            const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+            bsToast.show();
+        }
+    }
 
     const [searchQuery, setSearchQuery] = useState("");
     const filteredProjects = filterProjects(sortedProjects, searchQuery);
@@ -41,6 +57,28 @@ export default function ProjectsList() {
                     <div className="d-flex">
                         <div className="toast-body">
                             Project successfully updated.
+                        </div>
+                        <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="projectArchivedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+                    <div className="d-flex">
+                        <div className="toast-body">
+                            Project successfully archived.
+                        </div>
+                        <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="projectDeletedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+                    <div className="d-flex">
+                        <div className="toast-body">
+                            Project successfully deleted.
                         </div>
                         <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -92,13 +130,13 @@ export default function ProjectsList() {
                                         <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary me-2">
                                             Edit
                                         </Link>
-                                        <button type="button" className="btn btn-secondary me-2" onClick={() => archiveProject(project.id)}>Archive</button>
+                                        <button type="button" className="btn btn-secondary me-2" onClick={() => { archiveProject(project.id); showArchiveToast(); }}>Archive</button>
                                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                     </div>
                                 </div>
                             </div>
                         ))}
-                        <DeleteModal projectId={selectedProject} />
+                        <DeleteModal projectId={selectedProject} onDelete={showDeleteToast} />
                     </div>
                 </>
             )}

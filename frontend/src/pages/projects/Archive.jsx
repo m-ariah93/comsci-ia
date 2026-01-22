@@ -19,8 +19,47 @@ export default function Archive() {
     const [searchQuery, setSearchQuery] = useState("");
     const filteredProjects = filterProjects(sortedProjects, searchQuery);
 
+    function showArchiveToast() {
+        const toast = document.getElementById("projectArchivedToast");
+        if (toast) {
+            const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+            bsToast.show();
+        }
+    }
+
+    function showDeleteToast() {
+        const toast = document.getElementById("projectDeletedToast");
+        if (toast) {
+            const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+            bsToast.show();
+        }
+    }
+
     return (
-        <div>
+        <>
+            <div className="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="projectArchivedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+                    <div className="d-flex">
+                        <div className="toast-body">
+                            Project successfully moved to active projects.
+                        </div>
+                        <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="projectDeletedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+                    <div className="d-flex">
+                        <div className="toast-body">
+                            Project successfully deleted.
+                        </div>
+                        <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+
             {/* if no projects, show message */}
             {archivedProjects.length === 0 ? (
                 <div className="row mt-2 gy-2">
@@ -63,16 +102,16 @@ export default function Archive() {
                                         <h4 className="card-title" style={{ color: project.colour }}>{project.title}</h4>
                                         <p className="card-text">{project.address}</p>
                                         <p className="card-text">Start: {formatMonth(project.start_month)}</p>
-                                        <button type="button" className="btn btn-secondary me-2" onClick={() => unarchiveProject(project.id)}>Unarchive</button>
+                                        <button type="button" className="btn btn-secondary me-2" onClick={() => { unarchiveProject(project.id); showArchiveToast(); }}>Unarchive</button>
                                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                     </div>
                                 </div>
                             </div>
                         ))}
-                        <DeleteModal projectId={selectedProject} inArchive={true} />
+                        <DeleteModal projectId={selectedProject} inArchive={true} onDelete={showDeleteToast} />
                     </div>
                 </>
             )}
-        </div>
+        </>
     );
 }

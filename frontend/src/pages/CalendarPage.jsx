@@ -176,7 +176,7 @@ export default function CalendarPage() {
                         // next upcoming event
                         <>
                             <h4>Next up</h4>
-                            <div className="h-50 pt-2">
+                            <div className="pt-2">
                                 {nextEvent ? (
                                     <div className="card p-2">
                                         <div className="card-body">

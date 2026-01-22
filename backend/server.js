@@ -249,7 +249,7 @@ app.put("/projects/:projectId/checklist/:checklistId", (req, res) => {
     }
 });
 
-import bookingTemplate from "./templates/bookingTemplate.js";
+import bookingsTemplate from "./templates/bookingsTemplate.js";
 import checklistTemplate from "./templates/checklistTemplate.js";
 app.post("/projects", (req, res) => {
     const { title, address, start_month, colour } = req.body;
@@ -269,7 +269,7 @@ app.post("/projects", (req, res) => {
         const insertBookingTemplate = db.prepare(
             "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)"
         );
-        for (const title of bookingTemplate) {
+        for (const title of bookingsTemplate) {
             insertBookingTemplate.run(projectId, title);
         }
 

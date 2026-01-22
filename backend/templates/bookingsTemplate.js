@@ -1,4 +1,4 @@
-const bookingTemplate = [
+const bookingsTemplate = [
     "Excavator",
     "Retaining walls",
     "Site set out",
@@ -40,4 +40,4 @@ const bookingTemplate = [
     "Silicon sealer"
 ];
 
-export default bookingTemplate;
+export default bookingsTemplate;

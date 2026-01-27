@@ -87,7 +87,7 @@ export default function ProjectsList() {
 
             {/* if no projects, show message */}
             {activeProjects.length === 0 ? (
-                <div className="row mt-2 gy-2">
+                <div className="row gy-2">
                     <div className="col-12">
                         <div className="alert alert-primary text-center mx-auto" role="alert">
                             No projects found :( Create one <Link to="/projects/add" className="alert-link text-reset">here</Link>.

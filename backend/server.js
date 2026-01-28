@@ -159,7 +159,6 @@ app.get("/projects", (req, res) => {
         } else {
             const stmt = db.prepare("SELECT * FROM projects WHERE archived = ?");
             projects = stmt.all(archived);
-            console.log("fetching filtered projects");
         }
         res.json(projects);
     } catch {

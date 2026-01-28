@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function CustomEventModal({ projectId }) {
+export default function CustomEventModal({ projectId, onEventsChanged }) {
     const [name, setName] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -8,7 +8,6 @@ export default function CustomEventModal({ projectId }) {
     const NAME_MAX_LENGTH = 30;
 
     function createEvent(e) {
-
         e.preventDefault();
         const form = e.target;
         if (!form.checkValidity()) {
@@ -25,7 +24,7 @@ export default function CustomEventModal({ projectId }) {
             form.classList.add("was-validated");
             return;
         }
-        
+
         fetch("http://localhost:3001/events", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -38,16 +37,18 @@ export default function CustomEventModal({ projectId }) {
             })
         })
             .then((res) => res.json())
-            // .then(handleEventsChanged)
-            .then(console.log(`event added, title: ${name}, project id: ${projectId}`));
-        const modal = bootstrap.Modal.getInstance(
-            document.getElementById("customEventModal")
-        );
-        modal.hide();
-        setName("");
-        setStartDate("");
-        setEndDate("");
-        form.classList.remove("was-validated");
+            .then(() => {
+                if (onEventsChanged) onEventsChanged();
+                console.log(`event added, title: ${name}, project id: ${projectId}`);
+                const modal = bootstrap.Modal.getInstance(
+                    document.getElementById("customEventModal")
+                );
+                modal.hide();
+                setName("");
+                setStartDate("");
+                setEndDate("");
+                form.classList.remove("was-validated");
+            });
     }
 
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')

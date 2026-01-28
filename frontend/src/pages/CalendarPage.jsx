@@ -208,7 +208,7 @@ export default function CalendarPage() {
 
                 </div>
             </div>
-            <CustomEventModal projectId={currentProjectId} />
+            <CustomEventModal projectId={currentProjectId} onEventsChanged={handleEventsChanged} />
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import db from "./db/database.js";
+import db from "./database/initDb.js";
 import bcrypt from "bcrypt";
 
 const username = "admin";

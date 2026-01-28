@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import db from "./db/database.js";
+import db from "./database/initDb.js";
 import bcrypt from "bcrypt";
 
 const app = express();

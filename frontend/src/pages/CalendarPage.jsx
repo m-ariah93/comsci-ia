@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Draggable } from "@fullcalendar/interaction";
 import { Link, useLocation } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
-import { formatDate, subtractDay } from "/src/utils/DateUtils";
+import { formatDate, formatBookingDate, subtractDay } from "/src/utils/DateUtils";
 import CustomEventModal from "../components/CustomEventModal";
 
 export default function CalendarPage() {
@@ -125,6 +125,31 @@ export default function CalendarPage() {
             .catch(console.error);
     }
 
+    const [emailGreeting, setEmailGreeting] = useState("");
+    const [emailClosing, setEmailClosing] = useState("");
+
+    useEffect(() => {
+        fetch("http://localhost:3001/settings")
+            .then(res => res.json())
+            .then(data => {
+                setEmailGreeting(data.emailGreeting);
+                setEmailClosing(data.emailClosing);
+            });
+    }, []);
+
+    function mailtoLink(event) {
+        let dateText;
+        if (event.end) {
+            // multi day event
+            dateText = `from ${formatBookingDate(event.start)} to ${formatBookingDate(subtractDay(event.end))}`;
+        } else {
+            dateText = `on ${formatBookingDate(event.start)}`;
+        }
+        const body = encodeURIComponent(emailGreeting + "\r\n\r\n" + `Could you please confirm the booking for the ${event.title} ` + dateText + `${event.address ? `, at ${event.address}` : ""}` + "?\r\n\r\n" + emailClosing);
+        const link = "mailto:?subject=Booking%20confirmation&body=" + body;
+        return link;
+    }
+
     return (
         <div className="container-fluid d-flex flex-column flex-grow-1 vh-100 ps-0" >
             <div className="row mb-2 mt-3">
@@ -146,12 +171,12 @@ export default function CalendarPage() {
                 <div className="col-9 d-flex flex-column flex-grow-1 pb-4 mt-1" style={{ minHeight: 0 }}>
                     <Calendar
                         style={{ flex: 1 }}
-                        // key={currentProjectId}
                         currentProjectId={currentProjectId}
                         currentProject={currentProject}
                         keyBookingsRef={keyBookingsRef}
                         events={events}
                         onEventsChanged={handleEventsChanged} // callback to update events
+                        mailtoLink={mailtoLink}
                     />
                 </div>
                 <div className="col-3 d-flex flex-column flex-grow-1 h-100 mt-2 pe-4" style={{ minHeight: 0 }} id="draggable-events">
@@ -192,7 +217,7 @@ export default function CalendarPage() {
                                         </div>
                                         <hr className="m-0" />
                                         <div className="card-body">
-                                            <a href="#" className="btn btn-secondary btn-sm me-2">Request confirmation</a>
+                                            <a href={mailtoLink(nextEvent)} className="btn btn-secondary btn-sm me-2">Request confirmation</a>
                                             <a href="#" className="btn btn-danger btn-sm" onClick={deleteNextEvent}>Delete</a>
                                         </div>
                                     </div>

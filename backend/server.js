@@ -46,7 +46,6 @@ app.post("/login", (req, res) => {
 // user settings
 
 app.get("/settings", (req, res) => {
-    console.log("attempting to fetch email template");
     try {
         const stmt = db.prepare("SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users");
         const emailTemplate = stmt.get();
@@ -83,7 +82,7 @@ app.get("/events", (req, res) => {
         let events;
         if (projectId) { // if project_id is not null or zero
             const stmt = db.prepare(`
-                SELECT events.*, projects.colour AS projectColour
+                SELECT events.*, projects.colour AS projectColour, projects.address AS address
                 FROM events
                 LEFT JOIN projects ON events.project_id = projects.id
                 WHERE events.project_id = ?
@@ -120,6 +119,28 @@ app.get("/events/next", (req, res) => {
     } catch (err) {
         console.error(err);
         res.json({ error: "Failed to fetch next event" });
+    }
+});
+
+app.get("/events/:id", (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const stmt = db.prepare(`
+            SELECT events.*, projects.colour AS projectColour, projects.address AS address
+            FROM events
+            LEFT JOIN projects ON events.project_id = projects.id
+            WHERE events.id = ?`);
+        const thisEvent = stmt.get(id);
+
+        if (!thisEvent) {
+            return res.json({ error: "Event not found" });
+        }
+
+        res.json(thisEvent);
+    } catch (error) {
+        console.error("Error fetching event:", error);
+        res.json({ error: "Failed to fetch event" });
     }
 });
 

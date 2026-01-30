@@ -5,7 +5,7 @@ import listPlugin from '@fullcalendar/list';
 import { useState, useEffect } from "react";
 
 
-export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, events, onEventsChanged }) {
+export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, events, onEventsChanged, mailtoLink }) {
 
   useEffect(() => {
     handleEventsChanged();
@@ -90,11 +90,14 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       existingPopover.dispose();
     }
 
-    const confirmationButton = document.createElement("button");
+    const confirmationButton = document.createElement("a");
     confirmationButton.className = "btn btn-secondary btn-sm me-2";
     confirmationButton.textContent = "Request confirmation";
-
-    // todo: make mailto link
+    fetch(`http://localhost:3001/events/${info.event.id}`)
+      .then(res => res.json())
+      .then(data => {
+        confirmationButton.href = mailtoLink(data);
+      });
 
     // button to go in popover
     const deleteButton = document.createElement("button");

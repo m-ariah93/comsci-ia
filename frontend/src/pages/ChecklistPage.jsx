@@ -12,13 +12,15 @@ export default function ChecklistPage() {
     const [checklist, setChecklist] = useState([]);
 
     useEffect(() => {
-        // horizontal instead of vertical scrolling on navbar
-        let horizontal = document.getElementById("navTabsHorizontal");
-        horizontal.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            horizontal.scrollLeft += e.deltaY * 0.2;
-        });
-    }, [])
+        if (activeProjects.length > 0) {
+            // horizontal instead of vertical scrolling on navbar
+            let horizontal = document.getElementById("navTabsHorizontal");
+            horizontal.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                horizontal.scrollLeft += e.deltaY * 0.2;
+            });
+        }
+    }, []);
 
     useEffect(() => {
         if (!currentProjectId) return;
@@ -43,8 +45,12 @@ export default function ChecklistPage() {
         <>
             {/* if no projects, show message */}
             {activeProjects.length === 0 ? (
-                <div className="alert alert-primary text-center mx-auto" role="alert">
-                    No projects found :( Create one <Link to="/projects/add" className="alert-link text-reset">here</Link>.
+                <div className="row gy-2 pt-3">
+                    <div className="col-12">
+                        <div className="alert alert-primary text-center mx-auto" role="alert">
+                            No projects found :( Create one <Link to="/projects/add" className="alert-link text-reset">here</Link>.
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className="container-fluid d-flex flex-column vh-100 pe-4 ps-0" style={{ minHeight: 0 }}>

@@ -63,7 +63,7 @@ export default function SettingsPage() {
 					</div>
 					<div className="row">
 						<div className="col-12 col-md-auto pb-2" style={{ maxWidth: "200px", width: "100%" }}>
-							<label htmlFor="subcontractorEmailClosing" className="form-label mb-0">Default email closing</label>
+							<label htmlFor="subcontractorEmailClosing" className="form-label mb-0">Default email signature</label>
 						</div>
 						<div className="col-12 col-md">
 							<textarea className="form-control fst-italic" id="subcontractorEmailClosing" rows="3" value={emailClosing} onChange={(e) => setEmailClosing(e.target.value)} required></textarea>

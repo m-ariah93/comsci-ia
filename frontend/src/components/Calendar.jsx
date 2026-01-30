@@ -90,6 +90,12 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       existingPopover.dispose();
     }
 
+    const confirmationButton = document.createElement("button");
+    confirmationButton.className = "btn btn-secondary btn-sm me-2";
+    confirmationButton.textContent = "Request confirmation";
+
+    // todo: make mailto link
+
     // button to go in popover
     const deleteButton = document.createElement("button");
     deleteButton.className = "btn btn-danger btn-sm";
@@ -105,10 +111,14 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         .catch(console.error);
     };
 
+    const popoverContent = document.createElement("div");
+    popoverContent.appendChild(confirmationButton);
+    popoverContent.appendChild(deleteButton);
+
     // create popover
     new bootstrap.Popover(info.el, {
       html: true,
-      content: deleteButton,
+      content: popoverContent,
       placement: "top",
       trigger: "focus",
     });

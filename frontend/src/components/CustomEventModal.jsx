@@ -29,7 +29,7 @@ export default function CustomEventModal({ projectId, onEventsChanged }) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                title: name,
+                title: name.trim(),
                 start: startDate,
                 end: endDate || null,
                 project_id: projectId === 0 ? null : projectId,

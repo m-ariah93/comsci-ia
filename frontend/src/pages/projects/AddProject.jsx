@@ -36,8 +36,8 @@ export default function AddProject() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                title,
-                address,
+                title: title.trim(),
+                address: address.trim(),
                 start_month: startMonth,
                 colour,
             })

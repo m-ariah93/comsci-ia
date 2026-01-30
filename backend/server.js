@@ -43,6 +43,39 @@ app.post("/login", (req, res) => {
 
 });
 
+// user settings
+
+app.get("/settings", (req, res) => {
+    console.log("attempting to fetch email template");
+    try {
+        const stmt = db.prepare("SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users");
+        const emailTemplate = stmt.get();
+
+        res.json(emailTemplate);
+    } catch (error) {
+        console.error("Error fetching email template:", error);
+        res.json({ error: "Failed to fetch email template" });
+    }
+});
+
+app.put("/settings", (req, res) => {
+    const { greeting, closing } = req.body;
+
+    try {
+        const stmt = db.prepare("UPDATE users SET email_greeting = ?, email_closing = ?");
+        const result = stmt.run(greeting, closing);
+
+        if (result.changes === 0) {
+            return res.json({ error: "User not found" });
+        }
+
+        res.json({ greeting, closing });
+    } catch (error) {
+        console.error("Error updating email template:", error);
+        res.json({ error: "Failed to update email greeting and closing" });
+    }
+});
+
 // events table methods
 app.get("/events", (req, res) => {
     const projectId = req.query.project_id;

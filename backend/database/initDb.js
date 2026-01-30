@@ -47,7 +47,9 @@ db.prepare(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,
-    password TEXT
+    password TEXT, 
+    email_greeting TEXT,
+    email_closing TEXT
   )
 `).run();
 

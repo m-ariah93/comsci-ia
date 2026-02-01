@@ -146,6 +146,15 @@ export default function CalendarPage() {
         monthBtn.classList.add("d-none", "d-md-inline");
         var weekBtn = document.querySelector(".fc-listMonth-button");
         weekBtn.classList.add("d-none", "d-md-inline");
+
+        var dayNumbers = document.querySelectorAll(".fc-daygrid-day-number");
+        dayNumbers.forEach(function(day) {
+            day.classList.add("text-decoration-none");
+        });
+        var weekdayHeadings = document.querySelectorAll(".fc-col-header-cell-cushion");
+        weekdayHeadings.forEach(function(day) {
+            day.classList.add("text-decoration-none");
+        });
     }, []);
 
     function mailtoLink(event) {

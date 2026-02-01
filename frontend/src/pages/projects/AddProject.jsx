@@ -55,7 +55,7 @@ export default function AddProject() {
     }
 
     return (
-        <form className="needs-validation" onSubmit={addProject} noValidate>
+        <form className="needs-validation pe-4" onSubmit={addProject} noValidate>
             <h4 className="py-2">New project</h4>
             <label htmlFor="titleInput" className="form-label">Title (max 30 characters)</label>
             <input type="text" maxLength={TITLE_MAX_LENGTH} className="form-control mb-3" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} required />

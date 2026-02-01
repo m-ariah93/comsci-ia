@@ -1,16 +1,16 @@
-import { Outlet, NavLink, useParams } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 
 export default function ProjectsPage() {
     return (
         <>
-            <div className="container-fluid d-flex flex-column vh-100 ps-0">
-                <div className="row h-100 pt-3">
-                    <div className="d-flex flex-column col-sm-4 col-md-3 col-lg-3 col-xl-2 gap-2 mb-3 mx-auto">
+            <div className="container-fluid vh-100 px-0">
+                <div className="d-flex flex-column flex-md-row h-100 pt-3">
+                    <div className="d-flex flex-column gap-2 mb-4 w-100 flex-shrink-1 me-4" style={{ maxWidth: "190px" }}>
                         <NavLink to="/projects" end className={({ isActive }) => isActive ? "btn btn-primary text-start active" : "btn btn-primary text-start"} style={{ height: '40px' }}>Active projects</NavLink>
                         <NavLink to="/projects/add" end className={({ isActive }) => isActive ? "btn btn-primary text-start active" : "btn btn-primary text-start"} style={{ height: '40px' }}>Add new project</NavLink>
                         <NavLink to="/projects/archive" end className={({ isActive }) => isActive ? "btn btn-primary text-start active" : "btn btn-primary text-start"} style={{ height: '40px' }}>View archive</NavLink>
                     </div>
-                    <main className="col-sm-8 col-md-9 col-lg-9 col-xl-10 overflow-auto pe-sm-4">
+                    <main className="flex-grow-1 overflow-y-auto overflow-x-hidden h-100 px-0 pb-3">
                         <Outlet />
                     </main>
                 </div>

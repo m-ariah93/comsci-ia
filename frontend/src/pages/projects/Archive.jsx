@@ -36,7 +36,7 @@ export default function Archive() {
     }
 
     return (
-        <>
+        <div className="pe-4">
             <div className="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="projectArchivedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
                     <div className="d-flex">
@@ -94,9 +94,9 @@ export default function Archive() {
                             No projects match your search :(
                         </div>
                     )}
-                    <div className="row">
+                    <div className="row g-3">
                         {filteredProjects.map((project) => (
-                            <div key={project.id} className="col-sm-12 col-md-12 col-lg-6 mb-3">
+                            <div key={project.id} className="col-sm-12 col-md-12 col-lg-6">
                                 <div className="card">
                                     <div className="card-body">
                                         <h4 className="card-title" style={{ color: project.colour }}>{project.title}</h4>
@@ -112,6 +112,6 @@ export default function Archive() {
                     </div>
                 </>
             )}
-        </>
+        </div>
     );
 }

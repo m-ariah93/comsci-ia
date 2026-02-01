@@ -137,6 +137,17 @@ export default function CalendarPage() {
             });
     }, []);
 
+    useEffect(() => {
+        var todayBtn = document.querySelector(".fc-today-button");
+        todayBtn.classList.add("d-none", "d-md-inline");
+        var weekBtn = document.querySelector(".fc-dayGridWeek-button");
+        weekBtn.classList.add("d-none", "d-md-inline");
+        var monthBtn = document.querySelector(".fc-dayGridMonth-button");
+        monthBtn.classList.add("d-none", "d-md-inline");
+        var weekBtn = document.querySelector(".fc-listMonth-button");
+        weekBtn.classList.add("d-none", "d-md-inline");
+    }, []);
+
     function mailtoLink(event) {
         let dateText;
         if (event.end) {
@@ -179,7 +190,7 @@ export default function CalendarPage() {
                         mailtoLink={mailtoLink}
                     />
                 </div>
-                <div className="col-3 d-flex flex-column flex-grow-1 h-100 mt-2 pe-4" style={{ minHeight: 0 }} id="draggable-events">
+                <div className="col-3 d-none d-lg-flex flex-column flex-grow-1 h-100 mt-2 pe-4" style={{ minHeight: 0 }} id="draggable-events">
                     {currentProjectId !== 0 ? (
                         <>
                             <h4>Key bookings</h4>
@@ -216,7 +227,7 @@ export default function CalendarPage() {
                                             )}
                                         </div>
                                         <hr className="m-0" />
-                                        <div className="card-body">
+                                        <div className="card-body d-flex flex-wrap row-gap-2">
                                             <a href={mailtoLink(nextEvent)} className="btn btn-secondary btn-sm me-2">Request confirmation</a>
                                             <a href="#" className="btn btn-danger btn-sm" onClick={deleteNextEvent}>Delete</a>
                                         </div>

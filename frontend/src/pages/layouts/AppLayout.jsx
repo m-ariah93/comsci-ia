@@ -15,7 +15,7 @@ export default function AppLayout() {
                 <button className="nav-link text-center" onClick={logout}>Logout</button>
             </div>
 
-            <div className="tab-content w-100 flex-grow-1 d-flex flex-column" id="v-pills-tabContent" style={{ minWidth: 0 }}>
+            <div className="tab-content w-100 flex-grow-1 d-flex flex-column vh-100" id="v-pills-tabContent" style={{ minWidth: 0 }}>
                 <Outlet />
             </div>
         </div>

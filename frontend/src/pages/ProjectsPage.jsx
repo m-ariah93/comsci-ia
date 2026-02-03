@@ -11,7 +11,7 @@ export default function ProjectsPage() {
                         <NavLink to="/projects/archive" end className={({ isActive }) => isActive ? "nav-link active py-2 px-3" : "nav-link py-2 px-3"}>View archive</NavLink>
                     </div>
                     <main className="flex-grow-1 overflow-y-auto overflow-x-hidden h-100 px-0 pb-3">
-                        <div className="pe-3 pe-md-4">
+                        <div className="pe-3 pe-md-4 sticky-top">
                             <hr className="w-100 mt-0 d-block d-md-none" />
                         </div>
                         <Outlet />

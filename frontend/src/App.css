@@ -18,7 +18,11 @@
 }
 
 .fc-event-title {
-	font-weight: 500;
+	font-weight: 500 !important;
+}
+
+.fc-col-header-cell-cushion, .fc-daygrid-day-number { 
+	text-decoration: none !important;
 }
 
 .gochi-hand-regular {

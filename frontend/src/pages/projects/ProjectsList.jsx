@@ -51,7 +51,7 @@ export default function ProjectsList() {
     const filteredProjects = filterProjects(sortedProjects, searchQuery);
 
     return (
-        <div className="pe-4">
+        <div className="pe-3 pe-md-4">
             <div className="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="projectSavedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
                     <div className="d-flex">

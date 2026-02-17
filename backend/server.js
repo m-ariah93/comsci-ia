@@ -267,7 +267,7 @@ app.get("/projects/:id/checklist", (req, res) => {
         const stmt = db.prepare(`
             SELECT id, title, done
             FROM checklist
-            WHERE checklist.project_id = ?
+            WHERE project_id = ?
         `);
         const checklist = stmt.all(id);
         res.json(checklist);

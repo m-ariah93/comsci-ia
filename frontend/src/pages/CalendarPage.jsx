@@ -179,7 +179,7 @@ export default function CalendarPage() {
                 </div>
             </div>
             <div className="row d-flex flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
-                <div className="col-9 d-flex flex-column flex-grow-1 pb-4 mt-1" style={{ minHeight: 0 }}>
+                <div className="col-9 d-flex flex-column flex-grow-1 pb-2 pb-lg-4 mt-1" style={{ minHeight: 0 }}>
                     <Calendar
                         style={{ flex: 1 }}
                         currentProjectId={currentProjectId}

@@ -12,10 +12,6 @@
   ],
   "routes": [
     {
-      "src": "/api/hello",
-      "dest": "/api/hello.js"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
     },

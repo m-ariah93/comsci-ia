@@ -6,8 +6,41 @@ import db, { initDb } from "./database/initDb.js";
 
 const app = express();
 
+// Request logging for debugging
+app.use((req, res, next) => {
+    console.log(`[API] ${req.method} ${req.path}`);
+    next();
+});
+
 app.use(cors());
 app.use(express.json());
+
+// Initialise database once on startup
+let dbReady = false;
+let dbError = null;
+
+// Initialise database asynchronously
+(async () => {
+    try {
+        await initDb();
+        dbReady = true;
+        console.log("Database initialised successfully");
+    } catch (error) {
+        dbError = error;
+        console.error("Database initialisation failed:", error);
+    }
+})();
+
+// Check if DB is ready before handling requests
+app.use((req, res, next) => {
+    if (dbError) {
+        return res.status(500).json({ error: "Database not initialised: " + dbError.message });
+    }
+    if (!dbReady) {
+        return res.status(503).json({ error: "Database initialising, please try again" });
+    }
+    next();
+});
 
 // debug route to test vercel routing
 app.get("/test", (req, res) => {

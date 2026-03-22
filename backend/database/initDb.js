@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 // const dbPath = path.resolve("database", "app.db");
 // const db = new Database(dbPath);
 
+console.log(process.env.TURSO_DATABASE_URL, process.env.TURSO_AUTH_TOKEN);
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL,
   authToken: process.env.TURSO_AUTH_TOKEN,

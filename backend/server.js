@@ -204,7 +204,7 @@ app.post("/events", async (req, res) => {
     try {
         // const stmt = db.prepare("INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)");
         // const result = stmt.run(title, start, end, project_id, template_id);
-        const result = db.execute({
+        const result = await db.execute({
             sql: "INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)",
             args: [title, start, end, project_id, template_id],
         });
@@ -536,5 +536,12 @@ await initDb();
 // app.listen(PORT, () => {
 //     console.log(`Backend running on http://localhost:${PORT}`);
 // });
+
+
+// Catch-all error handler for unhandled errors (always return JSON)
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err);
+    res.status(500).json({ error: "Internal server error" });
+});
 
 export default app;

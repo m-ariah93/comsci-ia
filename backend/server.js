@@ -15,19 +15,23 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
-// Initialise database - create promise once
-const dbInitPromise = initDb()
-    .then(() => {
-        console.log("Database initialised successfully");
-        return true;
-    })
-    .catch((error) => {
-        console.error("Database initialisation failed:", error);
-        throw error;
-    });
+// initialise database lazily on first request
+let dbInitPromise = null;
 
-// Ensure DB is ready before handling requests
+// ensure db is ready before handling requests
 app.use(async (req, res, next) => {
+    if (!dbInitPromise) {
+        dbInitPromise = initDb()
+            .then(() => {
+                console.log("Database initialised successfully");
+                return true;
+            })
+            .catch((error) => {
+                console.error("Database initialisation failed:", error);
+                throw error;
+            });
+    }
+    
     try {
         await dbInitPromise;
         next();

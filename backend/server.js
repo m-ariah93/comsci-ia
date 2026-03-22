@@ -6,6 +6,22 @@ import db, { initDb } from "./database/initDb.js";
 
 const app = express();
 
+let dbInitialised = false;
+
+// Middleware to initialise database on first request
+app.use(async (req, res, next) => {
+    if (!dbInitialised) {
+        try {
+            await initDb();
+            dbInitialised = true;
+        } catch (error) {
+            console.error("database initialisation error:", error);
+            return res.status(500).json({ error: "database initialisation failed" });
+        }
+    }
+    next();
+});
+
 app.use(cors());
 app.use(express.json());
 
@@ -535,8 +551,6 @@ app.delete("/projects/:id", async (req, res) => {
         res.json({ error: "Failed to delete project" });
     }
 });
-
-await initDb();
 
 // const PORT = 3001;
 // app.listen(PORT, () => {

@@ -59,7 +59,11 @@ export default function EditProject() {
         navigate("/projects", { state: { updated: true } }); // go back to projects list
     }
 
-    if (!project) return <p>Loading...</p>;
+    if (!project) return (
+        <div className="spinner-border my-2" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </div>
+    );
     return (
         <>
             <form className="needs-validation pe-3 pe-md-4" onSubmit={clickSave} noValidate>
@@ -76,7 +80,7 @@ export default function EditProject() {
                     Please enter an address.
                 </div>
                 <label htmlFor="startMonthInput" className="form-label">Start month</label>
-                <input type="month" className="form-control mb-3" style={{width: 200}}id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
+                <input type="month" className="form-control mb-3" style={{ width: 200 }} id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
                 <div className="invalid-feedback">
                     Please select the project's start month.
                 </div>

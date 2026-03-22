@@ -16,7 +16,7 @@
       "dest": "/api/hello.js"
     },
     {
-      "src": "/api/(.*)",
+      "src": "/api/.*",
       "dest": "/api/index.js"
     },
     {

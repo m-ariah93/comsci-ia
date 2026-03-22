@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
-import db from "./database/initDb.js";
 import bcrypt from "bcrypt";
+import "dotenv/config";
+import db, { initDb } from "./database/initDb.js";
 
 const app = express();
 
@@ -10,12 +11,17 @@ app.use(express.json());
 
 // user authentication methods
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const stmt = db.prepare("SELECT * FROM users WHERE username = ?");
-        const user = stmt.get(username);
+        // const stmt = db.prepare("SELECT * FROM users WHERE username = ?");
+        // const user = stmt.get(username);
+        const result = await db.execute({
+            sql: "SELECT * FROM users WHERE username = ?",
+            args: [username],
+        });
+        const user = result.rows[0];
 
         if (!user) {
             return res.json({ success: false, message: "Invalid credentials" });
@@ -45,10 +51,14 @@ app.post("/login", (req, res) => {
 
 // user settings
 
-app.get("/settings", (req, res) => {
+app.get("/settings", async (req, res) => {
     try {
-        const stmt = db.prepare("SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users");
-        const emailTemplate = stmt.get();
+        // const stmt = db.prepare("SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users");
+        // const emailTemplate = stmt.get();
+        const result = await db.execute(
+            "SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users"
+        );
+        const emailTemplate = result.rows[0];
 
         res.json(emailTemplate);
     } catch (error) {
@@ -57,14 +67,18 @@ app.get("/settings", (req, res) => {
     }
 });
 
-app.put("/settings", (req, res) => {
+app.put("/settings", async (req, res) => {
     const { greeting, closing } = req.body;
 
     try {
-        const stmt = db.prepare("UPDATE users SET email_greeting = ?, email_closing = ?");
-        const result = stmt.run(greeting, closing);
+        // const stmt = db.prepare("UPDATE users SET email_greeting = ?, email_closing = ?");
+        // const result = stmt.run(greeting, closing);
+        const result = await db.execute({
+            sql: "UPDATE users SET email_greeting = ?, email_closing = ?",
+            args: [greeting, closing],
+        });
 
-        if (result.changes === 0) {
+        if (result.rowsAffected === 0) {
             return res.json({ error: "User not found" });
         }
 
@@ -76,25 +90,42 @@ app.put("/settings", (req, res) => {
 });
 
 // events table methods
-app.get("/events", (req, res) => {
+app.get("/events", async (req, res) => {
     const projectId = req.query.project_id;
     try {
         let events;
         if (projectId) { // if project_id is not null or zero
-            const stmt = db.prepare(`
-                SELECT events.*, projects.colour AS projectColour, projects.address AS address
-                FROM events
-                LEFT JOIN projects ON events.project_id = projects.id
-                WHERE events.project_id = ?
-            `);
-            events = stmt.all(projectId); // projectId parameter goes into stmt placeholder (?)
+            // const stmt = db.prepare(`
+            //     SELECT events.*, projects.colour AS projectColour, projects.address AS address
+            //     FROM events
+            //     LEFT JOIN projects ON events.project_id = projects.id
+            //     WHERE events.project_id = ?
+            // `);
+            // events = stmt.all(projectId); // projectId parameter goes into stmt placeholder (?)
+            const result = await db.execute({
+                sql: `
+                    SELECT events.*, projects.colour AS projectColour, projects.address AS address
+                    FROM events
+                    LEFT JOIN projects ON events.project_id = projects.id
+                    WHERE events.project_id = ?
+                `,
+                args: [projectId],
+            });
+            events = result.rows;
+
         } else {
-            const stmt = db.prepare(`
+            // const stmt = db.prepare(`
+            //     SELECT events.*, projects.colour AS projectColour
+            //     FROM events
+            //     LEFT JOIN projects ON events.project_id = projects.id
+            // `);
+            // events = stmt.all();
+            const result = await db.execute(`
                 SELECT events.*, projects.colour AS projectColour
                 FROM events
                 LEFT JOIN projects ON events.project_id = projects.id
             `);
-            events = stmt.all();
+            events = result.rows;
         }
         res.json(events);
     } catch (err) {
@@ -103,10 +134,19 @@ app.get("/events", (req, res) => {
     }
 });
 
-app.get("/events/next", (req, res) => {
+app.get("/events/next", async (req, res) => {
     try {
         let event;
-        const stmt = db.prepare(`
+        // const stmt = db.prepare(`
+        //     SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
+        //     FROM events
+        //     LEFT JOIN projects ON events.project_id = projects.id
+        //     WHERE date(events.start) >= date('now')
+        //     ORDER BY date(events.start) ASC
+        //     LIMIT 1
+        // `);
+        // event = stmt.get();
+        const result = await db.execute(`
             SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
             FROM events
             LEFT JOIN projects ON events.project_id = projects.id
@@ -114,7 +154,7 @@ app.get("/events/next", (req, res) => {
             ORDER BY date(events.start) ASC
             LIMIT 1
         `);
-        event = stmt.get();
+        event = result.rows[0];
         res.json(event);
     } catch (err) {
         console.error(err);
@@ -122,16 +162,26 @@ app.get("/events/next", (req, res) => {
     }
 });
 
-app.get("/events/:id", (req, res) => {
+app.get("/events/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        const stmt = db.prepare(`
-            SELECT events.*, projects.colour AS projectColour, projects.address AS address
-            FROM events
-            LEFT JOIN projects ON events.project_id = projects.id
-            WHERE events.id = ?`);
-        const thisEvent = stmt.get(id);
+        // const stmt = db.prepare(`
+        //     SELECT events.*, projects.colour AS projectColour, projects.address AS address
+        //     FROM events
+        //     LEFT JOIN projects ON events.project_id = projects.id
+        //     WHERE events.id = ?`);
+        // const thisEvent = stmt.get(id);
+
+        const result = await db.execute({
+            sql: `
+                SELECT events.*, projects.colour AS projectColour, projects.address AS address
+                FROM events
+                LEFT JOIN projects ON events.project_id = projects.id
+                WHERE events.id = ?`,
+            args: [id],
+        });
+        const thisEvent = result.rows[0];
 
         if (!thisEvent) {
             return res.json({ error: "Event not found" });
@@ -144,7 +194,7 @@ app.get("/events/:id", (req, res) => {
     }
 });
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
     const { title, start, end, project_id, template_id } = req.body;
 
     if (!title || !start) {
@@ -152,8 +202,12 @@ app.post("/events", (req, res) => {
     }
 
     try {
-        const stmt = db.prepare("INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)");
-        const result = stmt.run(title, start, end, project_id, template_id);
+        // const stmt = db.prepare("INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)");
+        // const result = stmt.run(title, start, end, project_id, template_id);
+        const result = db.execute({
+            sql: "INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)",
+            args: [title, start, end, project_id, template_id],
+        });
 
         res.json({ id: result.lastInsertRowid, title, start, end, project_id, template_id });
     } catch (error) {
@@ -162,7 +216,7 @@ app.post("/events", (req, res) => {
     }
 });
 
-app.put("/events/:id", (req, res) => {
+app.put("/events/:id", async (req, res) => {
     const { id } = req.params;
     const { start, end } = req.body;
 
@@ -171,10 +225,14 @@ app.put("/events/:id", (req, res) => {
     }
 
     try {
-        const stmt = db.prepare("UPDATE events SET start = ?, end = ? WHERE id = ?");
-        const result = stmt.run(start, end, id);
+        // const stmt = db.prepare("UPDATE events SET start = ?, end = ? WHERE id = ?");
+        // const result = stmt.run(start, end, id);
+        const result = await db.execute({
+            sql: "UPDATE events SET start = ?, end = ? WHERE id = ?",
+            args: [start, end, id],
+        })
 
-        if (result.changes === 0) {
+        if (result.rowsAffected === 0) {
             return res.json({ error: "Event not found" });
         }
 
@@ -185,13 +243,17 @@ app.put("/events/:id", (req, res) => {
     }
 });
 
-app.delete("/events/:id", (req, res) => {
+app.delete("/events/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const stmt = db.prepare("DELETE FROM events WHERE id = ?");
-        const result = stmt.run(id);
+        // const stmt = db.prepare("DELETE FROM events WHERE id = ?");
+        // const result = stmt.run(id);
+        const result = await db.execute({
+            sql: "DELETE FROM events WHERE id = ?",
+            args: [id],
+        });
 
-        if (result.changes === 0) {
+        if (result.rowsAffected === 0) {
             return res.json({ error: "Event not found" });
         }
 
@@ -204,29 +266,41 @@ app.delete("/events/:id", (req, res) => {
 
 
 // projects table methods
-app.get("/projects", (req, res) => {
+app.get("/projects", async (req, res) => {
     const { archived } = req.query;
     try {
         let projects;
         if (archived === undefined) {
-            projects = db.prepare("SELECT * FROM projects").all();
+            // projects = db.prepare("SELECT * FROM projects").all();
+            const result = await db.execute("SELECT * FROM projects");
+            projects = result.rows;
         } else {
-            const stmt = db.prepare("SELECT * FROM projects WHERE archived = ?");
-            projects = stmt.all(archived);
+            // const stmt = db.prepare("SELECT * FROM projects WHERE archived = ?");
+            // projects = stmt.all(archived);
+            const result = await db.execute({
+                sql: "SELECT * FROM projects WHERE archived = ?",
+                args: [archived],
+            });
+            projects = result.rows;
         }
         res.json(projects);
-    } catch {
+    } catch (err) {
         console.error(err);
         res.json({ error: "Failed to fetch projects" });
     }
 });
 
-app.get("/projects/:id", (req, res) => {
+app.get("/projects/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        const stmt = db.prepare("SELECT * FROM projects WHERE id = ?");
-        const project = stmt.get(id);
+        // const stmt = db.prepare("SELECT * FROM projects WHERE id = ?");
+        // const project = stmt.get(id);
+        const result = await db.execute({
+            sql: "SELECT * FROM projects WHERE id = ?",
+            args: [id],
+        });
+        const project = result.rows[0];
 
         if (!project) {
             return res.json({ error: "Project not found" });
@@ -239,20 +313,33 @@ app.get("/projects/:id", (req, res) => {
     }
 });
 
-app.get("/projects/:id/templates", (req, res) => {
+app.get("/projects/:id/templates", async (req, res) => {
     const { id } = req.params;
 
     try {
-        const stmt = db.prepare(`
-            SELECT 
-                booking_templates.id AS bookingId,
-                booking_templates.title,
-                CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
-            FROM booking_templates
-            LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
-            WHERE booking_templates.project_id = ?
-        `);
-        const templates = stmt.all(id);
+        // const stmt = db.prepare(`
+        //     SELECT 
+        //         booking_templates.id AS bookingId,
+        //         booking_templates.title,
+        //         CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
+        //     FROM booking_templates
+        //     LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
+        //     WHERE booking_templates.project_id = ?
+        // `);
+        // const templates = stmt.all(id);
+        const result = await db.execute({
+            sql: `
+                SELECT 
+                    booking_templates.id AS bookingId,
+                    booking_templates.title,
+                    CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
+                FROM booking_templates
+                LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
+                WHERE booking_templates.project_id = ?
+            `,
+            args: [id],
+        });
+        const templates = result.rows;
         res.json(templates);
     } catch (error) {
         console.error("Error fetching project template bookings:", error);
@@ -260,16 +347,25 @@ app.get("/projects/:id/templates", (req, res) => {
     }
 });
 
-app.get("/projects/:id/checklist", (req, res) => {
+app.get("/projects/:id/checklist", async (req, res) => {
     const { id } = req.params;
 
     try {
-        const stmt = db.prepare(`
-            SELECT id, title, done
-            FROM checklist
-            WHERE project_id = ?
-        `);
-        const checklist = stmt.all(id);
+        // const stmt = db.prepare(`
+        //     SELECT id, title, done
+        //     FROM checklist
+        //     WHERE project_id = ?
+        // `);
+        // const checklist = stmt.all(id);
+        const result = await db.execute({
+            sql: `
+                SELECT id, title, done
+                FROM checklist
+                WHERE project_id = ?
+            `,
+            args: [id],
+        });
+        const checklist = result.rows;
         res.json(checklist);
     } catch (error) {
         console.error("Error fetching project checklist:", error);
@@ -277,7 +373,7 @@ app.get("/projects/:id/checklist", (req, res) => {
     }
 });
 
-app.put("/projects/:projectId/checklist/:checklistId", (req, res) => {
+app.put("/projects/:projectId/checklist/:checklistId", async (req, res) => {
     const { projectId, checklistId } = req.params;
     const { done } = req.body;
 
@@ -286,10 +382,14 @@ app.put("/projects/:projectId/checklist/:checklistId", (req, res) => {
     }
 
     try {
-        const stmt = db.prepare("UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?");
-        const result = stmt.run(done, checklistId, projectId);
+        // const stmt = db.prepare("UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?");
+        // const result = stmt.run(done, checklistId, projectId);
+        const result = await db.execute({
+            sql: "UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?",
+            args: [done, checklistId, projectId],
+        });
 
-        if (result.changes === 0) {
+        if (result.rowsAffected === 0) {
             return res.json({ error: "Checklist not found" });
         }
         console.log("checklist value set to", done);
@@ -304,7 +404,7 @@ app.put("/projects/:projectId/checklist/:checklistId", (req, res) => {
 
 import bookingsTemplate from "./templates/bookingsTemplate.js";
 import checklistTemplate from "./templates/checklistTemplate.js";
-app.post("/projects", (req, res) => {
+app.post("/projects", async (req, res) => {
     const { title, address, start_month, colour } = req.body;
 
     if (!title || !address || !start_month || !colour) {
@@ -312,26 +412,64 @@ app.post("/projects", (req, res) => {
     }
 
     try {
-        const stmt = db.prepare("INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)");
-        const result = stmt.run(title, address, start_month, colour);
+        // const stmt = db.prepare("INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)");
+        // const result = stmt.run(title, address, start_month, colour);
+        const result = await db.execute({
+            sql: "INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)",
+            args: [title, address, start_month, colour],
+        })
 
-        const projectId = result.lastInsertRowid;
+        const projectId = Number(result.lastInsertRowid);
 
         // insert new sets of template bookings and checklist tasks
 
-        const insertBookingTemplate = db.prepare(
-            "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)"
-        );
-        for (const title of bookingsTemplate) {
-            insertBookingTemplate.run(projectId, title);
-        }
+        // const insertBookingTemplate = db.prepare(
+        //     "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)"
+        // );
+        // for (const title of bookingsTemplate) {
+        //     insertBookingTemplate.run(projectId, title);
+        // }
 
-        const insertChecklistTemplate = db.prepare(
-            "INSERT INTO checklist (project_id, title) VALUES (?, ?)"
+        // for (const title of bookingsTemplate) {
+        //     await db.execute({
+        //         sql: "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)",
+        //         args: [projectId, title],
+        //     });
+        // }
+
+        // const insertChecklistTemplate = db.prepare(
+        //     "INSERT INTO checklist (project_id, title) VALUES (?, ?)"
+        // );
+        // for (const task of checklistTemplate) {
+        // insertChecklistTemplate.run(projectId, task);
+        // }
+
+        // for (const task of checklistTemplate) {
+        //     await db.execute({
+        //         sql: "INSERT INTO checklist (project_id, title) VALUES (?, ?)",
+        //         args: [projectId, task],
+        //     });
+        // }
+
+        // parallel inserts (faster than for loops)
+
+        await Promise.all(
+            bookingsTemplate.map(title =>
+                db.execute({
+                    sql: "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)",
+                    args: [projectId, title],
+                })
+            )
         );
-        for (const task of checklistTemplate) {
-            insertChecklistTemplate.run(projectId, task);
-        }
+
+        await Promise.all(
+            checklistTemplate.map(task =>
+                db.execute({
+                    sql: "INSERT INTO checklist (project_id, title) VALUES (?, ?)",
+                    args: [projectId, task],
+                })
+            )
+        );
 
         res.json({ id: projectId, title, address, start_month, colour });
     } catch (error) {
@@ -340,7 +478,7 @@ app.post("/projects", (req, res) => {
     }
 });
 
-app.put("/projects/:id", (req, res) => {
+app.put("/projects/:id", async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
@@ -352,10 +490,15 @@ app.put("/projects/:id", (req, res) => {
     const values = Object.values(updates);
 
     try {
-        const stmt = db.prepare(`UPDATE projects SET ${setClauses} WHERE id = ?`);
-        const result = stmt.run(...values, id);
+        // const stmt = db.prepare(`UPDATE projects SET ${setClauses} WHERE id = ?`);
+        // const result = stmt.run(...values, id);
 
-        if (result.changes === 0) {
+        const result = await db.execute({
+            sql: `UPDATE projects SET ${setClauses} WHERE id = ?`,
+            args: [...values, id],
+        });
+
+        if (result.rowsAffected === 0) {
             return res.json({ error: "Project not found" });
         }
 
@@ -366,13 +509,17 @@ app.put("/projects/:id", (req, res) => {
     }
 });
 
-app.delete("/projects/:id", (req, res) => {
+app.delete("/projects/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const stmt = db.prepare("DELETE FROM projects WHERE id = ?");
-        const result = stmt.run(id);
+        // const stmt = db.prepare("DELETE FROM projects WHERE id = ?");
+        // const result = stmt.run(id);
+        const result = await db.execute({
+            sql: "DELETE FROM projects WHERE id = ?",
+            args: [id],
+        });
 
-        if (result.changes === 0) {
+        if (result.rowsAffected === 0) {
             return res.json({ error: "Project not found" });
         }
 
@@ -382,6 +529,8 @@ app.delete("/projects/:id", (req, res) => {
         res.json({ error: "Failed to delete project" });
     }
 });
+
+await initDb();
 
 const PORT = 3001;
 app.listen(PORT, () => {

@@ -9,6 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// debug route to test vercel routing
+app.get("/test", (req, res) => {
+    res.json({ message: "express app is working" });
+});
+
+
 // user authentication methods
 
 app.post("/login", async (req, res) => {

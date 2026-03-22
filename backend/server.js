@@ -15,31 +15,25 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
-// Initialise database once on startup
-let dbReady = false;
-let dbError = null;
-
-// Initialise database asynchronously
-(async () => {
-    try {
-        await initDb();
-        dbReady = true;
+// Initialise database - create promise once
+const dbInitPromise = initDb()
+    .then(() => {
         console.log("Database initialised successfully");
-    } catch (error) {
-        dbError = error;
+        return true;
+    })
+    .catch((error) => {
         console.error("Database initialisation failed:", error);
-    }
-})();
+        throw error;
+    });
 
-// Check if DB is ready before handling requests
-app.use((req, res, next) => {
-    if (dbError) {
-        return res.status(500).json({ error: "Database not initialised: " + dbError.message });
+// Ensure DB is ready before handling requests
+app.use(async (req, res, next) => {
+    try {
+        await dbInitPromise;
+        next();
+    } catch (error) {
+        res.status(500).json({ error: "Database initialisation failed: " + error.message });
     }
-    if (!dbReady) {
-        return res.status(503).json({ error: "Database initialising, please try again" });
-    }
-    next();
 });
 
 // debug route to test vercel routing

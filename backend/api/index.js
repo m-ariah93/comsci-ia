@@ -1,5 +1,4 @@
 import app from "../server.js";
 
-export default function handler(req, res) {
-  return app(req, res);
-}
+// Vercel expects a default export of a function (req, res)
+export default app;

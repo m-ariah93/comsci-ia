@@ -1,4 +1,5 @@
-import app from "../server.js";
+// import app from "../server.js";
 
-// Vercel expects a default export of a function (req, res)
-export default app;
+// export default app;
+
+// MOVED API TO ROOT

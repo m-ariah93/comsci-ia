@@ -1,3 +1,5 @@
-export default function handler(req, res) {
-  res.status(200).json({ message: "HELLOOOO" });
-}
+// export default function handler(req, res) {
+//   res.status(200).json({ message: "HELLOOOO" });
+// }
+
+// MOVED API TO ROOT

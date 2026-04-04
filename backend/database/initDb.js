@@ -1,8 +1,4 @@
 // import { createClient } from "@libsql/client";
-import bcrypt from "bcrypt";
-import { connect } from "@tursodatabase/serverless";
-
-
 // const dbPath = path.resolve("database", "app.db");
 // const db = new Database(dbPath);
 
@@ -11,6 +7,8 @@ import { connect } from "@tursodatabase/serverless";
 //   url: process.env.TURSO_DATABASE_URL,
 //   authToken: process.env.TURSO_AUTH_TOKEN,
 // });
+import bcrypt from "bcrypt";
+import { connect } from "@tursodatabase/serverless";
 
 export const db = connect({
   url: process.env.TURSO_DATABASE_URL,
@@ -58,7 +56,7 @@ export async function initDb() {
     )
   `);
 
-    await db.execute(`
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS events (
       id INTEGER PRIMARY KEY,
       title TEXT NOT NULL,

@@ -1,3 +1,8 @@
+console.log("ENV CHECK:", {
+  url: process.env.TURSO_DATABASE_URL,
+  token: process.env.TURSO_AUTH_TOKEN ? "present" : "missing"
+});
+
 import express from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";

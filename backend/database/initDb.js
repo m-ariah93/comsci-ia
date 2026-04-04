@@ -21,7 +21,7 @@ export const db = connect({
 export async function initDb() {
   await db.execute(`
     CREATE TABLE IF NOT EXISTS events (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id INTEGER PRIMARY KEY,
       title TEXT NOT NULL,
       start TEXT NOT NULL,
       end TEXT,
@@ -32,7 +32,7 @@ export async function initDb() {
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS projects (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id INTEGER PRIMARY KEY,
       title TEXT NOT NULL CHECK (length(title)<=30),
       address TEXT NOT NULL,
       start_month TEXT NOT NULL CHECK (length(start_month)=7),
@@ -43,7 +43,7 @@ export async function initDb() {
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS booking_templates (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id INTEGER PRIMARY KEY,
       title TEXT NOT NULL,
       project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE
     )
@@ -51,7 +51,7 @@ export async function initDb() {
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS checklist (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id INTEGER PRIMARY KEY,
       title TEXT NOT NULL,
       done INTEGER DEFAULT 0 CHECK (done=0 OR done=1),
       project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE
@@ -60,7 +60,7 @@ export async function initDb() {
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id INTEGER PRIMARY KEY,
       username TEXT UNIQUE,
       password TEXT, 
       email_greeting TEXT,

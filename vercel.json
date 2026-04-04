@@ -1,15 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build"
-    }
-  ],
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
     {
       "src": "/api/hello",

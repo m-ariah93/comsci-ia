@@ -1,14 +1,22 @@
-import { createClient } from "@libsql/client";
+// import { createClient } from "@libsql/client";
 import bcrypt from "bcrypt";
+import { connect } from "@tursodatabase/serverless";
+
 
 // const dbPath = path.resolve("database", "app.db");
 // const db = new Database(dbPath);
 
 //console.log(process.env.TURSO_DATABASE_URL, process.env.TURSO_AUTH_TOKEN);
-const db = createClient({
+// const db = createClient({
+//   url: process.env.TURSO_DATABASE_URL,
+//   authToken: process.env.TURSO_AUTH_TOKEN,
+// });
+
+export const db = connect({
   url: process.env.TURSO_DATABASE_URL,
   authToken: process.env.TURSO_AUTH_TOKEN,
 });
+
 
 export async function initDb() {
   await db.execute(`

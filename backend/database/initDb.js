@@ -75,13 +75,10 @@ export async function initDb() {
 
   await db.execute({
     sql: `
-      INSERT INTO users (username, password)
-      SELECT ?, ?
-      WHERE NOT EXISTS (
-        SELECT 1 FROM users WHERE username = ?
-      )
+      INSERT OR IGNORE INTO users (username, password)
+      VALUES (?, ?)
     `,
-    args: [username, hash, username],
+    args: [username, hash],
   });
   console.log("User created:", username);
 

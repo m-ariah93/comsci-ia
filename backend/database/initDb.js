@@ -19,16 +19,6 @@ export const db = connect({
 
 
 export async function initDb() {
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS events (
-      id INTEGER PRIMARY KEY,
-      title TEXT NOT NULL,
-      start TEXT NOT NULL,
-      end TEXT,
-      project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
-      template_id INTEGER REFERENCES booking_templates(id)
-    )
-  `);
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS projects (
@@ -65,6 +55,17 @@ export async function initDb() {
       password TEXT, 
       email_greeting TEXT,
       email_closing TEXT
+    )
+  `);
+
+    await db.execute(`
+    CREATE TABLE IF NOT EXISTS events (
+      id INTEGER PRIMARY KEY,
+      title TEXT NOT NULL,
+      start TEXT NOT NULL,
+      end TEXT,
+      project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
+      template_id INTEGER REFERENCES booking_templates(id)
     )
   `);
 

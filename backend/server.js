@@ -311,7 +311,7 @@ app.put("/api/events/:id", async (req, res) => {
     }
 });
 
-app.delete("/events/:id", async (req, res) => {
+app.delete("/api/events/:id", async (req, res) => {
     const { id } = req.params;
     try {
         // const stmt = db.prepare("DELETE FROM events WHERE id = ?");

@@ -316,10 +316,9 @@ app.delete("/events/:id", async (req, res) => {
     try {
         // const stmt = db.prepare("DELETE FROM events WHERE id = ?");
         // const result = stmt.run(id);
-        const result = await db.execute({
-            sql: "DELETE FROM events WHERE id = ?",
-            args: [id],
-        });
+        const result = await db.execute(
+            "DELETE FROM events WHERE id = ?", [id]
+        );
 
         if (result.rowsAffected === 0) {
             return res.json({ error: "Event not found" });

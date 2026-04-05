@@ -55,7 +55,7 @@ export default function CalendarPage() {
 
     useEffect(() => {
         // fetch next event
-        fetch("http://localhost:3001/events/next")
+        fetch("/api/events/next")
             .then(res => res.json())
             .then(data => {
                 console.log("events/next response:", data)
@@ -89,7 +89,7 @@ export default function CalendarPage() {
 
     function refreshExternalEvents() {
         // refresh next up event card and draggable bookings
-        fetch("http://localhost:3001/events/next")
+        fetch("/api/events/next")
             .then(res => res.json())
             .then(data => setNextEvent(data))
             .catch(() => setNextEvent(null));

@@ -149,6 +149,34 @@ app.put("/api/settings", async (req, res) => {
 });
 
 // events table methods
+app.get("/api/events/next", async (req, res) => {
+    try {
+        let event;
+        // const stmt = db.prepare(`
+        //     SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
+        //     FROM events
+        //     LEFT JOIN projects ON events.project_id = projects.id
+        //     WHERE date(events.start) >= date('now')
+        //     ORDER BY date(events.start) ASC
+        //     LIMIT 1
+        // `);
+        // event = stmt.get();
+        const result = await db.execute(`
+            SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
+            FROM events
+            LEFT JOIN projects ON events.project_id = projects.id
+            WHERE date(events.start) >= date('now')
+            ORDER BY date(events.start) ASC
+            LIMIT 1
+        `);
+        event = result.rows[0];
+        res.json(event);
+    } catch (err) {
+        console.error(err);
+        res.json({ error: "Failed to fetch next event" });
+    }
+});
+
 app.get("/api/events", async (req, res) => {
     const projectId = req.query.project_id;
     try {
@@ -193,34 +221,6 @@ app.get("/api/events", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.json({ error: "Failed to fetch events" });
-    }
-});
-
-app.get("/api/events/next", async (req, res) => {
-    try {
-        let event;
-        // const stmt = db.prepare(`
-        //     SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
-        //     FROM events
-        //     LEFT JOIN projects ON events.project_id = projects.id
-        //     WHERE date(events.start) >= date('now')
-        //     ORDER BY date(events.start) ASC
-        //     LIMIT 1
-        // `);
-        // event = stmt.get();
-        const result = await db.execute(`
-            SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
-            FROM events
-            LEFT JOIN projects ON events.project_id = projects.id
-            WHERE date(events.start) >= date('now')
-            ORDER BY date(events.start) ASC
-            LIMIT 1
-        `);
-        event = result.rows[0];
-        res.json(event);
-    } catch (err) {
-        console.error(err);
-        res.json({ error: "Failed to fetch next event" });
     }
 });
 

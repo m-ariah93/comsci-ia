@@ -1,6 +1,6 @@
 console.log("ENV CHECK:", {
-  url: process.env.TURSO_DATABASE_URL,
-  token: process.env.TURSO_AUTH_TOKEN ? "present" : "missing"
+    url: process.env.TURSO_DATABASE_URL,
+    token: process.env.TURSO_AUTH_TOKEN ? "present" : "missing"
 });
 
 import express from "express";
@@ -36,7 +36,7 @@ app.use(async (req, res, next) => {
                 throw error;
             });
     }
-    
+
     try {
         await dbInitPromise;
         next();
@@ -46,15 +46,15 @@ app.use(async (req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.json({ message: "API root is working", time: Date.now() });
+    res.json({ message: "API root is working", time: Date.now() });
 });
 
 app.get("/index", (req, res) => {
-  res.json({ message: "/index route is working", time: Date.now() });
+    res.json({ message: "/index route is working", time: Date.now() });
 });
 
 app.get("/api/index", (req, res) => {
-  res.json({ message: "/api/index route is working", time: Date.now() });
+    res.json({ message: "/api/index route is working", time: Date.now() });
 });
 
 // debug route to test vercel routing
@@ -113,9 +113,11 @@ app.get("/api/settings", async (req, res) => {
         const result = await db.execute(
             "SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users"
         );
-        // const emailTemplate = result.rows[0];
-        // res.json(emailTemplate);
-        res.json(result.rows[0]); // return objects not array
+        const emailTemplate = result.rows[0];
+        res.json({
+            emailGreeting: emailTemplate[0],
+            emailClosing: emailTemplate[1]
+        });
     } catch (error) {
         console.error("Error fetching email template:", error);
         res.json({ error: "Failed to fetch email template" });

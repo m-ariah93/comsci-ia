@@ -333,22 +333,22 @@ app.delete("/api/events/:id", async (req, res) => {
 
 
 // projects table methods
-app.get("/projects", async (req, res) => {
+app.get("/api/projects", async (req, res) => {
     const { archived } = req.query;
     try {
         let projects;
         if (archived === undefined) {
             // projects = db.prepare("SELECT * FROM projects").all();
             const result = await db.execute("SELECT * FROM projects");
-            projects = result.rows;
+            projects = rowsToObjects(result);
         } else {
             // const stmt = db.prepare("SELECT * FROM projects WHERE archived = ?");
             // projects = stmt.all(archived);
-            const result = await db.execute({
-                sql: "SELECT * FROM projects WHERE archived = ?",
-                args: [archived],
-            });
-            projects = result.rows;
+            const result = await db.execute(
+                "SELECT * FROM projects WHERE archived = ?",
+                [archived]
+            );
+            projects = rowsToObjects(result);
         }
         res.json(projects);
     } catch (err) {

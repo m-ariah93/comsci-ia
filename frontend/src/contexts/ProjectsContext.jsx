@@ -15,12 +15,12 @@ export function ProjectsProvider({ children }) {
     const location = useLocation();
 
     const refreshProjects = () => {
-        fetch("http://localhost:3001/projects?archived=0") // only active projects
+        fetch("/api/projects?archived=0") // only active projects
             .then((res) => res.json())
             .then((data) => setActiveProjects(data))
             .catch(console.error);
 
-        fetch("http://localhost:3001/projects?archived=1") // only archived projects
+        fetch("/api/projects?archived=1") // only archived projects
             .then((res) => res.json())
             .then((data) => setArchivedProjects(data))
             .catch(console.error);

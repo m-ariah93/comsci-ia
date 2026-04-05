@@ -152,7 +152,7 @@ app.put("/api/settings", async (req, res) => {
 app.get("/api/events", async (req, res) => {
     const projectId = req.query.project_id;
     try {
-        let events;
+        let result;
         if (projectId) { // if project_id is not null or zero
             // const stmt = db.prepare(`
             //     SELECT events.*, projects.colour AS projectColour, projects.address AS address
@@ -161,14 +161,13 @@ app.get("/api/events", async (req, res) => {
             //     WHERE events.project_id = ?
             // `);
             // events = stmt.all(projectId); // projectId parameter goes into stmt placeholder (?)
-            const result = await db.execute(`
+            result = await db.execute(`
                 SELECT events.*, projects.colour AS projectColour, projects.address AS address
                 FROM events
                 LEFT JOIN projects ON events.project_id = projects.id
                 WHERE events.project_id = ?`,
                 [projectId]
             );
-            events = result.rows;
 
         } else {
             // const stmt = db.prepare(`
@@ -183,16 +182,20 @@ app.get("/api/events", async (req, res) => {
             //     LEFT JOIN projects ON events.project_id = projects.id
             // `);
 
-            const result = await db.execute(`
+            result = await db.execute(`
                 SELECT events.*, projects.colour AS projectColour
                 FROM events
-                LEFT JOIN projects ON events.project_id = projects.id`,
-                [],
-                { rowMode: "object" } // return objects not array
+                LEFT JOIN projects ON events.project_id = projects.id`
             );
-            events = result.rows;
 
         }
+        const events = result.rows.map(row => {
+            const obj = {};
+            result.columns.forEach((col, i) => {
+                obj[col] = row[i];
+            });
+            return obj;
+        }); // return objects not array
         res.json(events);
     } catch (err) {
         console.error(err);

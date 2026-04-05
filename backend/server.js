@@ -1,8 +1,3 @@
-console.log("ENV CHECK:", {
-    url: process.env.TURSO_DATABASE_URL,
-    token: process.env.TURSO_AUTH_TOKEN ? "present" : "missing"
-});
-
 import express from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";
@@ -22,7 +17,7 @@ function rowsToObjects(result) {
     });
 }
 
-// Request logging for debugging
+// request logging for debugging
 app.use((req, res, next) => {
     console.log(`[API] ${req.method} ${req.path}`);
     next();
@@ -56,36 +51,12 @@ app.use(async (req, res, next) => {
     }
 });
 
-app.get("/", (req, res) => {
-    res.json({ message: "API root is working", time: Date.now() });
-});
-
-app.get("/index", (req, res) => {
-    res.json({ message: "/index route is working", time: Date.now() });
-});
-
-app.get("/api/index", (req, res) => {
-    res.json({ message: "/api/index route is working", time: Date.now() });
-});
-
-// debug route to test vercel routing
-app.get("/api/test", (req, res) => {
-    res.json({ message: "express app is working" });
-});
-
-
 // user authentication methods
 
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        // const stmt = db.prepare("SELECT * FROM users WHERE username = ?");
-        // const user = stmt.get(username);
-        // const result = await db.execute({
-        //     sql: "SELECT * FROM users WHERE username = ?",
-        //     args: [username],
-        // });
         const result = await db.execute("SELECT * FROM users WHERE username = ?", [username]);
         const user = result.rows[0];
 
@@ -119,8 +90,6 @@ app.post("/api/login", async (req, res) => {
 
 app.get("/api/settings", async (req, res) => {
     try {
-        // const stmt = db.prepare("SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users");
-        // const emailTemplate = stmt.get();
         const result = await db.execute(
             "SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users"
         );
@@ -139,19 +108,13 @@ app.put("/api/settings", async (req, res) => {
     const { greeting, closing } = req.body;
 
     try {
-        // const stmt = db.prepare("UPDATE users SET email_greeting = ?, email_closing = ?");
-        // const result = stmt.run(greeting, closing);
-        // const result = await db.execute({
-        //     sql: "UPDATE users SET email_greeting = ?, email_closing = ?",
-        //     args: [greeting, closing],
-        // });
-
-        const result = await db.execute("UPDATE users SET email_greeting = ?, email_closing = ?", [greeting, closing]);
-
+        const result = await db.execute(
+            "UPDATE users SET email_greeting = ?, email_closing = ?", 
+            [greeting, closing]
+        );
         if (result.rowsAffected === 0) {
             return res.json({ error: "User not found" });
         }
-
         res.json({ greeting, closing });
     } catch (error) {
         console.error("Error updating email template:", error);
@@ -162,16 +125,6 @@ app.put("/api/settings", async (req, res) => {
 // events table methods
 app.get("/api/events/next", async (req, res) => {
     try {
-        let event;
-        // const stmt = db.prepare(`
-        //     SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
-        //     FROM events
-        //     LEFT JOIN projects ON events.project_id = projects.id
-        //     WHERE date(events.start) >= date('now')
-        //     ORDER BY date(events.start) ASC
-        //     LIMIT 1
-        // `);
-        // event = stmt.get();
         const result = await db.execute(`
             SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
             FROM events
@@ -181,7 +134,7 @@ app.get("/api/events/next", async (req, res) => {
             LIMIT 1
         `);
         const events = rowsToObjects(result);
-        event = events[0];
+        const event = events[0];
         res.json(event);
     } catch (err) {
         console.error(err);
@@ -203,24 +156,11 @@ app.get("/api/events", async (req, res) => {
             ); // projectId parameter goes into stmt placeholder (?)
 
         } else {
-            // const stmt = db.prepare(`
-            //     SELECT events.*, projects.colour AS projectColour
-            //     FROM events
-            //     LEFT JOIN projects ON events.project_id = projects.id
-            // `);
-            // events = stmt.all();
-            // const result = await db.execute(`
-            //     SELECT events.*, projects.colour AS projectColour
-            //     FROM events
-            //     LEFT JOIN projects ON events.project_id = projects.id
-            // `);
-
             result = await db.execute(`
                 SELECT events.*, projects.colour AS projectColour
                 FROM events
                 LEFT JOIN projects ON events.project_id = projects.id`
             );
-
         }
         const events = rowsToObjects(result);
         res.json(events);
@@ -234,13 +174,6 @@ app.get("/api/events/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        // const stmt = db.prepare(`
-        //     SELECT events.*, projects.colour AS projectColour, projects.address AS address
-        //     FROM events
-        //     LEFT JOIN projects ON events.project_id = projects.id
-        //     WHERE events.id = ?`);
-        // const thisEvent = stmt.get(id);
-
         const result = await db.execute(`
             SELECT events.*, projects.colour AS projectColour, projects.address AS address
             FROM events
@@ -269,8 +202,6 @@ app.post("/api/events", async (req, res) => {
     }
 
     try {
-        // const stmt = db.prepare("INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)");
-        // const result = stmt.run(title, start, end, project_id, template_id);
         const result = await db.execute(`
             INSERT INTO events (title, start, end, project_id, template_id)
             VALUES (?, ?, ?, ?, ?)`,
@@ -293,8 +224,6 @@ app.put("/api/events/:id", async (req, res) => {
     }
 
     try {
-        // const stmt = db.prepare("UPDATE events SET start = ?, end = ? WHERE id = ?");
-        // const result = stmt.run(start, end, id);
         const result = await db.execute(
             "UPDATE events SET start = ?, end = ? WHERE id = ?",
             [start, end, id]
@@ -314,8 +243,6 @@ app.put("/api/events/:id", async (req, res) => {
 app.delete("/api/events/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        // const stmt = db.prepare("DELETE FROM events WHERE id = ?");
-        // const result = stmt.run(id);
         const result = await db.execute(
             "DELETE FROM events WHERE id = ?", [id]
         );
@@ -338,12 +265,9 @@ app.get("/api/projects", async (req, res) => {
     try {
         let projects;
         if (archived === undefined) {
-            // projects = db.prepare("SELECT * FROM projects").all();
             const result = await db.execute("SELECT * FROM projects");
             projects = rowsToObjects(result);
         } else {
-            // const stmt = db.prepare("SELECT * FROM projects WHERE archived = ?");
-            // projects = stmt.all(archived);
             const result = await db.execute(
                 "SELECT * FROM projects WHERE archived = ?",
                 [archived]
@@ -361,8 +285,6 @@ app.get("/api/projects/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        // const stmt = db.prepare("SELECT * FROM projects WHERE id = ?");
-        // const project = stmt.get(id);
         const result = await db.execute(
             "SELECT * FROM projects WHERE id = ?", [id]
         );
@@ -384,16 +306,6 @@ app.get("/api/projects/:id/templates", async (req, res) => {
     const { id } = req.params;
 
     try {
-        // const stmt = db.prepare(`
-        //     SELECT 
-        //         booking_templates.id AS bookingId,
-        //         booking_templates.title,
-        //         CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
-        //     FROM booking_templates
-        //     LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
-        //     WHERE booking_templates.project_id = ?
-        // `);
-        // const templates = stmt.all(id);
         const result = await db.execute(`
             SELECT 
                 booking_templates.id AS bookingId,
@@ -415,12 +327,6 @@ app.get("/api/projects/:id/checklist", async (req, res) => {
     const { id } = req.params;
 
     try {
-        // const stmt = db.prepare(`
-        //     SELECT id, title, done
-        //     FROM checklist
-        //     WHERE project_id = ?
-        // `);
-        // const checklist = stmt.all(id);
         const result = await db.execute(`
             SELECT id, title, done
             FROM checklist
@@ -443,8 +349,6 @@ app.put("/api/projects/:projectId/checklist/:checklistId", async (req, res) => {
     }
 
     try {
-        // const stmt = db.prepare("UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?");
-        // const result = stmt.run(done, checklistId, projectId);
         const result = await db.execute(
             "UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?",
             [done, checklistId, projectId]
@@ -472,8 +376,6 @@ app.post("/api/projects", async (req, res) => {
     }
 
     try {
-        // const stmt = db.prepare("INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)");
-        // const result = stmt.run(title, address, start_month, colour);
         const result = await db.execute(
             "INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)",
             [title, address, start_month, colour]
@@ -550,9 +452,6 @@ app.put("/api/projects/:id", async (req, res) => {
     const values = Object.values(updates);
 
     try {
-        // const stmt = db.prepare(`UPDATE projects SET ${setClauses} WHERE id = ?`);
-        // const result = stmt.run(...values, id);
-
         const result = await db.execute(
             `UPDATE projects SET ${setClauses} WHERE id = ?`,
             [...values, id]
@@ -572,8 +471,6 @@ app.put("/api/projects/:id", async (req, res) => {
 app.delete("/api/projects/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        // const stmt = db.prepare("DELETE FROM projects WHERE id = ?");
-        // const result = stmt.run(id);
         const result = await db.execute(
             "DELETE FROM projects WHERE id = ?", [id]
         );
@@ -589,13 +486,9 @@ app.delete("/api/projects/:id", async (req, res) => {
     }
 });
 
-// const PORT = 3001;
-// app.listen(PORT, () => {
-//     console.log(`Backend running on http://localhost:${PORT}`);
-// });
 
 
-// Catch-all error handler for unhandled errors (always return JSON)
+// for all unhandled errors (always return json)
 app.use((err, req, res, next) => {
     console.error("Unhandled error:", err);
     res.status(500).json({ error: "Internal server error" });

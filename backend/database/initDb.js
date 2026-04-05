@@ -1,12 +1,3 @@
-// import { createClient } from "@libsql/client";
-// const dbPath = path.resolve("database", "app.db");
-// const db = new Database(dbPath);
-
-//console.log(process.env.TURSO_DATABASE_URL, process.env.TURSO_AUTH_TOKEN);
-// const db = createClient({
-//   url: process.env.TURSO_DATABASE_URL,
-//   authToken: process.env.TURSO_AUTH_TOKEN,
-// });
 import bcrypt from "bcrypt";
 import { connect } from "@tursodatabase/serverless";
 
@@ -72,19 +63,10 @@ export async function initDb() {
 
   const hash = bcrypt.hashSync(plainPassword, 10);
 
-  console.log("Username: " + username + ", password hash: " + hash);
-
-  // await db.execute({
-  //   sql: "INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)",
-  //   args: [username, hash]
-  // });
-
   await db.execute(
     "INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)",
     [username, hash]
   );
-
-  console.log("User created:", username);
 
 }
 

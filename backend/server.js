@@ -154,20 +154,13 @@ app.get("/api/events", async (req, res) => {
     try {
         let result;
         if (projectId) { // if project_id is not null or zero
-            // const stmt = db.prepare(`
-            //     SELECT events.*, projects.colour AS projectColour, projects.address AS address
-            //     FROM events
-            //     LEFT JOIN projects ON events.project_id = projects.id
-            //     WHERE events.project_id = ?
-            // `);
-            // events = stmt.all(projectId); // projectId parameter goes into stmt placeholder (?)
             result = await db.execute(`
                 SELECT events.*, projects.colour AS projectColour, projects.address AS address
                 FROM events
                 LEFT JOIN projects ON events.project_id = projects.id
                 WHERE events.project_id = ?`,
                 [projectId]
-            );
+            ); // projectId parameter goes into stmt placeholder (?)
 
         } else {
             // const stmt = db.prepare(`

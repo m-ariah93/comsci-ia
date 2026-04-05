@@ -73,6 +73,7 @@ export default function CalendarPage() {
         if (currentProjectId === 0) {
             return;
         }
+        setTemplateBookings(null); // reset to null so spinner shows
         fetch(`/api/projects/${currentProjectId}/templates`)
             .then(res => res.json())
             .then(data => setTemplateBookings(data));

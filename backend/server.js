@@ -11,6 +11,17 @@ import db, { initDb } from "./database/initDb.js";
 
 const app = express();
 
+// helper function - convert arrays from db to objects using column names
+function rowsToObjects(result) {
+    return result.rows.map(row => {
+        const obj = {};
+        result.columns.forEach((col, i) => {
+            obj[col] = row[i];
+        });
+        return obj;
+    });
+}
+
 // Request logging for debugging
 app.use((req, res, next) => {
     console.log(`[API] ${req.method} ${req.path}`);
@@ -169,7 +180,8 @@ app.get("/api/events/next", async (req, res) => {
             ORDER BY date(events.start) ASC
             LIMIT 1
         `);
-        event = result.rows[0];
+        const events = rowsToObjects(result);
+        event = events[0];
         res.json(event);
     } catch (err) {
         console.error(err);
@@ -210,13 +222,7 @@ app.get("/api/events", async (req, res) => {
             );
 
         }
-        const events = result.rows.map(row => {
-            const obj = {};
-            result.columns.forEach((col, i) => {
-                obj[col] = row[i];
-            });
-            return obj;
-        }); // return objects not array
+        const events = rowsToObjects(result);
         res.json(events);
     } catch (err) {
         console.error(err);

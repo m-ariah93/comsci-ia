@@ -58,7 +58,7 @@ app.get("/api/index", (req, res) => {
 });
 
 // debug route to test vercel routing
-app.get("/test", (req, res) => {
+app.get("/api/test", (req, res) => {
     res.json({ message: "express app is working" });
 });
 

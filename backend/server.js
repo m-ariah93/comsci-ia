@@ -124,16 +124,18 @@ app.get("/api/settings", async (req, res) => {
     }
 });
 
-app.put("/settings", async (req, res) => {
+app.put("/api/settings", async (req, res) => {
     const { greeting, closing } = req.body;
 
     try {
         // const stmt = db.prepare("UPDATE users SET email_greeting = ?, email_closing = ?");
         // const result = stmt.run(greeting, closing);
-        const result = await db.execute({
-            sql: "UPDATE users SET email_greeting = ?, email_closing = ?",
-            args: [greeting, closing],
-        });
+        // const result = await db.execute({
+        //     sql: "UPDATE users SET email_greeting = ?, email_closing = ?",
+        //     args: [greeting, closing],
+        // });
+
+        const result = await db.execute("UPDATE users SET email_greeting = ?, email_closing = ?", [greeting, closing]);
 
         if (result.rowsAffected === 0) {
             return res.json({ error: "User not found" });

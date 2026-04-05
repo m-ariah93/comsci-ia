@@ -78,7 +78,13 @@ export async function initDb() {
   //   sql: "INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)",
   //   args: [username, hash]
   // });
-  // console.log("User created:", username);
+
+  await db.execute(
+    "INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)",
+    [username, hash]
+  );
+
+  console.log("User created:", username);
 
 }
 

@@ -106,7 +106,7 @@ app.post("/api/login", async (req, res) => {
 
 // user settings
 
-app.get("/settings", async (req, res) => {
+app.get("/api/settings", async (req, res) => {
     try {
         // const stmt = db.prepare("SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users");
         // const emailTemplate = stmt.get();

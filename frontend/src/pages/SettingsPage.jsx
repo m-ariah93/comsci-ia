@@ -6,7 +6,7 @@ export default function SettingsPage() {
 	const [emailClosing, setEmailClosing] = useState("");
 
 	useEffect(() => {
-		fetch("http://localhost:3001/settings")
+		fetch("/api/settings")
 			.then(res => res.json())
 			.then(data => {
 				setEmailGreeting(data.emailGreeting);
@@ -32,7 +32,7 @@ export default function SettingsPage() {
 			return;
 		}
 
-		fetch("http://localhost:3001/settings", {
+		fetch("/api/settings", {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

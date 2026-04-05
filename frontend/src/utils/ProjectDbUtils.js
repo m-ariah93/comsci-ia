@@ -1,6 +1,6 @@
 export function archiveProject(id) {
     console.log("Attempting to archive project " + id)
-    return fetch(`http://localhost:3001/projects/${id}`, {
+    return fetch(`/api/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -10,7 +10,7 @@ export function archiveProject(id) {
 }
 
 export function unarchiveProject(id) {
-    return fetch(`http://localhost:3001/projects/${id}`, {
+    return fetch(`/api/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -21,7 +21,7 @@ export function unarchiveProject(id) {
 
 export function saveProject(id, title, address, startMonth, colour) {
     // need to add form validation: character limit on title
-    return fetch(`http://localhost:3001/projects/${id}`, {
+    return fetch(`/api/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -37,7 +37,7 @@ export function saveProject(id, title, address, startMonth, colour) {
 
 export function deleteProject(id) {
     console.log("Attempting to delete project " + id)
-    return fetch(`http://localhost:3001/projects/${id}`, {
+    return fetch(`/api/projects/${id}`, {
         method: "DELETE",
     })
     .catch(err => console.error("DELETE error:", err));

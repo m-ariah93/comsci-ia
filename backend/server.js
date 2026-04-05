@@ -434,7 +434,7 @@ app.get("/api/projects/:id/checklist", async (req, res) => {
     }
 });
 
-app.put("/projects/:projectId/checklist/:checklistId", async (req, res) => {
+app.put("/api/projects/:projectId/checklist/:checklistId", async (req, res) => {
     const { projectId, checklistId } = req.params;
     const { done } = req.body;
 
@@ -445,16 +445,15 @@ app.put("/projects/:projectId/checklist/:checklistId", async (req, res) => {
     try {
         // const stmt = db.prepare("UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?");
         // const result = stmt.run(done, checklistId, projectId);
-        const result = await db.execute({
-            sql: "UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?",
-            args: [done, checklistId, projectId],
-        });
+        const result = await db.execute(
+            "UPDATE checklist SET done = ? WHERE id = ? AND project_id = ?",
+            [done, checklistId, projectId]
+        );
 
         if (result.rowsAffected === 0) {
             return res.json({ error: "Checklist not found" });
         }
         console.log("checklist value set to", done);
-
 
         res.json({ projectId, checklistId, done });
     } catch (error) {
@@ -465,7 +464,7 @@ app.put("/projects/:projectId/checklist/:checklistId", async (req, res) => {
 
 import bookingsTemplate from "./templates/bookingsTemplate.js";
 import checklistTemplate from "./templates/checklistTemplate.js";
-app.post("/projects", async (req, res) => {
+app.post("/api/projects", async (req, res) => {
     const { title, address, start_month, colour } = req.body;
 
     if (!title || !address || !start_month || !colour) {
@@ -475,10 +474,10 @@ app.post("/projects", async (req, res) => {
     try {
         // const stmt = db.prepare("INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)");
         // const result = stmt.run(title, address, start_month, colour);
-        const result = await db.execute({
-            sql: "INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)",
-            args: [title, address, start_month, colour],
-        })
+        const result = await db.execute(
+            "INSERT INTO projects (title, address, start_month, colour) VALUES (?, ?, ?, ?)",
+            [title, address, start_month, colour]
+        )
 
         const projectId = Number(result.lastInsertRowid);
 
@@ -516,19 +515,19 @@ app.post("/projects", async (req, res) => {
 
         await Promise.all(
             bookingsTemplate.map(title =>
-                db.execute({
-                    sql: "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)",
-                    args: [projectId, title],
-                })
+                db.execute(
+                    "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)",
+                    [projectId, title]
+                )
             )
         );
 
         await Promise.all(
             checklistTemplate.map(task =>
-                db.execute({
-                    sql: "INSERT INTO checklist (project_id, title) VALUES (?, ?)",
-                    args: [projectId, task],
-                })
+                db.execute(
+                    "INSERT INTO checklist (project_id, title) VALUES (?, ?)",
+                    [projectId, task]
+                )
             )
         );
 
@@ -539,7 +538,7 @@ app.post("/projects", async (req, res) => {
     }
 });
 
-app.put("/projects/:id", async (req, res) => {
+app.put("/api/projects/:id", async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
@@ -554,10 +553,10 @@ app.put("/projects/:id", async (req, res) => {
         // const stmt = db.prepare(`UPDATE projects SET ${setClauses} WHERE id = ?`);
         // const result = stmt.run(...values, id);
 
-        const result = await db.execute({
-            sql: `UPDATE projects SET ${setClauses} WHERE id = ?`,
-            args: [...values, id],
-        });
+        const result = await db.execute(
+            `UPDATE projects SET ${setClauses} WHERE id = ?`,
+            [...values, id]
+        );
 
         if (result.rowsAffected === 0) {
             return res.json({ error: "Project not found" });
@@ -570,15 +569,14 @@ app.put("/projects/:id", async (req, res) => {
     }
 });
 
-app.delete("/projects/:id", async (req, res) => {
+app.delete("/api/projects/:id", async (req, res) => {
     const { id } = req.params;
     try {
         // const stmt = db.prepare("DELETE FROM projects WHERE id = ?");
         // const result = stmt.run(id);
-        const result = await db.execute({
-            sql: "DELETE FROM projects WHERE id = ?",
-            args: [id],
-        });
+        const result = await db.execute(
+            "DELETE FROM projects WHERE id = ?", [id]
+        );
 
         if (result.rowsAffected === 0) {
             return res.json({ error: "Project not found" });

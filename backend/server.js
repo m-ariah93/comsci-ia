@@ -261,7 +261,7 @@ app.get("/api/events/:id", async (req, res) => {
     }
 });
 
-app.post("/events", async (req, res) => {
+app.post("/api/events", async (req, res) => {
     const { title, start, end, project_id, template_id } = req.body;
 
     if (!title || !start) {
@@ -271,10 +271,11 @@ app.post("/events", async (req, res) => {
     try {
         // const stmt = db.prepare("INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)");
         // const result = stmt.run(title, start, end, project_id, template_id);
-        const result = await db.execute({
-            sql: "INSERT INTO events (title, start, end, project_id, template_id) VALUES (?, ?, ?, ?, ?)",
-            args: [title, start, end, project_id, template_id],
-        });
+        const result = await db.execute(`
+            INSERT INTO events (title, start, end, project_id, template_id)
+            VALUES (?, ?, ?, ?, ?)`,
+            [title, start, end, project_id, template_id]
+        );
 
         res.json({ id: result.lastInsertRowid, title, start, end, project_id, template_id });
     } catch (error) {

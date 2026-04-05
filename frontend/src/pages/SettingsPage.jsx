@@ -58,27 +58,29 @@ export default function SettingsPage() {
 						<span className="visually-hidden">Loading...</span>
 					</div>
 				) : (
-					<div className="container-fluid mb-3 px-0 mt-3">
-						<div className="row mb-2">
-							<div className="col-12 col-md-auto pb-2" style={{ maxWidth: "200px", width: "100%" }}>
-								<label htmlFor="subcontractorEmailGreeting" className="form-label mb-0">Default email greeting</label>
+					<>
+						<div className="container-fluid mb-3 px-0 mt-3">
+							<div className="row mb-2">
+								<div className="col-12 col-md-auto pb-2" style={{ maxWidth: "200px", width: "100%" }}>
+									<label htmlFor="subcontractorEmailGreeting" className="form-label mb-0">Default email greeting</label>
+								</div>
+								<div className="col-12 col-md">
+									<textarea className="form-control mb-3 fst-italic" id="subcontractorEmailGreeting" rows="1" value={emailGreeting} onChange={(e) => setEmailGreeting(e.target.value)} required></textarea>
+									<p className="ms-2 mb-2"><i>Could you please confirm the booking for the <b className="fst-normal">event title</b> on the <b className="fst-normal">date</b> of <b className="fst-normal">month</b>?</i></p>
+								</div>
 							</div>
-							<div className="col-12 col-md">
-								<textarea className="form-control mb-3 fst-italic" id="subcontractorEmailGreeting" rows="1" value={emailGreeting} onChange={(e) => setEmailGreeting(e.target.value)} required></textarea>
-								<p className="ms-2 mb-2"><i>Could you please confirm the booking for the <b className="fst-normal">event title</b> on the <b className="fst-normal">date</b> of <b className="fst-normal">month</b>?</i></p>
+							<div className="row">
+								<div className="col-12 col-md-auto pb-2" style={{ maxWidth: "200px", width: "100%" }}>
+									<label htmlFor="subcontractorEmailClosing" className="form-label mb-0">Default email signature</label>
+								</div>
+								<div className="col-12 col-md">
+									<textarea className="form-control fst-italic" id="subcontractorEmailClosing" rows="3" value={emailClosing} onChange={(e) => setEmailClosing(e.target.value)} required></textarea>
+								</div>
 							</div>
 						</div>
-						<div className="row">
-							<div className="col-12 col-md-auto pb-2" style={{ maxWidth: "200px", width: "100%" }}>
-								<label htmlFor="subcontractorEmailClosing" className="form-label mb-0">Default email signature</label>
-							</div>
-							<div className="col-12 col-md">
-								<textarea className="form-control fst-italic" id="subcontractorEmailClosing" rows="3" value={emailClosing} onChange={(e) => setEmailClosing(e.target.value)} required></textarea>
-							</div>
-						</div>
-					</div>
+						<button type="submit" className="btn btn-primary">Save changes</button>
+					</>
 				)}
-				<button type="submit" className="btn btn-primary" disabled={!emailLoaded}>Save changes</button>
 			</form>
 			<hr className="mx-2 my-4" />
 			<h4>Notifications</h4>

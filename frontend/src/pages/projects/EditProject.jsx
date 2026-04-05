@@ -12,7 +12,7 @@ export default function EditProject() {
     const { archiveProject, saveProject } = useProjects();
 
     useEffect(() => {
-        fetch(`http://localhost:3001/projects/${id}`)
+        fetch(`/api/projects/${id}`)
             .then(res => res.json())
             .then(data => {
                 setProject(data);

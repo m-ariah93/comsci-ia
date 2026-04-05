@@ -357,17 +357,17 @@ app.get("/api/projects", async (req, res) => {
     }
 });
 
-app.get("/projects/:id", async (req, res) => {
+app.get("/api/projects/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
         // const stmt = db.prepare("SELECT * FROM projects WHERE id = ?");
         // const project = stmt.get(id);
-        const result = await db.execute({
-            sql: "SELECT * FROM projects WHERE id = ?",
-            args: [id],
-        });
-        const project = result.rows[0];
+        const result = await db.execute(
+            "SELECT * FROM projects WHERE id = ?", [id]
+        );
+        const projects = rowsToObjects(result);
+        const project = projects[0];
 
         if (!project) {
             return res.json({ error: "Project not found" });
@@ -380,7 +380,7 @@ app.get("/projects/:id", async (req, res) => {
     }
 });
 
-app.get("/projects/:id/templates", async (req, res) => {
+app.get("/api/projects/:id/templates", async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -394,19 +394,16 @@ app.get("/projects/:id/templates", async (req, res) => {
         //     WHERE booking_templates.project_id = ?
         // `);
         // const templates = stmt.all(id);
-        const result = await db.execute({
-            sql: `
-                SELECT 
-                    booking_templates.id AS bookingId,
-                    booking_templates.title,
-                    CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
-                FROM booking_templates
-                LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
-                WHERE booking_templates.project_id = ?
-            `,
-            args: [id],
-        });
-        const templates = result.rows;
+        const result = await db.execute(`
+            SELECT 
+                booking_templates.id AS bookingId,
+                booking_templates.title,
+                CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
+            FROM booking_templates
+            LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
+            WHERE booking_templates.project_id = ?`, [id]
+        );
+        const templates = rowsToObjects(result);
         res.json(templates);
     } catch (error) {
         console.error("Error fetching project template bookings:", error);
@@ -414,7 +411,7 @@ app.get("/projects/:id/templates", async (req, res) => {
     }
 });
 
-app.get("/projects/:id/checklist", async (req, res) => {
+app.get("/api/projects/:id/checklist", async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -424,15 +421,12 @@ app.get("/projects/:id/checklist", async (req, res) => {
         //     WHERE project_id = ?
         // `);
         // const checklist = stmt.all(id);
-        const result = await db.execute({
-            sql: `
-                SELECT id, title, done
-                FROM checklist
-                WHERE project_id = ?
-            `,
-            args: [id],
-        });
-        const checklist = result.rows;
+        const result = await db.execute(`
+            SELECT id, title, done
+            FROM checklist
+            WHERE project_id = ?`, [id]
+        );
+        const checklist = rowsToObjects(result);
         res.json(checklist);
     } catch (error) {
         console.error("Error fetching project checklist:", error);

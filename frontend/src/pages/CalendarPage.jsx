@@ -44,7 +44,7 @@ export default function CalendarPage() {
 
     // store current project (for colour for draggable events, and passing to Calendar)
     useEffect(() => {
-        fetch(`http://localhost:3001/projects/${currentProjectId}`)
+        fetch(`/api/projects/${currentProjectId}`)
             .then(res => res.json())
             .then(data => {
                 setCurrentProject(data);
@@ -73,7 +73,7 @@ export default function CalendarPage() {
         if (currentProjectId === 0) {
             return;
         }
-        fetch(`http://localhost:3001/projects/${currentProjectId}/templates`)
+        fetch(`/api/projects/${currentProjectId}/templates`)
             .then(res => res.json())
             .then(data => setTemplateBookings(data));
     }, [currentProjectId]);
@@ -93,7 +93,7 @@ export default function CalendarPage() {
             .then(res => res.json())
             .then(data => setNextEvent(data))
             .catch(() => setNextEvent(null));
-        fetch(`http://localhost:3001/projects/${currentProjectId}/templates`)
+        fetch(`/api/projects/${currentProjectId}/templates`)
             .then(res => res.json())
             .then(data => setTemplateBookings(data));
     }

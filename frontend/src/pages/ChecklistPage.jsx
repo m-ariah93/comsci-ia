@@ -24,7 +24,7 @@ export default function ChecklistPage() {
 
     useEffect(() => {
         if (!currentProjectId) return;
-        fetch(`http://localhost:3001/projects/${currentProjectId}/checklist`)
+        fetch(`/api/projects/${currentProjectId}/checklist`)
             .then(res => res.json())
             .then(data => setChecklist(data));
     }, [currentProjectId, onChecklistChange]);
@@ -32,7 +32,7 @@ export default function ChecklistPage() {
     const location = useLocation();
 
     function onChecklistChange(checklistId, checked) {
-        fetch(`http://localhost:3001/projects/${currentProjectId}/checklist/${checklistId}`, {
+        fetch(`/api/projects/${currentProjectId}/checklist/${checklistId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

@@ -177,12 +177,21 @@ app.get("/api/events", async (req, res) => {
             //     LEFT JOIN projects ON events.project_id = projects.id
             // `);
             // events = stmt.all();
+            // const result = await db.execute(`
+            //     SELECT events.*, projects.colour AS projectColour
+            //     FROM events
+            //     LEFT JOIN projects ON events.project_id = projects.id
+            // `);
+
             const result = await db.execute(`
                 SELECT events.*, projects.colour AS projectColour
                 FROM events
-                LEFT JOIN projects ON events.project_id = projects.id
-            `);
+                LEFT JOIN projects ON events.project_id = projects.id`,
+                [],
+                { rowMode: "object" } // return objects not array
+            );
             events = result.rows;
+
         }
         res.json(events);
     } catch (err) {
@@ -191,7 +200,7 @@ app.get("/api/events", async (req, res) => {
     }
 });
 
-app.get("/events/next", async (req, res) => {
+app.get("/api/events/next", async (req, res) => {
     try {
         let event;
         // const stmt = db.prepare(`

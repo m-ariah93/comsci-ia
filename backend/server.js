@@ -65,7 +65,7 @@ app.get("/api/test", (req, res) => {
 
 // user authentication methods
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
     try {

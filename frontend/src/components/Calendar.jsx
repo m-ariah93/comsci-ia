@@ -12,7 +12,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
   }, [currentProjectId]);
 
   function handleEventDrop(info) {
-    fetch(`http://localhost:3001/events/${info.event.id}`, {
+    fetch(`/api/events/${info.event.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -42,7 +42,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
   }
 
   function handleEventResize(info) {
-    fetch(`http://localhost:3001/events/${info.event.id}`, {
+    fetch(`/api/events/${info.event.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -75,7 +75,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
       info.event.remove();
 
-      fetch(`http://localhost:3001/events/${eventId}`, {
+      fetch(`/api/events/${eventId}`, {
         // delete event from events table
         method: "DELETE",
       })
@@ -93,7 +93,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     const confirmationButton = document.createElement("a");
     confirmationButton.className = "btn btn-secondary btn-sm me-2";
     confirmationButton.textContent = "Request confirmation";
-    fetch(`http://localhost:3001/events/${info.event.id}`)
+    fetch(`/api/events/${info.event.id}`)
       .then(res => res.json())
       .then(data => {
         confirmationButton.href = mailtoLink(data);
@@ -104,7 +104,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     deleteButton.className = "btn btn-danger btn-sm";
     deleteButton.textContent = "Delete";
     deleteButton.onclick = () => {
-      fetch(`http://localhost:3001/events/${info.event.id}`, {
+      fetch(`/api/events/${info.event.id}`, {
         method: "DELETE",
       })
         .then(() => {

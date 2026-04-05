@@ -100,7 +100,7 @@ export default function CalendarPage() {
 
     const handleEventsChanged = () => {
         refreshExternalEvents();
-        const url = currentProjectId === 0 ? "http://localhost:3001/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
+        const url = currentProjectId === 0 ? "/api/events" : `http://localhost:3001/events?project_id=${currentProjectId}`;
         fetch(url)
             .then(res => res.json())
             .then(data => {

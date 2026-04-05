@@ -25,7 +25,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
   function handleEventReceive(info) {
     const templateId = info.draggedEl.dataset.templateId;
-    fetch("http://localhost:3001/events", {
+    fetch("/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

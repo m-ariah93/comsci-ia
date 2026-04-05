@@ -149,7 +149,7 @@ app.put("/api/settings", async (req, res) => {
 });
 
 // events table methods
-app.get("/events", async (req, res) => {
+app.get("/api/events", async (req, res) => {
     const projectId = req.query.project_id;
     try {
         let events;
@@ -161,15 +161,13 @@ app.get("/events", async (req, res) => {
             //     WHERE events.project_id = ?
             // `);
             // events = stmt.all(projectId); // projectId parameter goes into stmt placeholder (?)
-            const result = await db.execute({
-                sql: `
-                    SELECT events.*, projects.colour AS projectColour, projects.address AS address
-                    FROM events
-                    LEFT JOIN projects ON events.project_id = projects.id
-                    WHERE events.project_id = ?
-                `,
-                args: [projectId],
-            });
+            const result = await db.execute(`
+                SELECT events.*, projects.colour AS projectColour, projects.address AS address
+                FROM events
+                LEFT JOIN projects ON events.project_id = projects.id
+                WHERE events.project_id = ?`,
+                [projectId]
+            );
             events = result.rows;
 
         } else {

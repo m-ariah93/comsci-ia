@@ -284,7 +284,7 @@ app.post("/api/events", async (req, res) => {
     }
 });
 
-app.put("/events/:id", async (req, res) => {
+app.put("/api/events/:id", async (req, res) => {
     const { id } = req.params;
     const { start, end } = req.body;
 
@@ -295,10 +295,10 @@ app.put("/events/:id", async (req, res) => {
     try {
         // const stmt = db.prepare("UPDATE events SET start = ?, end = ? WHERE id = ?");
         // const result = stmt.run(start, end, id);
-        const result = await db.execute({
-            sql: "UPDATE events SET start = ?, end = ? WHERE id = ?",
-            args: [start, end, id],
-        })
+        const result = await db.execute(
+            "UPDATE events SET start = ?, end = ? WHERE id = ?",
+            [start, end, id]
+        )
 
         if (result.rowsAffected === 0) {
             return res.json({ error: "Event not found" });

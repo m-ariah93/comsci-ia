@@ -113,9 +113,9 @@ app.get("/api/settings", async (req, res) => {
         const result = await db.execute(
             "SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users"
         );
-        const emailTemplate = result.rows[0];
-
-        res.json(emailTemplate);
+        // const emailTemplate = result.rows[0];
+        // res.json(emailTemplate);
+        res.json(result.rows[0]); // return objects not array
     } catch (error) {
         console.error("Error fetching email template:", error);
         res.json({ error: "Failed to fetch email template" });

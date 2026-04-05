@@ -45,6 +45,18 @@ app.use(async (req, res, next) => {
     }
 });
 
+app.get("/", (req, res) => {
+  res.json({ message: "API root is working", time: Date.now() });
+});
+
+app.get("/index", (req, res) => {
+  res.json({ message: "/index route is working", time: Date.now() });
+});
+
+app.get("/api/index", (req, res) => {
+  res.json({ message: "/api/index route is working", time: Date.now() });
+});
+
 // debug route to test vercel routing
 app.get("/test", (req, res) => {
     res.json({ message: "express app is working" });

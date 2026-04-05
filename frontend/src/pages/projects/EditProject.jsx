@@ -100,7 +100,7 @@ export default function EditProject() {
                     </>
                 )}
             </form>
-            <DeleteModal projectId={project.id} />
+            {project && <DeleteModal projectId={project.id} />}
         </>
     );
 }

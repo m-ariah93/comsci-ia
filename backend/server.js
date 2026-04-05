@@ -230,7 +230,7 @@ app.get("/api/events", async (req, res) => {
     }
 });
 
-app.get("/events/:id", async (req, res) => {
+app.get("/api/events/:id", async (req, res) => {
     const { id } = req.params;
 
     try {

@@ -67,7 +67,7 @@ export default function CalendarPage() {
 
     const location = useLocation();
 
-    const [templateBookings, setTemplateBookings] = useState([]);
+    const [templateBookings, setTemplateBookings] = useState(null);
 
     useEffect(() => {
         if (currentProjectId === 0) {

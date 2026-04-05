@@ -129,7 +129,7 @@ app.get("/api/events/next", async (req, res) => {
             SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
             FROM events
             LEFT JOIN projects ON events.project_id = projects.id
-            WHERE date(events.start) >= date('now')
+            WHERE date(events.start) >= date('now') AND projects.archived = 0
             ORDER BY date(events.start) ASC
             LIMIT 1
         `);

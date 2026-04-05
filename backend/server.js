@@ -71,10 +71,11 @@ app.post("/api/login", async (req, res) => {
     try {
         // const stmt = db.prepare("SELECT * FROM users WHERE username = ?");
         // const user = stmt.get(username);
-        const result = await db.execute({
-            sql: "SELECT * FROM users WHERE username = ?",
-            args: [username],
-        });
+        // const result = await db.execute({
+        //     sql: "SELECT * FROM users WHERE username = ?",
+        //     args: [username],
+        // });
+        const result = await db.execute("SELECT * FROM users WHERE username = ?", [username]);
         const user = result.rows[0];
 
         if (!user) {

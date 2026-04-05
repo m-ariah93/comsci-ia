@@ -241,15 +241,14 @@ app.get("/events/:id", async (req, res) => {
         //     WHERE events.id = ?`);
         // const thisEvent = stmt.get(id);
 
-        const result = await db.execute({
-            sql: `
-                SELECT events.*, projects.colour AS projectColour, projects.address AS address
-                FROM events
-                LEFT JOIN projects ON events.project_id = projects.id
-                WHERE events.id = ?`,
-            args: [id],
-        });
-        const thisEvent = result.rows[0];
+        const result = await db.execute(`
+            SELECT events.*, projects.colour AS projectColour, projects.address AS address
+            FROM events
+            LEFT JOIN projects ON events.project_id = projects.id
+            WHERE events.id = ?`, [id]
+        );
+        const events = rowsToObjects(result);
+        const thisEvent = events[0];
 
         if (!thisEvent) {
             return res.json({ error: "Event not found" });

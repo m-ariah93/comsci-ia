@@ -158,17 +158,17 @@ export default function SettingsPage() {
 				<h4>Change password</h4>
 				<label htmlFor="oldPasswordInput" className="form-label">Old password</label>
 				<input type="password" className="form-control mb-3 mw-100" style={{ width: "450px" }} id="oldPasswordInput" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required></input>
-				<div className="invalid-feedback d-block">
+				<div className="invalid-feedback">
 					Please enter your old password.
 				</div>
 				<label htmlFor="newPasswordInput" className="form-label">New password</label>
 				<input type="password" className="form-control mb-3 mw-100" style={{ width: "450px" }} id="newPasswordInput" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} aria-describedby="passwordHelpBlock" required></input>
-				<div className="invalid-feedback d-block">
+				<div className="invalid-feedback">
 					Please enter the new password.
 				</div>
 				<label htmlFor="confirmPasswordInput" className="form-label">Confirm new password</label>
 				<input type="password" className="form-control mw-100" style={{ width: "450px" }} id="confirmPasswordInput" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required></input>
-				<div className="invalid-feedback d-block">
+				<div className="invalid-feedback">
 					Please re-enter the new password.
 				</div>
 				<div id="passwordHelpBlock" className="form-text mb-3">

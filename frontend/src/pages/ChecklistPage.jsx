@@ -10,6 +10,7 @@ export default function ChecklistPage() {
     );
 
     const [checklist, setChecklist] = useState([]);
+    const [checklistLoaded, setChecklistLoaded] = useState(false);
 
     useEffect(() => {
         if (activeProjects.length > 0) {
@@ -24,14 +25,25 @@ export default function ChecklistPage() {
 
     useEffect(() => {
         if (!currentProjectId) return;
+        setChecklistLoaded(false);
         fetch(`/api/projects/${currentProjectId}/checklist`)
             .then(res => res.json())
-            .then(data => setChecklist(data));
-    }, [currentProjectId, onChecklistChange]);
+            .then(data => {
+                setChecklist(data);
+                setChecklistLoaded(true);
+            });
+    }, [currentProjectId]);
 
     const location = useLocation();
 
     function onChecklistChange(itemId, checked) {
+        // update local state optimistically before db updates
+        setChecklist(prev =>
+            prev.map(item =>
+                item.id === itemId ? { ...item, done: checked ? 1 : 0 } : item
+            )
+        );
+        
         fetch(`/api/projects/${currentProjectId}/checklist/${itemId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -44,6 +56,13 @@ export default function ChecklistPage() {
     const [editingNoteId, setEditingNoteId] = useState(null);
 
     function saveNote(itemId, noteInput) {
+        // update local state optimistically before db updates
+        setChecklist(prev =>
+            prev.map(item =>
+                item.id === itemId ? { ...item, note: noteInput } : item
+            )
+        );
+        
         fetch(`/api/projects/${currentProjectId}/checklistNote/${itemId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -77,7 +96,7 @@ export default function ChecklistPage() {
                         </ul>
                     </div>
                     <h4 className="py-2">Order checklist</h4>
-                    {checklist.length === 0 ? (
+                    {!checklistLoaded ? (
                         <div className="spinner-border" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </div>

@@ -198,7 +198,7 @@ export default function CalendarPage() {
             <div className="row d-flex flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
                 <div className="col-9 d-flex flex-column flex-grow-1 pb-2 pb-lg-4 mt-1 position-relative" style={{ minHeight: 0 }}>
                     {eventsLoading && (
-                        <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: "rgba(252, 252, 249, 0.5)", zIndex: 10 }}>
+                        <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center z-3" style={{ backgroundColor: "rgba(252, 252, 249, 0.5)"}}>
                             <div className="spinner-border" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>

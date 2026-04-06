@@ -162,7 +162,7 @@ app.put("/api/changePassword", async (req, res) => {
 app.get("/api/events/next", async (req, res) => {
     try {
         const result = await db.execute(`
-            SELECT events.*, projects.title AS projectTitle, projects.colour AS projectColour
+            SELECT events.*, projects.title AS projectTitle, projects.address AS address, projects.colour AS projectColour
             FROM events
             LEFT JOIN projects ON events.project_id = projects.id
             WHERE date(events.start) >= date('now') AND projects.archived = 0

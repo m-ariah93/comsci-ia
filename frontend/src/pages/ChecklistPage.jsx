@@ -99,6 +99,7 @@ export default function ChecklistPage() {
                                                 if (e.key === "Enter") {
                                                     saveNote(item.id, e.target.value);
                                                     setEditingNoteId(null);
+                                                    e.target.blur();
                                                 }
                                             }}
                                             onBlur={(e) => {

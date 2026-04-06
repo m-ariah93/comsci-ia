@@ -61,18 +61,28 @@ export default function SettingsPage() {
 		setPasswordError("");
 		const form = e.target;
 
+		// Check if required fields are filled
+		if (!form.checkValidity()) {
+			form.classList.add("was-validated");
+			return;
+		}
+
+		// Custom validations for other errors
 		if (newPassword !== confirmPassword) {
-			setPasswordError("Passwords do not match");
+			setPasswordError("Passwords don't match :(");
+			form.classList.add("was-validated");
 			return;
 		}
 
 		if (newPassword.length < 8) {
-			setPasswordError("Password is too short");
+			setPasswordError("Password must be minimum 8 characters long");
+			form.classList.add("was-validated");
 			return;
 		}
 
 		if (!validatePassword(newPassword)) {
-			setPasswordError("Password must have upper and lowercase letters, numbers, and symbols");
+			setPasswordError("Password must have upper and lowercase letters, numbers and symbols");
+			form.classList.add("was-validated");
 			return;
 		}
 
@@ -98,6 +108,7 @@ export default function SettingsPage() {
 					form.classList.remove("was-validated");
 				} else {
 					setPasswordError(data.message || "Failed to update password");
+					form.classList.add("was-validated");
 				}
 			})
 			.catch(console.error);
@@ -147,24 +158,24 @@ export default function SettingsPage() {
 				<h4>Change password</h4>
 				<label htmlFor="oldPasswordInput" className="form-label">Old password</label>
 				<input type="password" className="form-control mb-3 mw-100" style={{ width: "450px" }} id="oldPasswordInput" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required></input>
-				<div className="invalid-feedback">
+				<div className="invalid-feedback d-block">
 					Please enter your old password.
 				</div>
 				<label htmlFor="newPasswordInput" className="form-label">New password</label>
 				<input type="password" className="form-control mb-3 mw-100" style={{ width: "450px" }} id="newPasswordInput" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} aria-describedby="passwordHelpBlock" required></input>
-				<div className="invalid-feedback">
+				<div className="invalid-feedback d-block">
 					Please enter the new password.
 				</div>
 				<label htmlFor="confirmPasswordInput" className="form-label">Confirm new password</label>
 				<input type="password" className="form-control mw-100" style={{ width: "450px" }} id="confirmPasswordInput" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required></input>
-				<div className="invalid-feedback">
+				<div className="invalid-feedback d-block">
 					Please re-enter the new password.
 				</div>
 				<div id="passwordHelpBlock" className="form-text mb-3">
-					Your password must be minimum 8 characters long, and be a combination of upper and lowercase letters, numbers, and symbols.
+					Your password must be minimum 8 characters long, and be a combination of upper and lowercase letters, numbers and symbols.
 				</div>
 				{passwordError && (
-					<div className="alert alert-danger mb-3" role="alert">
+					<div className="invalid-feedback d-block mb-3">
 						{passwordError}
 					</div>
 				)}

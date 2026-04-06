@@ -75,7 +75,7 @@ export default function ChecklistPage() {
                                 <li key={`check-${i}`} className='list-group-item position-relative d-flex align-items-center'>
                                     <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
                                     <label className={`form-check-label ${item.done && "text-decoration-line-through"}`} htmlFor={`check-${i}`}>{item.title}</label>
-                                    <input type="text" placeholder="Add note..." className="form-control form-control-sm ms-auto position-relative z-3 note-input"/>
+                                    <input type="text" placeholder="Add note..." maxLength="40" className="form-control form-control-sm ms-auto w-25 position-relative z-3 note-input"/>
 
                                     <label
                                         htmlFor={`check-${i}`}

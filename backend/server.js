@@ -109,7 +109,7 @@ app.put("/api/settings", async (req, res) => {
 
     try {
         const result = await db.execute(
-            "UPDATE users SET email_greeting = ?, email_closing = ?", 
+            "UPDATE users SET email_greeting = ?, email_closing = ?",
             [greeting, closing]
         );
         if (result.rowsAffected === 0) {
@@ -329,7 +329,7 @@ app.get("/api/projects/:id/checklist", async (req, res) => {
 
     try {
         const result = await db.execute(`
-            SELECT id, title, done
+            SELECT id, title, note, done
             FROM checklist
             WHERE project_id = ?`, [id]
         );
@@ -361,6 +361,31 @@ app.put("/api/projects/:projectId/checklist/:checklistId", async (req, res) => {
         console.log("checklist value set to", done);
 
         res.json({ projectId, checklistId, done });
+    } catch (error) {
+        console.error("Error updating done value of checklist:", error);
+        res.json({ error: "Failed to update checklist" });
+    }
+});
+
+app.put("/api/projects/:projectId/checklistNote/:checklistId", async (req, res) => {
+    const { projectId, checklistId } = req.params;
+    const { note } = req.body;
+    if (note === undefined) {
+        return res.json({ error: "No done value given" });
+    }
+
+    try {
+        const result = await db.execute(
+            "UPDATE checklist SET note = ? WHERE id = ? AND project_id = ?",
+            [note, checklistId, projectId]
+        );
+
+        if (result.rowsAffected === 0) {
+            return res.json({ error: "Checklist not found" });
+        }
+        console.log("checklist note set to", note);
+
+        res.json({ projectId, checklistId, note });
     } catch (error) {
         console.error("Error updating done value of checklist:", error);
         res.json({ error: "Failed to update checklist" });

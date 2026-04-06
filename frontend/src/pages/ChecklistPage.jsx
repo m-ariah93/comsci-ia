@@ -31,8 +31,8 @@ export default function ChecklistPage() {
 
     const location = useLocation();
 
-    function onChecklistChange(checklistId, checked) {
-        fetch(`/api/projects/${currentProjectId}/checklist/${checklistId}`, {
+    function onChecklistChange(itemId, checked) {
+        fetch(`/api/projects/${currentProjectId}/checklist/${itemId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -42,6 +42,16 @@ export default function ChecklistPage() {
     }
 
     const [editingNoteId, setEditingNoteId] = useState(null);
+
+    function saveNote(itemId, noteInput) {
+        fetch(`/api/projects/${currentProjectId}/checklistNote/${itemId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                note: noteInput,
+            })
+        });
+    }
 
     return (
         <>
@@ -96,11 +106,8 @@ export default function ChecklistPage() {
                                             }}
                                         />
                                     ) : item.note ? (
-                                        <p
-                                            className="ms-auto mb-0 w-25 text-muted position-relative z-3"
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => setEditingNoteId(item.id)}
-                                        >
+                                        <p className="ms-auto mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
+                                            onClick={() => setEditingNoteId(item.id)}>
                                             {item.note}
                                         </p>
                                     ) : (

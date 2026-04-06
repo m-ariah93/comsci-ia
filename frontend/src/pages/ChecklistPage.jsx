@@ -72,10 +72,10 @@ export default function ChecklistPage() {
                     ) : (
                         <ul className="list-group overflow-auto flex-grow-1 pb-3 me-4" style={{ minHeight: 0 }}>
                             {checklist.map((item, i) => (
-                                <li key={`check-${i}`} className='list-group-item position-relative'>
+                                <li key={`check-${i}`} className='list-group-item position-relative d-flex align-items-center'>
                                     <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
                                     <label className={`form-check-label ${item.done && "text-decoration-line-through"}`} htmlFor={`check-${i}`}>{item.title}</label>
-                                    <button className="btn btn-outline-primary rounded-circle align-items-center justify-content-center ms-auto me-3"><i className="bi bi-sticky fs-4"></i></button>
+                                    <button className="btn btn-outline-primary rounded-circle ms-auto me-3 position-relative z-1"><i className="bi bi-sticky fs-4"></i></button>
 
                                     <label
                                         htmlFor={`check-${i}`}

@@ -52,16 +52,22 @@ export default function CalendarPage() {
     }, [currentProjectId]);
 
     const [nextEvent, setNextEvent] = useState(null);
+    const [nextEventLoaded, setNextEventLoaded] = useState(false);
 
     useEffect(() => {
         // fetch next event
+        setNextEventLoaded(false);
         fetch("/api/events/next")
             .then(res => res.json())
             .then(data => {
                 console.log("events/next response:", data)
-                setNextEvent(data)
+                setNextEvent(data);
+                setNextEventLoaded(true);
             })
-            .catch(() => setNextEvent(null));
+            .catch(() => {
+                setNextEvent(null);
+                setNextEventLoaded(true);
+            });
 
     }, []);
 
@@ -90,10 +96,17 @@ export default function CalendarPage() {
 
     function refreshExternalEvents() {
         // refresh next up event card and draggable bookings
+        setNextEventLoaded(false);
         fetch("/api/events/next")
             .then(res => res.json())
-            .then(data => setNextEvent(data))
-            .catch(() => setNextEvent(null));
+            .then(data => {
+                setNextEvent(data);
+                setNextEventLoaded(true);
+            })
+            .catch(() => {
+                setNextEvent(null);
+                setNextEventLoaded(true);
+            });
         fetch(`/api/projects/${currentProjectId}/templates`)
             .then(res => res.json())
             .then(data => setTemplateBookings(data));
@@ -220,7 +233,11 @@ export default function CalendarPage() {
                         <>
                             <h4>Next up</h4>
                             <div className="pt-2">
-                                {nextEvent ? (
+                                {!nextEventLoaded ? (
+                                    <div className="spinner-border mt-2" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                ) : nextEvent ? (
                                     <div className="card p-2">
                                         <div className="card-body">
                                             <h5 className="fw-bold">{nextEvent.title}</h5>

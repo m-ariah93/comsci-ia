@@ -20,6 +20,7 @@ export default function SettingsPage() {
 	const [oldPassword, setOldPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [passwordError, setPasswordError] = useState("");
 
 	function saveEmail(e) {
 		e.preventDefault();
@@ -45,6 +46,59 @@ export default function SettingsPage() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("Updated settings:", data);
+			})
+			.catch(console.error);
+	}
+
+	function validatePassword(password) {
+		// combination of letters, numbers, and symbols
+		const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]+$/;
+		return regex.test(password);
+	}
+
+	function changePassword(e) {
+		e.preventDefault();
+		setPasswordError("");
+		const form = e.target;
+
+		if (newPassword !== confirmPassword) {
+			setPasswordError("Passwords do not match");
+			return;
+		}
+
+		if (newPassword.length < 8) {
+			setPasswordError("Password is too short");
+			return;
+		}
+
+		if (!validatePassword(newPassword)) {
+			setPasswordError("Password must have upper and lowercase letters, numbers, and symbols");
+			return;
+		}
+
+		fetch("/api/changePassword", {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				oldPassword,
+				newPassword,
+			})
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.success) {
+					const toast = document.getElementById("passwordChangedToast");
+					if (toast) {
+						const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+						bsToast.show();
+					}
+					setOldPassword("");
+					setNewPassword("");
+					setConfirmPassword("");
+					form.classList.remove("was-validated");
+				} else {
+					setPasswordError(data.message || "Failed to update password");
+				}
 			})
 			.catch(console.error);
 	}
@@ -89,28 +143,43 @@ export default function SettingsPage() {
 				<label className="form-check-label" htmlFor="switchCheckDefault">Receive an overview email the day before events are scheduled</label>
 			</div>
 			<hr className="mx-2 my-4" />
-			<form className="needs-validation" onSubmit={null} noValidate>
+			<form className="needs-validation" onSubmit={changePassword} noValidate>
 				<h4>Change password</h4>
 				<label htmlFor="oldPasswordInput" className="form-label">Old password</label>
 				<input type="password" className="form-control mb-3 mw-100" style={{ width: "450px" }} id="oldPasswordInput" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required></input>
 				<div className="invalid-feedback">
-					Please enter a password.
+					Please enter your old password.
 				</div>
 				<label htmlFor="newPasswordInput" className="form-label">New password</label>
 				<input type="password" className="form-control mb-3 mw-100" style={{ width: "450px" }} id="newPasswordInput" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} aria-describedby="passwordHelpBlock" required></input>
 				<div className="invalid-feedback">
-					Please enter a password.
+					Please enter the new password.
 				</div>
 				<label htmlFor="confirmPasswordInput" className="form-label">Confirm new password</label>
 				<input type="password" className="form-control mw-100" style={{ width: "450px" }} id="confirmPasswordInput" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required></input>
 				<div className="invalid-feedback">
-					Please enter a password.
+					Please re-enter the new password.
 				</div>
 				<div id="passwordHelpBlock" className="form-text mb-3">
-					Your password must be 8-20 characters long, and be a combination of letters, numbers, and symbols.
+					Your password must be minimum 8 characters long, and be a combination of upper and lowercase letters, numbers, and symbols.
 				</div>
+				{passwordError && (
+					<div className="alert alert-danger mb-3" role="alert">
+						{passwordError}
+					</div>
+				)}
 				<button type="submit" className="btn btn-primary mb-4">Update password</button>
 			</form>
+			<div className="toast-container position-fixed bottom-0 end-0 p-3">
+				<div id="passwordChangedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+					<div className="d-flex">
+						<div className="toast-body">
+							Password successfully updated.
+						</div>
+						<button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+				</div>
+			</div>
 		</div>
 
 	);

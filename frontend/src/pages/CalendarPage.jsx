@@ -216,8 +216,8 @@ export default function CalendarPage() {
                                 <div className="overflow-auto border d-grid gap-0 row-gap-1 mt-2" ref={keyBookingsRef}>
                                     {templateBookings.map((event) => (
                                         <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event ${event.used ? "opacity-50 user-select-none" : "fc-event-draggable"}`} style={{
-                                            backgroundColor: currentProject.colour,
-                                            borderColor: currentProject.colour,
+                                            backgroundColor: currentProject.colour || "#6F6D6B",
+                                            borderColor: currentProject.colour || "#6F6D6B",
                                             cursor: event.used ? "auto" : "pointer"
                                         }}
                                             data-template-id={event.bookingId}

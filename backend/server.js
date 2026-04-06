@@ -122,6 +122,42 @@ app.put("/api/settings", async (req, res) => {
     }
 });
 
+app.put("/api/changePassword", async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+        return res.json({ success: false, message: "Old and new passwords are required" });
+    }
+
+    try {
+        // get user (ASSUMES ONLY ONE USER - possibly a problem later)
+        const result = await db.execute("SELECT * FROM users LIMIT 1");
+        const user = result.rows[0];
+
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        // check old password matches stored password
+        const passwordMatches = bcrypt.compareSync(oldPassword, user.password);
+        if (!passwordMatches) {
+            return res.json({ success: false, message: "Incorrect old password" });
+        }
+
+        // hash and update new password
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+        await db.execute(
+            "UPDATE users SET password = ? WHERE id = ?",
+            [hashedPassword, user.id]
+        );
+
+        res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+        console.error("Error changing password:", error);
+        res.json({ success: false, message: "Failed to change password" });
+    }
+});
+
 // events table methods
 app.get("/api/events/next", async (req, res) => {
     try {

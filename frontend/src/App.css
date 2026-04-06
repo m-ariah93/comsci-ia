@@ -43,3 +43,8 @@
     opacity: 1;
     pointer-events: auto;
 }
+
+.note-input:focus {
+    opacity: 1;
+    pointer-events: auto;
+}

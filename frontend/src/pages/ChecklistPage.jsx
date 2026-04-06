@@ -41,6 +41,8 @@ export default function ChecklistPage() {
         });
     }
 
+    const [editingNoteId, setEditingNoteId] = useState(null);
+
     return (
         <>
             {/* if no projects, show message */}
@@ -75,7 +77,41 @@ export default function ChecklistPage() {
                                 <li key={`check-${i}`} className='list-group-item position-relative d-flex align-items-center'>
                                     <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
                                     <label className={`form-check-label ${item.done && "text-decoration-line-through"}`} htmlFor={`check-${i}`}>{item.title}</label>
-                                    <input type="text" placeholder="Add note..." maxLength="40" className="form-control form-control-sm ms-auto w-25 position-relative z-3 note-input"/>
+                                    {editingNoteId === item.id ? (
+                                        <input
+                                            type="text"
+                                            defaultValue={item.note || ""}
+                                            placeholder="Add note..."
+                                            maxLength="30"
+                                            autoFocus
+                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3"
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    saveNote(item.id, e.target.value);
+                                                    setEditingNoteId(null);
+                                                }
+                                            }}
+                                            onBlur={(e) => {
+                                                setEditingNoteId(null);
+                                            }}
+                                        />
+                                    ) : item.note ? (
+                                        <p
+                                            className="ms-auto mb-0 w-25 text-muted position-relative z-3"
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => setEditingNoteId(item.id)}
+                                        >
+                                            {item.note}
+                                        </p>
+                                    ) : (
+                                        <input
+                                            type="text"
+                                            placeholder="Add note..."
+                                            maxLength="30"
+                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3 note-input"
+                                            onFocus={() => setEditingNoteId(item.id)}
+                                        />
+                                    )}
 
                                     <label
                                         htmlFor={`check-${i}`}

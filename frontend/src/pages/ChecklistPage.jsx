@@ -106,10 +106,10 @@ export default function ChecklistPage() {
                                             }}
                                         />
                                     ) : item.note ? (
-                                        <p className="ms-auto mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
-                                            onClick={() => setEditingNoteId(item.id)}>
-                                            {item.note}
-                                        </p>
+                                        <input type="text" className="form-control form-control-sm border-0 ms-auto mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
+                                            onClick={() => setEditingNoteId(item.id)}
+                                            value={item.note}>
+                                        </input>
                                     ) : (
                                         <input
                                             type="text"

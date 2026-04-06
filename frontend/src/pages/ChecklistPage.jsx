@@ -116,7 +116,10 @@ export default function ChecklistPage() {
                                             className="form-control form-control-sm ms-auto w-25 position-relative z-3"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") {
-                                                    saveNote(item.id, e.target.value.trim());
+                                                    const trimmed = e.target.value.trim();
+                                                    if (trimmed) {
+                                                        saveNote(item.id, trimmed);
+                                                    }
                                                     setEditingNoteId(null);
                                                     e.target.blur();
                                                 }

@@ -7,7 +7,7 @@ export default function SettingsPage() {
 	const [emailLoaded, setEmailLoaded] = useState(false);
 
 	useEffect(() => {
-		fetch("/api/settings")
+		fetch("/api/emailSettings")
 			.then(res => res.json())
 			.then(data => {
 				setEmailGreeting(data.emailGreeting);
@@ -35,7 +35,7 @@ export default function SettingsPage() {
 			return;
 		}
 
-		fetch("/api/settings", {
+		fetch("/api/emailSettings", {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

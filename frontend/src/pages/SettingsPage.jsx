@@ -148,12 +148,6 @@ export default function SettingsPage() {
 				)}
 			</form>
 			<hr className="mx-2 my-4" />
-			<h4>Notifications</h4>
-			<div className="form-check form-switch">
-				<input className="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" onChange={(e) => setDayEmailNotif(e.target.value)} />
-				<label className="form-check-label" htmlFor="switchCheckDefault">Receive an overview email the day before events are scheduled</label>
-			</div>
-			<hr className="mx-2 my-4" />
 			<form className="needs-validation" onSubmit={changePassword} noValidate>
 				<h4>Change password</h4>
 				<label htmlFor="oldPasswordInput" className="form-label">Old password</label>

@@ -113,12 +113,12 @@ app.put("/api/emailSettings", async (req, res) => {
             [greeting, closing]
         );
         if (result.rowsAffected === 0) {
-            return res.json({ error: "User not found" });
+            return res.json({ success: false, error: "User not found" });
         }
-        res.json({ greeting, closing });
+        res.json({ success: true, greeting, closing });
     } catch (error) {
         console.error("Error updating email template:", error);
-        res.json({ error: "Failed to update email greeting and closing" });
+        res.json({ success: false, error: "Failed to update email greeting and closing" });
     }
 });
 
@@ -164,9 +164,9 @@ app.put("/api/notificationSettings", async (req, res) => {
             values
         );
         if (result.rowsAffected === 0) {
-            return res.json({ error: "User not found" });
+            return res.json({ success: false, error: "User not found" });
         }
-        res.json({ notifications, emailAddress });
+        res.json({ success: true, notifications, emailAddress });
     } catch (error) {
         console.error("Error updating notification settings:", error);
         res.json({ error: "Failed to update notification settings" });

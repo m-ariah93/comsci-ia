@@ -71,7 +71,14 @@ export default function SettingsPage() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("Updated settings:", data);
+				if (data.success) {
+					const toast = document.getElementById("emailTemplateSavedToast");
+					if (toast) {
+						const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+						bsToast.show();
+					}
+					form.classList.remove("was-validated");
+				}
 			})
 			.catch(console.error);
 	}
@@ -163,7 +170,12 @@ export default function SettingsPage() {
 		})
 			.then(res => res.json())
 			.then(data => {
-				if (!data.error) {
+				if (data.success) {
+					const toast = document.getElementById("emailAddressSavedToast");
+					if (toast) {
+						const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+						bsToast.show();
+					}
 					form.classList.remove("was-validated");
 				}
 			})
@@ -248,6 +260,22 @@ export default function SettingsPage() {
 				<button type="submit" className="btn btn-primary mb-4">Update password</button>
 			</form>
 			<div className="toast-container position-fixed bottom-0 end-0 p-3">
+				<div id="emailTemplateSavedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+					<div className="d-flex">
+						<div className="toast-body">
+							Default email template saved successfully.
+						</div>
+						<button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+				</div>
+				<div id="emailAddressSavedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+					<div className="d-flex">
+						<div className="toast-body">
+							Email address saved successfully.
+						</div>
+						<button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+				</div>
 				<div id="passwordChangedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
 					<div className="d-flex">
 						<div className="toast-body">

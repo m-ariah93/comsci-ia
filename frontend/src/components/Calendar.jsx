@@ -93,6 +93,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     // event title label
 
     const eventLabel = document.createElement("h6");
+    eventLabel.className = "mb-1";
     eventLabel.textContent = info.event.title;
 
     // buttons to go in popover

@@ -5,7 +5,7 @@ export default function ProjectsPage() {
         <>
             <div className="container-fluid vh-100 px-0">
                 <div className="d-flex flex-column flex-md-row h-100 pt-3">
-                    <div className="d-flex flex-column nav-pills gap-2 mb-3 w-100 pe-3 me-2" role="tablist" aria-orientation="vertical" style={{ maxWidth: "180px", minWidth: "180px" }}>
+                    <div className="d-flex flex-column nav-pills gap-2 mb-3 w-100 pe-4" role="tablist" aria-orientation="vertical" style={{ maxWidth: "180px", minWidth: "180px" }}>
                         <NavLink to="/projects" end className={({ isActive }) => isActive ? "nav-link active py-2 px-3" : "nav-link text-primary py-2 px-3"}>Active projects</NavLink>
                         <NavLink to="/projects/add" end className={({ isActive }) => isActive ? "nav-link active py-2 px-3" : "nav-link text-primary py-2 px-3"}>Add new project</NavLink>
                         <NavLink to="/projects/archive" end className={({ isActive }) => isActive ? "nav-link active py-2 px-3" : "nav-link text-primary py-2 px-3"}>View archive</NavLink>

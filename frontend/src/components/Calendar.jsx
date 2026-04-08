@@ -90,6 +90,12 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       existingPopover.dispose();
     }
 
+    // event title label
+
+    const eventLabel = document.createElement("h6");
+    eventLabel.textContent = info.event.title;
+
+    // buttons to go in popover
     const confirmationButton = document.createElement("a");
     confirmationButton.className = "btn btn-secondary btn-sm me-2";
     confirmationButton.textContent = "Request confirmation";
@@ -99,7 +105,6 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         confirmationButton.href = mailtoLink(data);
       });
 
-    // button to go in popover
     const deleteButton = document.createElement("button");
     deleteButton.className = "btn btn-danger btn-sm";
     deleteButton.textContent = "Delete";
@@ -115,6 +120,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     };
 
     const popoverContent = document.createElement("div");
+    popoverContent.appendChild(eventLabel);
     popoverContent.appendChild(confirmationButton);
     popoverContent.appendChild(deleteButton);
 

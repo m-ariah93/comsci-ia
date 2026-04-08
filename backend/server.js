@@ -88,7 +88,7 @@ app.post("/api/login", async (req, res) => {
 
 // user settings
 
-app.get("/api/emailSettings", async (req, res) => {
+app.get("/api/settings", async (req, res) => {
     try {
         const result = await db.execute(
             "SELECT email_greeting AS emailGreeting, email_closing AS emailClosing FROM users"
@@ -104,7 +104,7 @@ app.get("/api/emailSettings", async (req, res) => {
     }
 });
 
-app.put("/api/emailSettings", async (req, res) => {
+app.put("/api/settings", async (req, res) => {
     const { greeting, closing } = req.body;
 
     try {

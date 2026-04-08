@@ -146,7 +146,7 @@ export default function CalendarPage() {
     const [emailClosing, setEmailClosing] = useState("");
 
     useEffect(() => {
-        fetch("/api/emailSettings")
+        fetch("/api/settings")
             .then(res => res.json())
             .then(data => {
                 setEmailGreeting(data.emailGreeting);

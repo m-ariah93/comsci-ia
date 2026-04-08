@@ -229,6 +229,23 @@ app.get("/api/events/next", async (req, res) => {
     }
 });
 
+app.get("/api/events/tomorrow", async (req, res) => {
+    try {
+        const result = await db.execute(`
+            SELECT events.*, projects.title AS projectTitle, projects.address AS address
+            FROM events
+            LEFT JOIN projects ON events.project_id = projects.id
+            WHERE date(events.start) = date('now', 'localtime', '+1 day') AND projects.archived = 0
+            ORDER BY date(events.start) ASC
+        `);
+        const events = rowsToObjects(result);
+        res.json(events);
+    } catch (err) {
+        console.error(err);
+        res.json({ error: "Failed to fetch next event" });
+    }
+});
+
 app.get("/api/events", async (req, res) => {
     const projectId = req.query.project_id;
     try {

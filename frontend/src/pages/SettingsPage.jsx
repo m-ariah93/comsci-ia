@@ -87,13 +87,12 @@ export default function SettingsPage() {
 		setPasswordError("");
 		const form = e.target;
 
-		// Check if required fields are filled
 		if (!form.checkValidity()) {
 			form.classList.add("was-validated");
 			return;
 		}
 
-		// Custom validations for other errors
+		// custom validations for other errors
 		if (newPassword !== confirmPassword) {
 			setPasswordError("Passwords don't match :(");
 			form.classList.add("was-validated");
@@ -143,12 +142,12 @@ export default function SettingsPage() {
 	function changeEmail(e) {
 		e.preventDefault();
 		const form = e.target;
-		
+
 		if (!form.checkValidity()) {
 			form.classList.add("was-validated");
 			return;
 		}
-		
+
 		if (!emailAddress) {
 			form.classList.add("was-validated");
 			return;
@@ -209,17 +208,17 @@ export default function SettingsPage() {
 			<div className="form-check form-switch">
 				<input className="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" checked={dayEmailNotif} onChange={handleNotificationToggle} />
 				<label className="form-check-label" htmlFor="switchCheckDefault">Receive an overview email the day before events are scheduled</label>
-				{dayEmailNotif && (
-					<form className="needs-validation" onSubmit={changeEmail} noValidate>
-						<label htmlFor="emailAddressInput" className="form-label mt-3">Your email address</label>
-						<input type="email" className="form-control" id="emailAddressInput" value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)} required></input>
-						<div className="invalid-feedback">
-							Please enter a valid email.
-						</div>
-						<button type="submit" className="btn btn-primary mt-3">Save email</button>
-					</form>
-				)}
 			</div>
+			{dayEmailNotif && (
+				<form className="needs-validation" onSubmit={changeEmail} noValidate>
+					<label htmlFor="emailAddressInput" className="form-label mt-3">Your email address</label>
+					<input type="email" className="form-control mw-100" style={{ width: "450px" }} id="emailAddressInput" value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)} required></input>
+					<div className="invalid-feedback">
+						Please enter a valid email.
+					</div>
+					<button type="submit" className="btn btn-primary mt-3">Save email</button>
+				</form>
+			)}
 			<hr className="mx-2 my-4" />
 			<form className="needs-validation" onSubmit={changePassword} noValidate>
 				<h4>Change password</h4>

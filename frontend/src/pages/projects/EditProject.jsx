@@ -70,22 +70,22 @@ export default function EditProject() {
                 ) : (
                     <>
                         <label htmlFor="titleInput" className="form-label">Title (max 30 characters)</label>
-                        <input type="text" maxLength={TITLE_MAX_LENGTH} className="form-control mb-3" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                        <input type="text" maxLength={TITLE_MAX_LENGTH} className="form-control" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} required />
                         <div className="invalid-feedback">
                             Please enter a project title.
                         </div>
 
-                        <label htmlFor="addressInput" className="form-label">Address</label>
-                        <input type="text" className="form-control mb-3" id="addressInput" value={address} onChange={(e) => setAddress(e.target.value)} required />
+                        <label htmlFor="addressInput" className="form-label mt-3">Address</label>
+                        <input type="text" className="form-control" id="addressInput" value={address} onChange={(e) => setAddress(e.target.value)} required />
                         <div className="invalid-feedback">
                             Please enter an address.
                         </div>
-                        <label htmlFor="startMonthInput" className="form-label">Start month</label>
-                        <input type="month" className="form-control mb-3" style={{ width: 200 }} id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
+                        <label htmlFor="startMonthInput" className="form-label mt-3">Start month</label>
+                        <input type="month" className="form-control" style={{ width: 200 }} id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
                         <div className="invalid-feedback">
                             Please select the project's start month.
                         </div>
-                        <label htmlFor="colourInput" className="form-label">Colour (for calendar events)</label>
+                        <label htmlFor="colourInput" className="form-label mt-3">Colour (for calendar events)</label>
                         <input type="color" className="form-control form-control-color mb-3" title="Choose your colour" id="colourInput" value={colour} onChange={(e) => setColour(e.target.value)}></input>
                         <button type="submit" className="btn btn-primary me-2">Save changes</button>
                         <button type="button" className="btn btn-secondary me-2" onClick={() => {

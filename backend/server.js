@@ -139,34 +139,20 @@ app.get("/api/notificationSettings", async (req, res) => {
 });
 
 app.put("/api/notificationSettings", async (req, res) => {
-    const { notifications, emailAddress } = req.body;
+    const { notifications } = req.body;
 
     if (notifications === undefined) {
         return res.json({ error: "Notifications value is required" });
     }
 
     try {
-        const updates = { notifications };
-        const values = [notifications];
-        
-        if (emailAddress !== undefined) {
-            updates.emailAddress = emailAddress;
-            values.push(emailAddress);
-        }
-        
-        const setClauses = Object.keys(updates).map(key => {
-            if (key === 'emailAddress') return 'email_address = ?';
-            return `${key} = ?`;
-        }).join(", ");
-        
         const result = await db.execute(
-            `UPDATE users SET ${setClauses}`,
-            values
+            "UPDATE users SET notifications = ?", [notifications]
         );
         if (result.rowsAffected === 0) {
             return res.json({ error: "User not found" });
         }
-        res.json({ notifications, emailAddress });
+        res.json({ notifications });
     } catch (error) {
         console.error("Error updating notification settings:", error);
         res.json({ error: "Failed to update notification settings" });

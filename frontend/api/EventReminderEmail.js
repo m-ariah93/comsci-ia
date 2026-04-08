@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     const today = new Date();
     const subjectDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
 
-    const result = await resend.emails.send({
+    await resend.emails.send({
         from: "Build Diary <onboarding@resend.dev>",
         to: emailAddress,
         subject: "Coming Up: " + subjectDate,
@@ -54,8 +54,7 @@ export default async function handler(req, res) {
                 <p>You can disable these emails in notification settings.</p>
             `
     });
-    console.log("Resend result:", result);
 
-    res.status(200).json({ success: true, emailAddress });
+    res.status(200).json({ success: true });
 
 }

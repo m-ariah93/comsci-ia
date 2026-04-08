@@ -16,34 +16,11 @@ export default function SettingsPage() {
 			});
 	}, []);
 
-	const [dayEmailNotif, setDayEmailNotif] = useState(false);
+	const [dayEmailNotif, setDayEmailNotif] = useState("");
 	const [oldPassword, setOldPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [passwordError, setPasswordError] = useState("");
-
-	useEffect(() => {
-		fetch("/api/notificationSettings")
-			.then(res => res.json())
-			.then(data => {
-				setDayEmailNotif(Boolean(data.notifications));
-			});
-	}, []);
-
-	function handleNotificationToggle(e) {
-		const newValue = e.target.checked;
-		setDayEmailNotif(newValue);
-
-		fetch("/api/notificationSettings", {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				notifications: newValue ? 1 : 0,
-			})
-		})
-			.then(res => res.json())
-			.catch(console.error);
-	}
 
 	function saveEmail(e) {
 		e.preventDefault();
@@ -173,7 +150,7 @@ export default function SettingsPage() {
 			<hr className="mx-2 my-4" />
 			<h4>Notifications</h4>
 			<div className="form-check form-switch">
-				<input className="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" checked={dayEmailNotif} onChange={handleNotificationToggle} />
+				<input className="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" onChange={(e) => setDayEmailNotif(e.target.value)} />
 				<label className="form-check-label" htmlFor="switchCheckDefault">Receive an overview email the day before events are scheduled</label>
 			</div>
 			<hr className="mx-2 my-4" />

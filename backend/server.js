@@ -122,43 +122,6 @@ app.put("/api/emailSettings", async (req, res) => {
     }
 });
 
-app.get("/api/notificationSettings", async (req, res) => {
-    try {
-        const result = await db.execute(
-            "SELECT notifications, email_address AS emailAddress FROM users"
-        );
-        const row = result.rows[0];
-        res.json({
-            notifications: row[0],
-            emailAddress: row[1]
-        });
-    } catch (error) {
-        console.error("Error fetching user notification settings:", error);
-        res.json({ error: "Failed to fetch notification settings" });
-    }
-});
-
-app.put("/api/notificationSettings", async (req, res) => {
-    const { notifications } = req.body;
-
-    if (notifications === undefined) {
-        return res.json({ error: "Notifications value is required" });
-    }
-
-    try {
-        const result = await db.execute(
-            "UPDATE users SET notifications = ?", [notifications]
-        );
-        if (result.rowsAffected === 0) {
-            return res.json({ error: "User not found" });
-        }
-        res.json({ notifications });
-    } catch (error) {
-        console.error("Error updating notification settings:", error);
-        res.json({ error: "Failed to update notification settings" });
-    }
-});
-
 app.put("/api/changePassword", async (req, res) => {
     const { oldPassword, newPassword } = req.body;
 

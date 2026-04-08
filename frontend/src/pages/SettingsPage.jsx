@@ -17,6 +17,7 @@ export default function SettingsPage() {
 	}, []);
 
 	const [dayEmailNotif, setDayEmailNotif] = useState(false);
+	const [emailAddress, setEmailAddress] = useState("");
 	const [oldPassword, setOldPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,6 +28,7 @@ export default function SettingsPage() {
 			.then(res => res.json())
 			.then(data => {
 				setDayEmailNotif(Boolean(data.notifications));
+				setEmailAddress(data.emailAddress || "");
 			});
 	}, []);
 
@@ -39,6 +41,7 @@ export default function SettingsPage() {
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
 				notifications: newValue ? 1 : 0,
+				emailAddress: emailAddress
 			})
 		})
 			.then(res => res.json())
@@ -137,6 +140,37 @@ export default function SettingsPage() {
 			.catch(console.error);
 	}
 
+	function changeEmail(e) {
+		e.preventDefault();
+		const form = e.target;
+		
+		if (!form.checkValidity()) {
+			form.classList.add("was-validated");
+			return;
+		}
+		
+		if (!emailAddress) {
+			form.classList.add("was-validated");
+			return;
+		}
+
+		fetch("/api/notificationSettings", {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				notifications: dayEmailNotif ? 1 : 0,
+				emailAddress: emailAddress
+			})
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (!data.error) {
+					form.classList.remove("was-validated");
+				}
+			})
+			.catch(console.error);
+	}
+
 	return (
 		<div className="ps-1 pe-4 overflow-auto h-100">
 			<form className="needs-validation pt-4" onSubmit={saveEmail} noValidate>
@@ -175,6 +209,16 @@ export default function SettingsPage() {
 			<div className="form-check form-switch">
 				<input className="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" checked={dayEmailNotif} onChange={handleNotificationToggle} />
 				<label className="form-check-label" htmlFor="switchCheckDefault">Receive an overview email the day before events are scheduled</label>
+				{dayEmailNotif && (
+					<form className="needs-validation" onSubmit={changeEmail} noValidate>
+						<label htmlFor="emailAddressInput" className="form-label mt-3">Your email address</label>
+						<input type="email" className="form-control" id="emailAddressInput" value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)} required></input>
+						<div className="invalid-feedback">
+							Please enter a valid email.
+						</div>
+						<button type="submit" className="btn btn-primary mt-3">Save email</button>
+					</form>
+				)}
 			</div>
 			<hr className="mx-2 my-4" />
 			<form className="needs-validation" onSubmit={changePassword} noValidate>

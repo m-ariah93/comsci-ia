@@ -10,11 +10,5 @@
     "api/[...all].js": {
       "includeFiles": "../backend/**"
     }
-  },
-  "crons": [
-    {
-      "path": "/api/EventReminderEmail",
-      "schedule": "*/1 * * * *"
-    }
-  ]
+  }
 }

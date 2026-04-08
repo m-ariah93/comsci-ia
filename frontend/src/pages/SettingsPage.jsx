@@ -115,7 +115,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="pe-4 overflow-auto h-100">
+		<div className="ps-1 pe-4 overflow-auto h-100">
 			<form className="needs-validation pt-4" onSubmit={saveEmail} noValidate>
 				<h4>Confirmation emails to subcontractors</h4>
 				{!emailLoaded ? (

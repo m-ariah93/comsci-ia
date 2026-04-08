@@ -61,7 +61,7 @@ export default function EditProject() {
 
     return (
         <>
-            <form className="needs-validation pe-3 pe-md-4 ps-1 ps-md-0" onSubmit={clickSave} noValidate>
+            <form className="needs-validation pe-3 pe-md-4" onSubmit={clickSave} noValidate>
                 <h4 className="py-2">Edit project</h4>
                 {!project ? (
                     <div className="spinner-border my-2" role="status">

@@ -25,7 +25,7 @@
 	text-decoration: none !important;
 }
 
-.fc-day-today {
+.fc .fc-daygrid-day.fc-day-today {
     background-color: #dbe5e8;
 }
 

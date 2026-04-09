@@ -84,14 +84,14 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     }
   }
 
+  const popoverRef = useRef(null);
   function handleEventClick(info) {
-    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => {
-      const otherPopover = bootstrap.Popover.getInstance(el);
-      if (otherPopover) otherPopover.dispose();
-    });
+    if (popoverRef.current) {
+      popoverRef.current.dispose();
+      popoverRef.current = null;
+    }
 
     // event title label
-
     const eventLabel = document.createElement("h6");
     eventLabel.className = "mb-1";
     eventLabel.textContent = info.event.title;
@@ -136,8 +136,23 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     });
 
     popover.show();
-
+    popoverRef.current = popover;
   }
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (!popoverRef.current) return;
+
+      const popoverEl = document.querySelector(".popover");
+      if (popoverEl && !popoverEl.contains(e.target) && !e.target.closest(".fc-event")) {
+        popoverRef.current.dispose();
+        popoverRef.current = null;
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <div className="d-flex flex-column flex-grow-1">

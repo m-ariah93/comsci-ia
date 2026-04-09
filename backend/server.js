@@ -196,7 +196,7 @@ app.get("/api/events", async (req, res) => {
                 SELECT events.*, projects.colour AS projectColour
                 FROM events
                 LEFT JOIN projects ON events.project_id = projects.id
-                WHERE projects.archived = 0`
+                WHERE projects.archived = 0 OR events.project_id IS NULL`
             );
         }
         const events = rowsToObjects(result);

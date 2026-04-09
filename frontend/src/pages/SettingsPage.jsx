@@ -16,7 +16,6 @@ export default function SettingsPage() {
 			});
 	}, []);
 
-	const [dayEmailNotif, setDayEmailNotif] = useState("");
 	const [oldPassword, setOldPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");

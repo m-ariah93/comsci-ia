@@ -100,10 +100,13 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     const confirmationButton = document.createElement("a");
     confirmationButton.className = "btn btn-secondary btn-sm me-2";
     confirmationButton.textContent = "Request confirmation";
+    confirmationButton.classList.add("disabled");
+
     fetch(`/api/events/${info.event.id}`)
       .then(res => res.json())
       .then(data => {
         confirmationButton.href = mailtoLink(data);
+        confirmationButton.classList.remove("disabled");
       });
 
     const deleteButton = document.createElement("button");
@@ -130,7 +133,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       html: true,
       content: popoverContent,
       placement: "top",
-      trigger: "focus",
+      trigger: "click",
     });
 
     info.el.focus();

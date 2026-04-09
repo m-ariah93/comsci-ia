@@ -112,6 +112,11 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     deleteButton.className = "btn btn-danger btn-sm";
     deleteButton.textContent = "Delete";
     deleteButton.onclick = () => {
+      // close and reset popover
+      popoverRef.current?.dispose();
+      popoverRef.current = null;
+
+      // delete event from db
       fetch(`/api/events/${info.event.id}`, {
         method: "DELETE",
       })

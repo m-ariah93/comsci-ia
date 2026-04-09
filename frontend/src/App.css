@@ -25,6 +25,10 @@
 	text-decoration: none !important;
 }
 
+.fc-day-today {
+    background-color: #dbe5e8;
+}
+
 .gochi-hand-regular {
   font-family: "Gochi Hand", cursive;
   font-weight: 400;

@@ -20,7 +20,6 @@ export function unarchiveProject(id) {
 }
 
 export function saveProject(id, title, address, startMonth, colour) {
-    // need to add form validation: character limit on title
     return fetch(`/api/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

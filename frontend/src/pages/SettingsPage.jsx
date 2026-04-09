@@ -24,16 +24,6 @@ export default function SettingsPage() {
 
 	function saveEmail(e) {
 		e.preventDefault();
-		const form = e.target;
-		if (!form.checkValidity()) {
-			form.classList.add("was-validated");
-			return;
-		}
-
-		if (!emailGreeting || !emailClosing) {
-			form.classList.add("was-validated");
-			return;
-		}
 
 		fetch("/api/settings", {
 			method: "PUT",

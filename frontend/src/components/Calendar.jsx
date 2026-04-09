@@ -98,9 +98,8 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
     // buttons to go in popover
     const confirmationButton = document.createElement("a");
-    confirmationButton.className = "btn btn-secondary btn-sm me-2";
+    confirmationButton.className = "btn btn-secondary btn-sm me-2 disabled";
     confirmationButton.textContent = "Request confirmation";
-    confirmationButton.classList.add("disabled");
 
     fetch(`/api/events/${info.event.id}`)
       .then(res => res.json())
@@ -129,14 +128,15 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     popoverContent.appendChild(deleteButton);
 
     // create popover
-    new bootstrap.Popover(info.el, {
+    const popover = new bootstrap.Popover(info.el, {
       html: true,
       content: popoverContent,
       placement: "top",
-      trigger: "click",
+      trigger: "manual",
     });
 
-    info.el.focus();
+    popover.show();
+
   }
 
   return (

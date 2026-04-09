@@ -124,7 +124,7 @@ export default function CalendarPage() {
                     ...event,
                     backgroundColor: event.projectColour || "#6F6D6B", // default color if projectColour is not defined
                     borderColor: event.projectColour || "#6F6D6B",
-                    extendedProps: { project_id: event.project_id }
+                    extendedProps: { project_id: event.project_id, template_id: event.template_id }
                 }));
                 setEvents(allDayEvents);
                 setEventsLoading(false);

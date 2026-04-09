@@ -70,17 +70,21 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
   }
 
   function handleEventDragStop(info) {
-    if (isOverElement(info.jsEvent, keyBookingsRef)) {
+    const templateId = info.event.extendedProps.template_id;
+    if (isOverElement(info.jsEvent, keyBookingsRef) && templateId) {
       const eventId = info.event.id;
 
       info.event.remove();
 
       fetch(`/api/events/${eventId}`, {
-        // delete event from events table
-        method: "DELETE",
+        method: "DELETE", // delete from events table
       })
-        .then(handleEventsChanged)
-        .then(console.log(`event removed, title: ${info.event.title}, id: ${currentProjectId}`));
+        .then(() => {
+          info.event.remove();
+          handleEventsChanged();
+        })
+        .then(console.log(`event removed, title: ${info.event.title}, id: ${currentProjectId}`))
+        .catch(console.error);
     }
   }
 

@@ -85,10 +85,10 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
   }
 
   function handleEventClick(info) {
-    const existingPopover = bootstrap.Popover.getInstance(info.el);
-    if (existingPopover) {
-      existingPopover.dispose();
-    }
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => {
+      const otherPopover = bootstrap.Popover.getInstance(el);
+      if (otherPopover) otherPopover.dispose();
+    });
 
     // event title label
 

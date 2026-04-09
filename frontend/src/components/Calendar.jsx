@@ -2,7 +2,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import { useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 
 export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, events, onEventsChanged, mailtoLink }) {

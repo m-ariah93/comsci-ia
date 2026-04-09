@@ -116,7 +116,7 @@ export default function SettingsPage() {
 
 	return (
 		<div className="ps-1 pe-4 overflow-auto h-100">
-			<form className="needs-validation pt-4" onSubmit={saveEmail} noValidate>
+			<form className="pt-4" onSubmit={saveEmail}>
 				<h4>Confirmation emails to subcontractors</h4>
 				{!emailLoaded ? (
 					<div className="spinner-border my-3" role="status">
@@ -130,7 +130,7 @@ export default function SettingsPage() {
 									<label htmlFor="subcontractorEmailGreeting" className="form-label mb-0">Default email greeting</label>
 								</div>
 								<div className="col-12 col-md">
-									<textarea className="form-control mb-3 fst-italic" id="subcontractorEmailGreeting" rows="1" value={emailGreeting} onChange={(e) => setEmailGreeting(e.target.value)} required></textarea>
+									<textarea className="form-control mb-3 fst-italic" id="subcontractorEmailGreeting" rows="1" value={emailGreeting} onChange={(e) => setEmailGreeting(e.target.value)}></textarea>
 									<p className="ms-2 mb-2"><i>Could you please confirm the booking for the <b className="fst-normal">event title</b> on the <b className="fst-normal">date</b> of <b className="fst-normal">month</b>?</i></p>
 								</div>
 							</div>
@@ -139,7 +139,7 @@ export default function SettingsPage() {
 									<label htmlFor="subcontractorEmailClosing" className="form-label mb-0">Default email signature</label>
 								</div>
 								<div className="col-12 col-md">
-									<textarea className="form-control fst-italic" id="subcontractorEmailClosing" rows="3" value={emailClosing} onChange={(e) => setEmailClosing(e.target.value)} required></textarea>
+									<textarea className="form-control fst-italic" id="subcontractorEmailClosing" rows="3" value={emailClosing} onChange={(e) => setEmailClosing(e.target.value)}></textarea>
 								</div>
 							</div>
 						</div>

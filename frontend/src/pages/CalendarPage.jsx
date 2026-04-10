@@ -195,9 +195,15 @@ export default function CalendarPage() {
     useEffect(() => {
         // initialise used event date popovers
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-        popoverTriggerList.forEach((el) => {
-            new bootstrap.Popover(el);
+
+        const popovers = Array.from(popoverTriggerList).map((el) => {
+            return bootstrap.Popover.getInstance(el) || new bootstrap.Popover(el);
         });
+
+        // cleanup
+        return () => {
+            popovers.forEach(p => p.dispose());
+        };
     }, [templateBookings]);
 
     return (
@@ -248,7 +254,7 @@ export default function CalendarPage() {
                                 <div className="overflow-auto border d-grid gap-0 row-gap-1 mt-2" ref={keyBookingsRef}>
                                     {templateBookings.map((event) => (
                                         event.used ? (
-                                            <div key={event.bookingId} className="d-inline-block" tabIndex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-content={formatDate(event.start)}>
+                                            <div key={event.bookingId} className="d-inline-block" tabIndex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="left" data-bs-content={formatDate(event.start)}>
                                                 <DraggableEventComponent event={event} />
                                             </div>
                                         ) : (

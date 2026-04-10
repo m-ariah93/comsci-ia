@@ -103,10 +103,9 @@ export default function ChecklistPage() {
                     ) : (
                         <ul className="list-group overflow-auto flex-grow-1 pb-3 me-4" style={{ minHeight: 0 }}>
                             {checklist.map((item, i) => (
-                                <li key={`check-${i}`} className='list-group-item position-relative d-flex align-items-center'>
-                                    <input className="form-check-input me-2" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
-                                    <label className={`form-check-label ${item.done && "text-decoration-line-through"}`} htmlFor={`check-${i}`}>{item.title}</label>
-                                    <div className="vr ms-auto"></div>
+                                <li key={`check-${i}`} className='list-group-item position-relative d-flex align-items-center py-0'>
+                                    <input className="form-check-input me-2 my-3" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
+                                    <label className={`form-check-label ${item.done ? "text-decoration-line-through" : ""}`} htmlFor={`check-${i}`}>{item.title}</label>
                                     {editingNoteId === item.id ? (
                                         <input
                                             type="text"
@@ -114,7 +113,7 @@ export default function ChecklistPage() {
                                             placeholder="Add note..."
                                             maxLength="30"
                                             autoFocus
-                                            className="form-control form-control-sm ms-2 w-25 position-relative z-3"
+                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") {
                                                     const trimmed = e.target.value.trim();
@@ -130,7 +129,7 @@ export default function ChecklistPage() {
                                             }}
                                         />
                                     ) : item.note ? (
-                                        <input type="text" className="form-control form-control-sm border-0 ms-2 mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
+                                        <input type="text" className="form-control form-control-sm border-0 ms-auto mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
                                             onClick={() => setEditingNoteId(item.id)}
                                             value={item.note}>
                                         </input>
@@ -139,7 +138,7 @@ export default function ChecklistPage() {
                                             type="text"
                                             placeholder="Add note..."
                                             maxLength="30"
-                                            className="form-control form-control-sm ms-2 w-25 position-relative z-3 note-input"
+                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3 note-input"
                                             onFocus={() => setEditingNoteId(item.id)}
                                         />
                                     )}

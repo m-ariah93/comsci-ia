@@ -8,15 +8,27 @@ export default function AppLayout() {
         <div className="d-flex align-items-start vh-100">
             <div className="h-100 me-3" style={{ backgroundColor: "#dbe5e8" }}>
                 <div className="nav flex-column nav-pills mx-3 pt-3 gap-2" role="tablist" aria-orientation="vertical">
-                    <NavLink to="/calendar" end className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>Calendar</NavLink>
-                    <NavLink to="/checklist" className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>Checklist</NavLink>
-                    <NavLink to="/projects" className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>Projects</NavLink>
+                    <NavLink to="/calendar" end className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>
+                        <span className="d-none d-sm-inline">Calendar</span>
+                        <i className="bi bi-calendar-event-fill d-inline d-sm-none"></i>
+                    </NavLink>
+                    <NavLink to="/checklist" className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>
+                        <span className="d-none d-sm-inline">Checklist</span>
+                        <i className="bi bi-clipboard2-check-fill d-inline d-sm-none"></i>
+                    </NavLink>
+                    <NavLink to="/projects" className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>
+                        <span className="d-none d-sm-inline">Projects</span>
+                        <i className="bi bi-grid-fill d-inline d-sm-none"></i>
+                    </NavLink>
                     <NavLink to="/settings" className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>
-                        <span className="d-none d-md-inline">Settings</span>
-                        <i className="bi bi-gear-fill d-inline d-md-none"></i>
+                        <span className="d-none d-sm-inline">Settings</span>
+                        <i className="bi bi-gear-fill d-inline d-sm-none"></i>
                     </NavLink>
                     <hr />
-                    <button className="nav-link text-center" onClick={logout}>Logout</button>
+                    <button className="nav-link text-center" onClick={logout}>
+                        <span className="d-none d-sm-inline">Logout</span>
+                        <i className="bi bi-box-arrow-right d-inline d-sm-none"></i>
+                    </button>
                 </div>
             </div>
 

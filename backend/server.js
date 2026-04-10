@@ -347,7 +347,8 @@ app.get("/api/projects/:id/templates", async (req, res) => {
             SELECT 
                 booking_templates.id AS bookingId,
                 booking_templates.title,
-                CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used
+                CASE WHEN events.id IS NULL THEN 0 ELSE 1 END AS used,
+                events.start AS start
             FROM booking_templates
             LEFT JOIN events ON events.template_id = booking_templates.id AND events.project_id = booking_templates.project_id
             WHERE booking_templates.project_id = ?`, [id]

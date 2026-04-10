@@ -192,6 +192,13 @@ export default function CalendarPage() {
         );
     }
 
+    useEffect(() => {
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        popoverTriggerList.forEach((el) => {
+            new bootstrap.Popover(el);
+        });
+    }, [templateBookings]);
+
     return (
         <div className="container-fluid d-flex flex-column flex-grow-1 vh-100 ps-0" >
             <div className="row mb-2 mt-3">

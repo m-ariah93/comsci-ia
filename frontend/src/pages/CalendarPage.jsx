@@ -178,6 +178,20 @@ export default function CalendarPage() {
         return link;
     }
 
+    function DraggableEventComponent({ event }) {
+        return (
+            <div className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event ${event.used ? "opacity-50 user-select-none" : "fc-event-draggable"}`} style={{
+                backgroundColor: currentProject.colour || "#6F6D6B",
+                borderColor: currentProject.colour || "#6F6D6B",
+                cursor: event.used ? "auto" : "pointer"
+            }}
+                data-template-id={event.bookingId}
+            >
+                <div className={`fc-event-main ${event.used && "text-decoration-line-through"}`}>{event.title}</div>
+            </div>
+        );
+    }
+
     return (
         <div className="container-fluid d-flex flex-column flex-grow-1 vh-100 ps-0" >
             <div className="row mb-2 mt-3">
@@ -198,7 +212,7 @@ export default function CalendarPage() {
             <div className="row d-flex flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
                 <div className="col-9 d-flex flex-column flex-grow-1 pb-2 pb-lg-4 mt-1 position-relative" style={{ minHeight: 0 }}>
                     {eventsLoading && (
-                        <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center z-3" style={{ backgroundColor: "rgba(252, 252, 249, 0.5)"}}>
+                        <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center z-3" style={{ backgroundColor: "rgba(252, 252, 249, 0.5)" }}>
                             <div className="spinner-border" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>
@@ -225,15 +239,13 @@ export default function CalendarPage() {
                             ) : (
                                 <div className="overflow-auto border d-grid gap-0 row-gap-1 mt-2" ref={keyBookingsRef}>
                                     {templateBookings.map((event) => (
-                                        <div key={event.bookingId} className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event ${event.used ? "opacity-50 user-select-none" : "fc-event-draggable"}`} style={{
-                                            backgroundColor: currentProject.colour || "#6F6D6B",
-                                            borderColor: currentProject.colour || "#6F6D6B",
-                                            cursor: event.used ? "auto" : "pointer"
-                                        }}
-                                            data-template-id={event.bookingId}
-                                        >
-                                            <div className={`fc-event-main ${event.used && "text-decoration-line-through"}`}>{event.title}</div>
-                                        </div>
+                                        event.used ? (
+                                            <div key={event.bookingId} className="d-inline-block" tabIndex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content={formatDate(event.start)}>
+                                                <DraggableEventComponent event={event} />
+                                            </div>
+                                        ) : (
+                                            <DraggableEventComponent key={event.bookingId} event={event} />
+                                        )
                                     ))}
                                 </div>
                             )}

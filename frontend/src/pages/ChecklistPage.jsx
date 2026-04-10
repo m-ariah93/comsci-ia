@@ -114,7 +114,7 @@ export default function ChecklistPage() {
                                             placeholder="Add note..."
                                             maxLength="30"
                                             autoFocus
-                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3"
+                                            className="form-control form-control-sm ms-2 w-25 position-relative z-3"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") {
                                                     const trimmed = e.target.value.trim();
@@ -130,7 +130,7 @@ export default function ChecklistPage() {
                                             }}
                                         />
                                     ) : item.note ? (
-                                        <input type="text" className="form-control form-control-sm border-0 ms-auto mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
+                                        <input type="text" className="form-control form-control-sm border-0 ms-2 mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
                                             onClick={() => setEditingNoteId(item.id)}
                                             value={item.note}>
                                         </input>
@@ -139,7 +139,7 @@ export default function ChecklistPage() {
                                             type="text"
                                             placeholder="Add note..."
                                             maxLength="30"
-                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3 note-input"
+                                            className="form-control form-control-sm ms-2 w-25 position-relative z-3 note-input"
                                             onFocus={() => setEditingNoteId(item.id)}
                                         />
                                     )}

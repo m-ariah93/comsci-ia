@@ -101,7 +101,7 @@ export default function ChecklistPage() {
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        <ul className="list-group overflow-auto flex-grow-1 pb-3 me-4" style={{ minHeight: 0 }}>
+                        <ul className="list-group overflow-auto flex-grow-1 pb-3 me-2 me-md-4" style={{ minHeight: 0 }}>
                             {checklist.map((item, i) => (
                                 <li key={`check-${i}`} className='list-group-item position-relative d-flex align-items-center py-0'>
                                     <input className="form-check-input me-2 my-3" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />

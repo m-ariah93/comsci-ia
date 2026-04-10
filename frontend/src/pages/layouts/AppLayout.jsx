@@ -7,7 +7,7 @@ export default function AppLayout() {
     return (
         <div className="d-flex align-items-start vh-100">
             <div className="h-100 me-3" style={{ backgroundColor: "#dbe5e8" }}>
-                <div className="nav flex-column nav-pills mx-3 pt-3 gap-2" role="tablist" aria-orientation="vertical">
+                <div className="nav flex-column nav-pills mx-3 pt-3 gap-3 gap-sm-2" role="tablist" aria-orientation="vertical">
                     <NavLink to="/calendar" end className={({ isActive }) => isActive ? "nav-link text-center active" : "nav-link text-center"}>
                         <span className="d-none d-sm-inline">Calendar</span>
                         <i className="bi bi-calendar-event-fill d-inline d-sm-none"></i>

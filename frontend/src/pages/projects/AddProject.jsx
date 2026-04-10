@@ -14,7 +14,9 @@ export default function AddProject() {
     const location = useLocation();
     const fromLocation = location.state?.from;
 
-    function addProject(e) {
+    const [loading, setLoading] = useState(false);
+
+    async function addProject(e) {
         e.preventDefault();
         const form = e.target;
         if (!form.checkValidity()) {
@@ -32,30 +34,36 @@ export default function AddProject() {
             return;
         }
 
-        fetch("/api/projects", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                title: title.trim(),
-                address: address.trim(),
-                start_month: startMonth,
-                colour,
-            })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("Created project:", data);
-                if (fromLocation) {
-                    navigate(fromLocation.pathname); // if coming from the calendar page
-                } else {
-                    navigate("/projects"); // go back to projects list
-                }
-            })
-            .catch(console.error);
+        setLoading(true);
+
+        try {
+            const result = await fetch("/api/projects", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    title: title.trim(),
+                    address: address.trim(),
+                    start_month: startMonth,
+                    colour,
+                })
+            });
+
+            const data = await result.json();
+            console.log("Created project:", data);
+            if (fromLocation) {
+                navigate(fromLocation.pathname); // if coming from the calendar page
+            } else {
+                navigate("/projects"); // go back to projects list
+            }
+        } catch {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
-        <form className="needs-validation pe-3 pe-md-4" onSubmit={addProject} noValidate>
+        <form className={`needs-validation pe-3 pe-md-4 ${loading ? "opacity-75" : ""}`} onSubmit={addProject} noValidate>
             <h4 className="py-2">New project</h4>
             <label htmlFor="titleInput" className="form-label">Title (max 30 characters)</label>
             <input type="text" maxLength={TITLE_MAX_LENGTH} className="form-control" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} required />
@@ -69,13 +77,22 @@ export default function AddProject() {
                 Please enter an address.
             </div>
             <label htmlFor="startMonthInput" className="form-label mt-3">Start month</label>
-            <input type="month" className="form-control" style={{width: 200}}id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
+            <input type="month" className="form-control" style={{ width: 200 }} id="startMonthInput" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} required></input>
             <div className="invalid-feedback">
                 Please select the project's start month.
             </div>
             <label htmlFor="colourInput" className="form-label mt-3">Colour (for calendar events)</label>
             <input type="color" className="form-control form-control-color mb-3" title="Choose your colour" id="colourInput" value={colour} onChange={(e) => setColour(e.target.value)}></input>
-            <button type="submit" className="btn btn-primary">Create project</button>
+            <button type="submit" className="btn btn-primary">
+                {loading ? (
+                    <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" />
+                        Creating...
+                    </>
+                ) : (
+                    "Create project"
+                )}
+            </button>
         </form>
     );
 }

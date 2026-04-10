@@ -18,8 +18,8 @@ export default function ProjectsList() {
 
     const location = useLocation();
     const showUpdatedToast = location.state?.updated;
-    console.log("showToast:", showUpdatedToast);
-    console.log("location.state:", location.state);
+    // console.log("showToast:", showUpdatedToast);
+    // console.log("location.state:", location.state);
 
     useEffect(() => {
         if (showUpdatedToast) {

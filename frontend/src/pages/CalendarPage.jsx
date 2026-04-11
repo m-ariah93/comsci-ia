@@ -60,7 +60,7 @@ export default function CalendarPage() {
         fetch("/api/events/next")
             .then(res => res.json())
             .then(data => {
-                console.log("events/next response:", data)
+                // console.log("events/next response:", data)
                 setNextEvent(data);
                 setNextEventLoaded(true);
             })
@@ -136,7 +136,7 @@ export default function CalendarPage() {
             method: "DELETE",
         })
             .then(() => {
-                console.log(`Event ${nextEvent.id} deleted`);
+                // console.log(`Event ${nextEvent.id} deleted`);
                 handleEventsChanged();
             })
             .catch(console.error);

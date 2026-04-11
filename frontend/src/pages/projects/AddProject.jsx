@@ -49,7 +49,7 @@ export default function AddProject() {
             });
 
             const data = await result.json();
-            console.log("Created project:", data);
+            // console.log("Created project:", data);
             if (fromLocation) {
                 navigate(fromLocation.pathname); // if coming from the calendar page
             } else {

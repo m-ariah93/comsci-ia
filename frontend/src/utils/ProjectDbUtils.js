@@ -1,5 +1,5 @@
 export function archiveProject(id) {
-    console.log("Attempting to archive project " + id)
+    // console.log("Attempting to archive project " + id)
     return fetch(`/api/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -35,7 +35,7 @@ export function saveProject(id, title, address, startMonth, colour) {
 }
 
 export function deleteProject(id) {
-    console.log("Attempting to delete project " + id)
+    // console.log("Attempting to delete project " + id)
     return fetch(`/api/projects/${id}`, {
         method: "DELETE",
     })

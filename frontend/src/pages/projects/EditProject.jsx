@@ -55,7 +55,7 @@ export default function EditProject() {
         }
 
         saveProject(project.id, title, address, startMonth, colour);
-        console.log("Saved project");
+        // console.log("Saved project");
         navigate("/projects", { state: { updated: true } }); // go back to projects list
     }
 

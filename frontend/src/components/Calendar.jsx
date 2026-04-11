@@ -37,8 +37,8 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       })
     })
       .then((res) => res.json())
-      .then(handleEventsChanged)
-      .then(console.log(`event added, title: ${info.event.title}, project id: ${currentProjectId}`));
+      .then(handleEventsChanged);
+      // .then(console.log(`event added, title: ${info.event.title}, project id: ${currentProjectId}`));
   }
 
   function handleEventResize(info) {
@@ -83,7 +83,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
           info.event.remove();
           handleEventsChanged();
         })
-        .then(console.log(`event removed, title: ${info.event.title}, id: ${currentProjectId}`))
+        // .then(console.log(`event removed, title: ${info.event.title}, id: ${currentProjectId}`))
         .catch(console.error);
     }
   }
@@ -160,7 +160,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         method: "DELETE",
       })
         .then(() => {
-          console.log(`Event ${info.event.id} deleted`);
+          // console.log(`Event ${info.event.id} deleted`);
           handleEventsChanged();
         })
         .catch(console.error);

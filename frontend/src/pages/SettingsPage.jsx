@@ -33,9 +33,9 @@ export default function SettingsPage() {
 			})
 		})
 			.then((res) => res.json())
-			.then((data) => {
-				console.log("Updated settings:", data);
-			})
+			// .then((data) => {
+			// 	console.log("Updated settings:", data);
+			// })
 			.catch(console.error);
 	}
 

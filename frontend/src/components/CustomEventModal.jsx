@@ -44,7 +44,7 @@ export default function CustomEventModal({ projectId, onEventsChanged }) {
             .then((res) => res.json())
             .then(() => {
                 if (onEventsChanged) onEventsChanged();
-                console.log(`event added, title: ${name}, project id: ${projectId}`);
+                // console.log(`event added, title: ${name}, project id: ${projectId}`);
                 const modal = bootstrap.Modal.getInstance(
                     document.getElementById("customEventModal")
                 );

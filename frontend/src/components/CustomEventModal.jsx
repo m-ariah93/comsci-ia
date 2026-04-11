@@ -8,6 +8,8 @@ export default function CustomEventModal({ projectId, onEventsChanged }) {
 
     const NAME_MAX_LENGTH = 30;
 
+    const [loading, setLoading] = useState(false);
+
     function createEvent(e) {
         e.preventDefault();
         const form = e.target;
@@ -25,6 +27,8 @@ export default function CustomEventModal({ projectId, onEventsChanged }) {
             form.classList.add("was-validated");
             return;
         }
+
+        setLoading(true);
 
         fetch("/api/events", {
             method: "POST",
@@ -49,7 +53,8 @@ export default function CustomEventModal({ projectId, onEventsChanged }) {
                 setStartDate("");
                 setEndDate("");
                 form.classList.remove("was-validated");
-            });
+            })
+            .finally(() => setLoading(false));
     }
 
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -64,39 +69,49 @@ export default function CustomEventModal({ projectId, onEventsChanged }) {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body container">
-                        <form className="needs-validation" onSubmit={createEvent} noValidate>
-                            <div className="row gy-3">
-                                <div className="col-12">
-                                    <label htmlFor="nameInput" className="form-label">Event name (max 30 characters)</label>
-                                    <input type="text" maxLength={NAME_MAX_LENGTH} className="form-control" id="nameInput" value={name} onChange={(e) => setName(e.target.value)} required />
-                                    <div className="invalid-feedback">
-                                        Please enter an event name.
+                        <form className={`needs-validation ${loading ? "opacity-50" : ""}`} onSubmit={createEvent} noValidate>
+                            <fieldset disabled={loading}>
+                                <div className="row gy-3">
+                                    <div className="col-12">
+                                        <label htmlFor="nameInput" className="form-label">Event name (max 30 characters)</label>
+                                        <input type="text" maxLength={NAME_MAX_LENGTH} className="form-control" id="nameInput" value={name} onChange={(e) => setName(e.target.value)} required />
+                                        <div className="invalid-feedback">
+                                            Please enter an event name.
+                                        </div>
+                                    </div>
+
+                                    <div className="col-6">
+                                        <label htmlFor="startDateInput" className="form-label">Start date</label>
+                                        <input type="date" className="form-control w-100" style={{ width: 200 }} id="startDateInput" value={startDate} onChange={(e) => setStartDate(e.target.value)} required></input>
+                                        <div className="invalid-feedback mb-3">
+                                            Please select a start date.
+                                        </div>
+                                    </div>
+
+                                    <div className="col-6">
+                                        <label htmlFor="endDateInput" className="form-label">End date</label>
+                                        <input type="date" className="form-control mb-3 w-100" style={{ width: 200 }} id="endDateInput" data-bs-toggle="tooltip" data-bs-placement="top" title="Leave blank for one-day event." value={endDate} onChange={(e) => setEndDate(e.target.value)}></input>
+                                    </div>
+
+                                </div>
+                                <div className="row">
+                                    <div className="modal-footer pb-0">
+                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" className="btn btn-primary">
+                                            {loading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" role="status" />
+                                                    Creating...
+                                                </>
+                                            ) : (
+                                                "Create"
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
-
-                                <div className="col-6">
-                                    <label htmlFor="startDateInput" className="form-label">Start date</label>
-                                    <input type="date" className="form-control w-100" style={{ width: 200 }} id="startDateInput" value={startDate} onChange={(e) => setStartDate(e.target.value)} required></input>
-                                    <div className="invalid-feedback mb-3">
-                                        Please select a start date.
-                                    </div>
-                                </div>
-
-                                <div className="col-6">
-                                    <label htmlFor="endDateInput" className="form-label">End date</label>
-                                    <input type="date" className="form-control mb-3 w-100" style={{ width: 200 }} id="endDateInput" data-bs-toggle="tooltip" data-bs-placement="top" title="Leave blank for one-day event." value={endDate} onChange={(e) => setEndDate(e.target.value)}></input>
-                                </div>
-
-                            </div>
-                            <div className="row">
-                                <div className="modal-footer pb-0">
-                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" className="btn btn-primary">Create</button>
-                                </div>
-                            </div>
+                            </fieldset>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>

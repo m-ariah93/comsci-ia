@@ -43,7 +43,7 @@ export default function ChecklistPage() {
                 item.id === itemId ? { ...item, done: checked ? 1 : 0 } : item
             )
         );
-        
+
         fetch(`/api/projects/${currentProjectId}/checklist/${itemId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -62,7 +62,7 @@ export default function ChecklistPage() {
                 item.id === itemId ? { ...item, note: noteInput } : item
             )
         );
-        
+
         fetch(`/api/projects/${currentProjectId}/checklistNote/${itemId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -125,6 +125,10 @@ export default function ChecklistPage() {
                                                 }
                                             }}
                                             onBlur={(e) => {
+                                                const trimmed = e.target.value.trim();
+                                                if (trimmed) {
+                                                    saveNote(item.id, trimmed);
+                                                }
                                                 setEditingNoteId(null);
                                             }}
                                         />

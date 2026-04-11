@@ -117,18 +117,14 @@ export default function ChecklistPage() {
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") {
                                                     const trimmed = e.target.value.trim();
-                                                    if (trimmed) {
-                                                        saveNote(item.id, trimmed);
-                                                    }
+                                                    saveNote(item.id, trimmed);
                                                     setEditingNoteId(null);
                                                     e.target.blur();
                                                 }
                                             }}
                                             onBlur={(e) => {
                                                 const trimmed = e.target.value.trim();
-                                                if (trimmed) {
-                                                    saveNote(item.id, trimmed);
-                                                }
+                                                saveNote(item.id, trimmed);
                                                 setEditingNoteId(null);
                                             }}
                                         />

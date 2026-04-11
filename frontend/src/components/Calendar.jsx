@@ -200,13 +200,13 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
   function renderEventContent(eventInfo) {
     return (
-      <>
-        <p>{eventInfo.event.title}</p>
+      <div className="d-flex">
+        <span className="fc-event-title my-0">{eventInfo.event.title}</span>
         {eventInfo.event.extendedProps.note && (
-          <i className="bi bi-three-dots ms-auto"></i>
+          <i className="bi bi-three-dots ms-auto me-1"></i>
         )
         }
-      </>
+      </div>
     )
 
   }

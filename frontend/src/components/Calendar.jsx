@@ -113,8 +113,9 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     const noteInput = document.createElement("input");
     noteInput.type = "text";
     noteInput.className = "form-control form-control-sm mb-2";
-    noteInput.placeholder = "Add note...";
+    noteInput.placeholder = "Loading...";
     noteInput.maxLength = "30";
+    noteInput.disabled = true;
 
     // buttons to go in popover
     const confirmationButton = document.createElement("a");
@@ -125,6 +126,8 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       .then(res => res.json())
       .then(data => {
         noteInput.value = data.note || "";
+        noteInput.placeholder = "Add note..."
+        noteInput.disabled = false;
         confirmationButton.href = mailtoLink(data);
         confirmationButton.classList.remove("disabled");
       });

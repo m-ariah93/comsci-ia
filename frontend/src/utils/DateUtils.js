@@ -27,8 +27,14 @@ export function formatBookingDate(value) {
 
 export function subtractDay(value) {
     // for end dates which are exclusive in the database but should be shown inclusive
-
     const date = new Date(value);
     date.setDate(date.getDate() - 1);
     return date;
+}
+
+export function addDay(value) {
+    // add a day to date string for custom event input (returns YYYY-MM-DD)
+    const date = new Date(value);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0]; // get the YYYY-MM-DD substring
 }

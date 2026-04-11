@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { addDay } from "../utils/DateUtils";
 
 export default function CustomEventModal({ projectId, onEventsChanged }) {
     const [name, setName] = useState("");
@@ -31,7 +32,7 @@ export default function CustomEventModal({ projectId, onEventsChanged }) {
             body: JSON.stringify({
                 title: name.trim(),
                 start: startDate,
-                end: endDate || null,
+                end: endDate ? addDay(endDate) : null,
                 project_id: projectId === 0 ? null : projectId,
                 template_id: null
             })

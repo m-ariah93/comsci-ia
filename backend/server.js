@@ -277,6 +277,22 @@ app.put("/api/events/:id", async (req, res) => {
     }
 });
 
+app.put("/api/events/:id/note", async (req, res) => {
+    const { id } = req.params;
+    const { note } = req.body;
+    try {
+        const result = await db.execute(
+            "UPDATE events SET note = ? WHERE id = ?",
+            [note, id]
+        );
+        
+        res.json({ id, note });
+    } catch (error) {
+        console.error("Error saving event note: ", error);
+        res.json({ error: "Failed to save event note" });
+    }
+});
+
 app.delete("/api/events/:id", async (req, res) => {
     const { id } = req.params;
     try {

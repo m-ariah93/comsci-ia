@@ -88,6 +88,15 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     }
   }
 
+  function saveEventNote(eventId, noteValue) {
+    fetch(`/api/events/${eventId}/note`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ note: noteValue })
+    })
+      .catch(console.error);
+  }
+
   const popoverRef = useRef(null);
   function handleEventClick(info) {
     if (popoverRef.current) {
@@ -97,8 +106,15 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
     // event title label
     const eventLabel = document.createElement("h6");
-    eventLabel.className = "mb-1";
+    eventLabel.className = "mb-2";
     eventLabel.textContent = info.event.title;
+
+    // note input field
+    const noteInput = document.createElement("input");
+    noteInput.type = "text";
+    noteInput.className = "form-control form-control-sm mb-2";
+    noteInput.placeholder = "Add note...";
+    noteInput.maxLength = "30";
 
     // buttons to go in popover
     const confirmationButton = document.createElement("a");
@@ -108,9 +124,24 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     fetch(`/api/events/${info.event.id}`)
       .then(res => res.json())
       .then(data => {
+        noteInput.value = data.note || "";
         confirmationButton.href = mailtoLink(data);
         confirmationButton.classList.remove("disabled");
       });
+
+    // note input event handlers
+    noteInput.addEventListener("blur", (e) => {
+      const trimmed = e.target.value.trim();
+      saveEventNote(info.event.id, trimmed);
+    });
+
+    noteInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const trimmed = e.target.value.trim();
+        saveEventNote(info.event.id, trimmed);
+        e.target.blur();
+      }
+    });
 
     const deleteButton = document.createElement("button");
     deleteButton.className = "btn btn-danger btn-sm";
@@ -133,6 +164,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
 
     const popoverContent = document.createElement("div");
     popoverContent.appendChild(eventLabel);
+    popoverContent.appendChild(noteInput);
     popoverContent.appendChild(confirmationButton);
     popoverContent.appendChild(deleteButton);
 

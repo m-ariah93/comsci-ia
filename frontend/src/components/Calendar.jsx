@@ -198,6 +198,19 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  function renderEventContent(eventInfo) {
+    return (
+      <>
+        <p>{eventInfo.event.title}</p>
+        {eventInfo.event.extendedProps.note && (
+          <i className="bi bi-three-dots ms-auto"></i>
+        )
+        }
+      </>
+    )
+
+  }
+
   return (
     <div className="d-flex flex-column flex-grow-1">
       <FullCalendar
@@ -219,6 +232,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         eventResize={handleEventResize}
         eventDragStop={handleEventDragStop}
         eventClick={handleEventClick}
+        eventContent={renderEventContent}
         dragRevertDuration={0}
         validRange={currentProject ? { start: `${currentProject.start_month}-01` } : null}
       />

@@ -94,6 +94,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ note: noteValue })
     })
+      .then(handleEventsChanged)
       .catch(console.error);
   }
 
@@ -203,7 +204,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       <div className="d-flex">
         <span className="fc-event-title my-0">{eventInfo.event.title}</span>
         {eventInfo.event.extendedProps.note && (
-          <i className="bi bi-three-dots ms-auto me-1"></i>
+          <i className="bi bi-three-dots ms-auto me-1 ps-1"></i>
         )
         }
       </div>

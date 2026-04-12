@@ -59,6 +59,10 @@ export default function EditProject() {
         navigate("/projects", { state: { updated: true } }); // go back to projects list
     }
 
+    function handleDeleteProject() {
+        navigate("/projects", { state: { deleted: true } });
+    }
+
     return (
         <>
             <form className="needs-validation pe-3 pe-md-4" onSubmit={clickSave} noValidate>
@@ -96,11 +100,10 @@ export default function EditProject() {
                             Archive
                         </button>
                         <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation">Delete</button>
-                        {/* todo: the delete modal needs to redirect back to projects list */}
                     </>
                 )}
             </form>
-            {project && <DeleteModal projectId={project.id} />}
+            {project && <DeleteModal projectId={project.id} onDelete={handleDeleteProject} />}
         </>
     );
 }

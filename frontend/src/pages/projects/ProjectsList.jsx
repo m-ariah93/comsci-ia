@@ -18,8 +18,7 @@ export default function ProjectsList() {
 
     const location = useLocation();
     const showUpdatedToast = location.state?.updated;
-    // console.log("showToast:", showUpdatedToast);
-    // console.log("location.state:", location.state);
+    const showDeletedToast = location.state?.deleted;
 
     useEffect(() => {
         if (showUpdatedToast) {
@@ -30,6 +29,16 @@ export default function ProjectsList() {
             }
         }
     }, [showUpdatedToast]);
+
+    useEffect(() => {
+        if (showDeletedToast) {
+            const toast = document.getElementById("projectDeletedToast");
+            if (toast) {
+                const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+                bsToast.show();
+            }
+        }
+    }, [showDeletedToast]);
 
     function showArchiveToast() {
         const toast = document.getElementById("projectArchivedToast");

@@ -286,13 +286,13 @@ export default function CalendarPage() {
                                                 <div className="">{formatDate(nextEvents[0].start)}</div>
                                             </div>
                                             {nextEvents.map((event) => (
-                                                <div key={event.id} className="my-2">
+                                                <div key={event.id}>
                                                     <hr className="m-0" />
-                                                    <div className="card-body pb-0">
+                                                    <div className="card-body pb-0 mt-2">
                                                         <h5 className="fw-bold">{event.title}</h5>
                                                         <div style={{ color: event.projectColour }}>{event.projectTitle || <em>No associated project</em>}</div>
                                                     </div>
-                                                    <div className="card-body d-flex flex-wrap row-gap-2">
+                                                    <div className="card-body d-flex flex-wrap row-gap-2 mb-2">
                                                         <a href={mailtoLink(event)} className="btn btn-secondary btn-sm me-2">Request confirmation</a>
                                                         <a href="#" className="btn btn-danger btn-sm" onClick={() => deleteNextEvent(event.id)}>Delete</a>
                                                     </div>

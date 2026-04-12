@@ -274,7 +274,7 @@ export default function CalendarPage() {
                         // next upcoming events
                         <>
                             <h4>Next up</h4>
-                            <div className="pt-2 d-flex flex-column flex-grow-1" style={{ minHeight: 0 }}>
+                            <div className="pt-2 d-flex flex-column" style={{ minHeight: 0 }}>
                                 {!nextEventsLoaded ? (
                                     <div className="spinner-border mt-2" role="status">
                                         <span className="visually-hidden">Loading...</span>
@@ -282,7 +282,7 @@ export default function CalendarPage() {
                                 ) : nextEvents.length > 0 ? (
                                     <div className="overflow-auto d-grid gap-0 row-gap-2 mt-2 mb-2" style={{ minHeight: 0 }}>
                                         <div className="card px-2 pt-2">
-                                            <div className="card-body">
+                                            <div className="card-body mb-1">
                                                 <div className="">{formatDate(nextEvents[0].start)}</div>
                                             </div>
                                             {nextEvents.map((event) => (

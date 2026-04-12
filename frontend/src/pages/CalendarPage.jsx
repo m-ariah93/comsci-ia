@@ -51,22 +51,21 @@ export default function CalendarPage() {
             });
     }, [currentProjectId]);
 
-    const [nextEvent, setNextEvent] = useState(null);
-    const [nextEventLoaded, setNextEventLoaded] = useState(false);
+    const [nextEvents, setNextEvents] = useState([]);
+    const [nextEventsLoaded, setNextEventsLoaded] = useState(false);
 
     useEffect(() => {
-        // fetch next event
-        setNextEventLoaded(false);
+        // fetch next events
+        setNextEventsLoaded(false);
         fetch("/api/events/next")
             .then(res => res.json())
             .then(data => {
-                // console.log("events/next response:", data)
-                setNextEvent(data);
-                setNextEventLoaded(true);
+                setNextEvents(Array.isArray(data) ? data : []);
+                setNextEventsLoaded(true);
             })
             .catch(() => {
-                setNextEvent(null);
-                setNextEventLoaded(true);
+                setNextEvents([]);
+                setNextEventsLoaded(true);
             });
 
     }, []);
@@ -96,22 +95,24 @@ export default function CalendarPage() {
     }, [currentProjectId]);
 
     function refreshExternalEvents() {
-        // refresh next up event card and draggable bookings
-        setNextEventLoaded(false);
+        // refresh next up events cards and draggable bookings
+        setNextEventsLoaded(false);
         fetch("/api/events/next")
             .then(res => res.json())
             .then(data => {
-                setNextEvent(data);
-                setNextEventLoaded(true);
+                setNextEvents(Array.isArray(data) ? data : []);
+                setNextEventsLoaded(true);
             })
             .catch(() => {
-                setNextEvent(null);
-                setNextEventLoaded(true);
+                setNextEvents([]);
+                setNextEventsLoaded(true);
             });
         fetch(`/api/projects/${currentProjectId}/templates`)
             .then(res => res.json())
             .then(data => setTemplateBookings(data));
     }
+
+    const secondaryColour = "#6F6D6B";
 
     const handleEventsChanged = () => {
         setEventsLoading(true);
@@ -120,19 +121,24 @@ export default function CalendarPage() {
         fetch(url)
             .then(res => res.json())
             .then(data => {
-                const allDayEvents = data.map(event => ({
+                setEvents(data.map(event => ({
                     ...event,
-                    backgroundColor: event.projectColour || "#6F6D6B", // default color if projectColour is not defined
-                    borderColor: event.projectColour || "#6F6D6B",
-                    extendedProps: { project_id: event.project_id, template_id: event.template_id, note: event.note }
-                }));
-                setEvents(allDayEvents);
+                    // set event colour to associated project colour
+                    // default to secondary colour if projectColour is undefined
+                    backgroundColor: event.projectColour || secondaryColour,
+                    borderColor: event.projectColour || secondaryColour,
+                    extendedProps: {
+                        project_id: event.project_id,
+                        template_id: event.template_id,
+                        note: event.note
+                    }
+                })));
                 setEventsLoading(false);
             });
     };
 
-    function deleteNextEvent() {
-        fetch(`/api/events/${nextEvent.id}`, {
+    function deleteNextEvent(eventId) {
+        fetch(`/api/events/${eventId}`, {
             method: "DELETE",
         })
             .then(() => {
@@ -181,8 +187,8 @@ export default function CalendarPage() {
     function DraggableEventComponent({ event }) {
         return (
             <div className={`fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event ${event.used ? "opacity-50 user-select-none" : "fc-event-draggable"}`} style={{
-                backgroundColor: currentProject.colour || "#6F6D6B",
-                borderColor: currentProject.colour || "#6F6D6B",
+                backgroundColor: currentProject.colour || secondaryColour,
+                borderColor: currentProject.colour || secondaryColour,
                 cursor: event.used ? "auto" : "pointer"
             }}
                 data-template-id={event.bookingId}
@@ -265,32 +271,36 @@ export default function CalendarPage() {
                             )}
                         </>
                     ) : (
-                        // next upcoming event
+                        // next upcoming events
                         <>
                             <h4>Next up</h4>
-                            <div className="pt-2">
-                                {!nextEventLoaded ? (
+                            <div className="pt-2 d-flex flex-column flex-grow-1" style={{ minHeight: 0 }}>
+                                {!nextEventsLoaded ? (
                                     <div className="spinner-border mt-2" role="status">
                                         <span className="visually-hidden">Loading...</span>
                                     </div>
-                                ) : nextEvent ? (
-                                    <div className="card p-2">
-                                        <div className="card-body">
-                                            <h5 className="fw-bold">{nextEvent.title}</h5>
-                                            <div style={{ color: nextEvent.projectColour }}>{nextEvent.projectTitle || <em>No associated project</em>}</div>
-                                        </div>
-                                        <hr className="m-0" />
-                                        <div className="card-body">
-                                            <div className="">{nextEvent.end && "Start: "}{formatDate(nextEvent.start)}</div>
-                                            {nextEvent.end && (
-                                                <div className="small">End: {formatDate(subtractDay(nextEvent.end))}</div>
-                                            )}
-                                        </div>
-                                        <hr className="m-0" />
-                                        <div className="card-body d-flex flex-wrap row-gap-2">
-                                            <a href={mailtoLink(nextEvent)} className="btn btn-secondary btn-sm me-2">Request confirmation</a>
-                                            <a href="#" className="btn btn-danger btn-sm" onClick={deleteNextEvent}>Delete</a>
-                                        </div>
+                                ) : nextEvents.length > 0 ? (
+                                    <div className="overflow-auto border d-grid gap-0 row-gap-2 mt-2 flex-grow-1 mb-2" style={{ minHeight: 0 }}>
+                                        {nextEvents.map((event) => (
+                                            <div key={event.id} className="card p-2">
+                                                <div className="card-body">
+                                                    <h5 className="fw-bold">{event.title}</h5>
+                                                    <div style={{ color: event.projectColour }}>{event.projectTitle || <em>No associated project</em>}</div>
+                                                </div>
+                                                <hr className="m-0" />
+                                                <div className="card-body">
+                                                    <div className="">{event.end && "Start: "}{formatDate(event.start)}</div>
+                                                    {event.end && (
+                                                        <div className="small">End: {formatDate(subtractDay(event.end))}</div>
+                                                    )}
+                                                </div>
+                                                <hr className="m-0" />
+                                                <div className="card-body d-flex flex-wrap row-gap-2">
+                                                    <a href={mailtoLink(event)} className="btn btn-secondary btn-sm me-2">Request confirmation</a>
+                                                    <a href="#" className="btn btn-danger btn-sm" onClick={() => deleteNextEvent(event.id)}>Delete</a>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 ) : (
                                     <div className="text-secondary">No upcoming events :(</div>
@@ -301,7 +311,6 @@ export default function CalendarPage() {
                     <div className="d-grid gap-2 mt-4 mb-5">
                         <button className="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#customEventModal">New custom event</button>
                     </div>
-
                 </div>
             </div>
             <CustomEventModal projectId={currentProjectId} onEventsChanged={handleEventsChanged} />

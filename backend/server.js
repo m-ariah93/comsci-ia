@@ -162,19 +162,29 @@ app.put("/api/changePassword", async (req, res) => {
 app.get("/api/events/next", async (req, res) => {
     try {
         const result = await db.execute(`
-            SELECT events.*, projects.title AS projectTitle, projects.address AS address, projects.colour AS projectColour
+            SELECT events.*, 
+                   projects.title AS projectTitle, 
+                   projects.address AS address, 
+                   projects.colour AS projectColour
             FROM events
             LEFT JOIN projects ON events.project_id = projects.id
-            WHERE date(events.start) >= date('now') AND projects.archived = 0
-            ORDER BY date(events.start) ASC
-            LIMIT 1
+            WHERE date(events.start) = (
+                SELECT date(events.start)
+                FROM events
+                LEFT JOIN projects ON events.project_id = projects.id
+                WHERE date(events.start) >= date('now') 
+                  AND (projects.archived = 0 OR events.project_id IS NULL)
+                ORDER BY date(events.start) ASC
+                LIMIT 1
+            )
+            AND (projects.archived = 0 OR events.project_id IS NULL)
+            ORDER BY events.start ASC
         `);
         const events = rowsToObjects(result);
-        const event = events[0];
-        res.json(event);
+        res.json(events);
     } catch (err) {
         console.error(err);
-        res.json({ error: "Failed to fetch next event" });
+        res.json({ error: "Failed to fetch next events" });
     }
 });
 

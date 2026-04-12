@@ -280,27 +280,25 @@ export default function CalendarPage() {
                                         <span className="visually-hidden">Loading...</span>
                                     </div>
                                 ) : nextEvents.length > 0 ? (
-                                    <div className="overflow-auto d-grid gap-0 row-gap-2 mt-2 mb-2" style={{ minHeight: 0, scrollbarGutter: "stable" }}>
-                                        {nextEvents.map((event) => (
-                                            <div key={event.id} className="card p-2">
-                                                <div className="card-body">
-                                                    <h5 className="fw-bold">{event.title}</h5>
-                                                    <div style={{ color: event.projectColour }}>{event.projectTitle || <em>No associated project</em>}</div>
-                                                </div>
-                                                <hr className="m-0" />
-                                                <div className="card-body">
-                                                    <div className="">{event.end && "Start: "}{formatDate(event.start)}</div>
-                                                    {event.end && (
-                                                        <div className="small">End: {formatDate(subtractDay(event.end))}</div>
-                                                    )}
-                                                </div>
-                                                <hr className="m-0" />
-                                                <div className="card-body d-flex flex-wrap row-gap-2">
-                                                    <a href={mailtoLink(event)} className="btn btn-secondary btn-sm me-2">Request confirmation</a>
-                                                    <a href="#" className="btn btn-danger btn-sm" onClick={() => deleteNextEvent(event.id)}>Delete</a>
-                                                </div>
+                                    <div className="overflow-auto d-grid gap-0 row-gap-2 mt-2 mb-2" style={{ minHeight: 0 }}>
+                                        <div className="card p-2">
+                                            <div className="card-body">
+                                                <div className="">{formatDate(nextEvents[0].start)}</div>
                                             </div>
-                                        ))}
+                                            {nextEvents.map((event) => (
+                                                <div key={event.id}>
+                                                    <hr className="m-0" />
+                                                    <div className="card-body">
+                                                        <h5 className="fw-bold">{event.title}</h5>
+                                                        <div style={{ color: event.projectColour }}>{event.projectTitle || <em>No associated project</em>}</div>
+                                                    </div>
+                                                    <div className="card-body d-flex flex-wrap row-gap-2">
+                                                        <a href={mailtoLink(event)} className="btn btn-secondary btn-sm me-2">Request confirmation</a>
+                                                        <a href="#" className="btn btn-danger btn-sm" onClick={() => deleteNextEvent(event.id)}>Delete</a>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="text-secondary">No upcoming events :(</div>

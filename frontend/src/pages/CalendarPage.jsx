@@ -280,7 +280,7 @@ export default function CalendarPage() {
                                         <span className="visually-hidden">Loading...</span>
                                     </div>
                                 ) : nextEvents.length > 0 ? (
-                                    <div className="overflow-auto border d-grid gap-0 row-gap-2 mt-2 flex-grow-1 mb-2" style={{ minHeight: 0 }}>
+                                    <div className="overflow-auto d-grid gap-0 row-gap-2 mt-2 mb-2" style={{ minHeight: 0, scrollbarGutter: "stable" }}>
                                         {nextEvents.map((event) => (
                                             <div key={event.id} className="card p-2">
                                                 <div className="card-body">

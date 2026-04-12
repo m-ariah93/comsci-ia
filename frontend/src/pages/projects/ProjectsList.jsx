@@ -19,6 +19,7 @@ export default function ProjectsList() {
     const location = useLocation();
     const showUpdatedToast = location.state?.updated;
     const showDeletedToast = location.state?.deleted;
+    const showArchivedToast = location.state?.archived;
 
     useEffect(() => {
         if (showUpdatedToast) {
@@ -30,16 +31,6 @@ export default function ProjectsList() {
         }
     }, [showUpdatedToast]);
 
-    useEffect(() => {
-        if (showDeletedToast) {
-            const toast = document.getElementById("projectDeletedToast");
-            if (toast) {
-                const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
-                bsToast.show();
-            }
-        }
-    }, [showDeletedToast]);
-
     function showArchiveToast() {
         const toast = document.getElementById("projectArchivedToast");
         if (toast) {
@@ -48,6 +39,12 @@ export default function ProjectsList() {
         }
     }
 
+    useEffect(() => {
+        if (showArchivedToast) {
+            showArchiveToast();
+        }
+    }, [showArchivedToast]);
+
     function showDeleteToast() {
         const toast = document.getElementById("projectDeletedToast");
         if (toast) {
@@ -55,6 +52,12 @@ export default function ProjectsList() {
             bsToast.show();
         }
     }
+
+    useEffect(() => {
+        if (showDeletedToast) {
+            showDeleteToast();
+        }
+    }, [showDeletedToast]);
 
     const [searchQuery, setSearchQuery] = useState("");
     const filteredProjects = filterProjects(sortedProjects, searchQuery);

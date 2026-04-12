@@ -63,6 +63,10 @@ export default function EditProject() {
         navigate("/projects", { state: { deleted: true } });
     }
 
+    function handleArchiveProject() {
+        navigate("/projects", { state: { archived: true } });
+    }
+
     return (
         <>
             <form className="needs-validation pe-3 pe-md-4" onSubmit={clickSave} noValidate>
@@ -103,7 +107,7 @@ export default function EditProject() {
                     </>
                 )}
             </form>
-            {project && <DeleteModal projectId={project.id} onDelete={handleDeleteProject} />}
+            {project && <DeleteModal projectId={project.id} onDelete={handleDeleteProject} onArchive={handleArchiveProject}/>}
         </>
     );
 }

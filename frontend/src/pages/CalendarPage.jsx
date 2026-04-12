@@ -281,14 +281,14 @@ export default function CalendarPage() {
                                     </div>
                                 ) : nextEvents.length > 0 ? (
                                     <div className="overflow-auto d-grid gap-0 row-gap-2 mt-2 mb-2" style={{ minHeight: 0 }}>
-                                        <div className="card p-2">
+                                        <div className="card px-2 pt-2">
                                             <div className="card-body">
                                                 <div className="">{formatDate(nextEvents[0].start)}</div>
                                             </div>
                                             {nextEvents.map((event) => (
-                                                <div key={event.id}>
+                                                <div key={event.id} className="my-2">
                                                     <hr className="m-0" />
-                                                    <div className="card-body">
+                                                    <div className="card-body pb-0">
                                                         <h5 className="fw-bold">{event.title}</h5>
                                                         <div style={{ color: event.projectColour }}>{event.projectTitle || <em>No associated project</em>}</div>
                                                     </div>

@@ -96,7 +96,7 @@ export default function Archive() {
                     )}
                     <div className="row g-3">
                         {filteredProjects.map((project) => (
-                            <div key={project.id} className="col-sm-12 col-md-12 col-lg-6">
+                            <div key={project.id} className="col-12 col-lg-6">
                                 <div className="card">
                                     <div className="card-body">
                                         <h4 className="card-title" style={{ color: project.colour }}>{project.title}</h4>

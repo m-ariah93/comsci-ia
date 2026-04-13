@@ -106,48 +106,49 @@ export default function ChecklistPage() {
                                 <li key={`check-${i}`} className='list-group-item position-relative d-flex align-items-center py-0'>
                                     <input className="form-check-input me-2 my-3" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
                                     <label className={`form-check-label ${item.done ? "text-decoration-line-through" : ""}`} htmlFor={`check-${i}`}>{item.title}</label>
-                                    <div className="ms-auto d-flex gap-0 column-gap-2">
-                                        <label className="col-form-label col-form-label-sm ms-auto note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
-                                        <input id={`orderedDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input" style={{ width: "min-content" }} />
-                                        <label className="col-form-label col-form-label-sm ms-auto note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
-                                        <input id={`pickupDeliveryDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input" style={{ width: "min-content" }} />
-                                        {editingNoteId === item.id ? (
-                                            <input
-                                                type="text"
-                                                defaultValue={item.note || ""}
-                                                placeholder="Add note..."
-                                                maxLength="30"
-                                                autoFocus
-                                                className="form-control form-control-sm ms-auto w-25 position-relative z-3"
-                                                onKeyDown={(e) => {
-                                                    if (e.key === "Enter") {
-                                                        const trimmed = e.target.value.trim();
-                                                        saveNote(item.id, trimmed);
-                                                        setEditingNoteId(null);
-                                                        e.target.blur();
-                                                    }
-                                                }}
-                                                onBlur={(e) => {
+                                    <div className="d-none d-lg-inline ms-auto d-flex gap-0 column-gap-2">
+                                        <label className="col-form-label col-form-label-sm ms-auto z-3 note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
+                                        <input id={`orderedDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input text-muted" style={{ width: "min-content" }} />
+                                        <label className="col-form-label col-form-label-sm ms-auto z-3 note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
+                                        <input id={`pickupDeliveryDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input text-muted" style={{ width: "min-content" }} />
+                                    </div>
+                                    {editingNoteId === item.id ? (
+                                        <input
+                                            type="text"
+                                            defaultValue={item.note || ""}
+                                            placeholder="Add note..."
+                                            maxLength="30"
+                                            autoFocus
+                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3"
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
                                                     const trimmed = e.target.value.trim();
                                                     saveNote(item.id, trimmed);
                                                     setEditingNoteId(null);
-                                                }}
-                                            />
-                                        ) : item.note ? (
-                                            <input type="text" className="form-control form-control-sm border-0 ms-auto mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
-                                                onClick={() => setEditingNoteId(item.id)}
-                                                value={item.note}>
-                                            </input>
-                                        ) : (
-                                            <input
-                                                type="text"
-                                                placeholder="Add note..."
-                                                maxLength="30"
-                                                className="form-control form-control-sm ms-auto w-25 position-relative z-3 note-input"
-                                                onFocus={() => setEditingNoteId(item.id)}
-                                            />
-                                        )}
-                                    </div>
+                                                    e.target.blur();
+                                                }
+                                            }}
+                                            onBlur={(e) => {
+                                                const trimmed = e.target.value.trim();
+                                                saveNote(item.id, trimmed);
+                                                setEditingNoteId(null);
+                                            }}
+                                        />
+                                    ) : item.note ? (
+                                        <input type="text" className="form-control form-control-sm border-0 ms-auto mb-0 w-25 text-muted position-relative z-3" style={{ cursor: "pointer" }}
+                                            onClick={() => setEditingNoteId(item.id)}
+                                            value={item.note}>
+                                        </input>
+                                    ) : (
+                                        <input
+                                            type="text"
+                                            placeholder="Add note..."
+                                            maxLength="30"
+                                            className="form-control form-control-sm ms-auto w-25 position-relative z-3 note-input"
+                                            onFocus={() => setEditingNoteId(item.id)}
+                                        />
+                                    )}
+
 
                                     <label
                                         htmlFor={`check-${i}`}

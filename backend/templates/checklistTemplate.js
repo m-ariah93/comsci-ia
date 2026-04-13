@@ -1,5 +1,5 @@
 const checklistTemplate = [
-    "Retaining walls order",
+    "Retaining walls",
     "Crusher dust",
     "Concrete",
     "Steel/reo",
@@ -18,7 +18,7 @@ const checklistTemplate = [
     "Bricks",
     "Lights",
     "Water tank and pump",
-    "Tile order",
+    "Tiles",
     "Turf",
     "Landscaping",
     "Disconnect power",

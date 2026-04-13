@@ -107,7 +107,7 @@ export default function ChecklistPage() {
                                     <input className="form-check-input me-2 my-3" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
                                     <label className={`form-check-label ${item.done ? "text-decoration-line-through" : ""}`} htmlFor={`check-${i}`}>{item.title}</label>
                                     <div className="ms-auto d-flex gap-2 flex-nowrap align-items-center z-3">
-                                        <div className="d-none d-lg-inline d-flex gap-0 column-gap-2 flex-nowrap">
+                                        <div className="d-none d-lg-flex gap-0 column-gap-2 flex-nowrap align-items-center">
                                             <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
                                             <input id={`orderedDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input text-muted" style={{ width: "min-content" }} />
                                             <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
@@ -138,7 +138,9 @@ export default function ChecklistPage() {
                                                 }}
                                             />
                                         ) : item.note ? (
-                                            <input id={`noteInput-${i}`} type="text"
+                                            <input
+                                                id={`noteInput-${i}`}
+                                                type="text"
                                                 className="form-control form-control-sm border-0 mb-0 text-muted position-relative z-3 flex-shrink-0"
                                                 style={{ cursor: "pointer", width: "150px" }}
                                                 onClick={() => setEditingNoteId(item.id)}

@@ -168,6 +168,7 @@ export default function ChecklistPage() {
                                                         saveOrderedDate(item.id, e.target.value);
                                                     }}
                                                     onBlur={() => setEditingOrderDateId(null)}
+                                                    onKeyDown={(e) => e.preventDefault()}
                                                     autoFocus
                                                 />
                                             ) : orderDates[item.id] || item.order_date ? (
@@ -183,6 +184,7 @@ export default function ChecklistPage() {
                                                         setOrderDates(prev => ({ ...prev, [item.id]: e.target.value }));
                                                         saveOrderedDate(item.id, e.target.value);
                                                     }}
+                                                    onKeyDown={(e) => e.preventDefault()}
                                                 />
                                             ) : (
                                                 <input
@@ -197,6 +199,7 @@ export default function ChecklistPage() {
                                                         saveOrderedDate(item.id, e.target.value);
                                                     }}
                                                     onFocus={() => setEditingOrderDateId(item.id)}
+                                                    onKeyDown={(e) => e.preventDefault()}
                                                 />
                                             )}
                                             <label className={`col-form-label col-form-label-sm z-3 ms-2 ${!(pickupDates[item.id] || item.pickup_delivery_date) ? "note-input" : ""}`} htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
@@ -213,6 +216,7 @@ export default function ChecklistPage() {
                                                         savePickupDeliveryDate(item.id, e.target.value);
                                                     }}
                                                     onBlur={() => setEditingPickupDateId(null)}
+                                                    onKeyDown={(e) => e.preventDefault()}
                                                     autoFocus
                                                 />
                                             ) : pickupDates[item.id] || item.pickup_delivery_date ? (
@@ -228,6 +232,7 @@ export default function ChecklistPage() {
                                                         setPickupDates(prev => ({ ...prev, [item.id]: e.target.value }));
                                                         savePickupDeliveryDate(item.id, e.target.value);
                                                     }}
+                                                    onKeyDown={(e) => e.preventDefault()}
                                                 />
                                             ) : (
                                                 <input
@@ -242,6 +247,7 @@ export default function ChecklistPage() {
                                                         savePickupDeliveryDate(item.id, e.target.value);
                                                     }}
                                                     onFocus={() => setEditingPickupDateId(item.id)}
+                                                    onKeyDown={(e) => e.preventDefault()}
                                                 />
                                             )}
                                         </div>

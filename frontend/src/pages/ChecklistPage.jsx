@@ -151,7 +151,7 @@ export default function ChecklistPage() {
                                     <label className={`form-check-label ${item.done ? "text-decoration-line-through" : ""}`} htmlFor={`check-${i}`}>{item.title}</label>
                                     <div className="ms-auto d-flex gap-2 flex-nowrap align-items-center z-3">
                                         <div className="d-none d-lg-flex gap-0 column-gap-2 flex-nowrap align-items-center">
-                                            <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
+                                            <label className={`col-form-label col-form-label-sm z-3 ${!(orderDates[item.id] || item.order_date) ? "note-input" : ""}`} htmlFor={`orderedDate-${i}`}>Ordered:</label>
                                             {editingOrderDateId === item.id ? (
                                                 <input
                                                     id={`orderedDate-${i}`}
@@ -193,7 +193,7 @@ export default function ChecklistPage() {
                                                     onFocus={() => setEditingOrderDateId(item.id)}
                                                 />
                                             )}
-                                            <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
+                                            <label className={`col-form-label col-form-label-sm z-3 ms-2 ${!(pickupDates[item.id] || item.pickup_delivery_date) ? "note-input" : ""}`} htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
                                             {editingPickupDateId === item.id ? (
                                                 <input
                                                     id={`pickupDeliveryDate-${i}`}

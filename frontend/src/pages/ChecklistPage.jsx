@@ -56,6 +56,8 @@ export default function ChecklistPage() {
     }
 
     const [editingNoteId, setEditingNoteId] = useState(null);
+    const [editingOrderDateId, setEditingOrderDateId] = useState(null);
+    const [editingPickupDateId, setEditingPickupDateId] = useState(null);
     const [orderDates, setOrderDates] = useState({});
     const [pickupDates, setPickupDates] = useState({});
 
@@ -150,13 +152,28 @@ export default function ChecklistPage() {
                                     <div className="ms-auto d-flex gap-2 flex-nowrap align-items-center z-3">
                                         <div className="d-none d-lg-flex gap-0 column-gap-2 flex-nowrap align-items-center">
                                             <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
-                                            {orderDates[item.id] || item.order_date ? (
+                                            {editingOrderDateId === item.id ? (
+                                                <input
+                                                    id={`orderedDate-${i}`}
+                                                    type="date"
+                                                    className="form-control form-control-sm z-3 text-muted"
+                                                    style={{ width: "min-content" }}
+                                                    value={orderDates[item.id] || item.order_date || ""}
+                                                    onChange={(e) => {
+                                                        setOrderDates(prev => ({ ...prev, [item.id]: e.target.value }));
+                                                        saveOrderedDate(item.id, e.target.value);
+                                                    }}
+                                                    onBlur={() => setEditingOrderDateId(null)}
+                                                    autoFocus
+                                                />
+                                            ) : orderDates[item.id] || item.order_date ? (
                                                 <input
                                                     id={`orderedDate-${i}`}
                                                     type="date"
                                                     className="form-control form-control-sm border-0 text-muted z-3"
                                                     style={{ width: "min-content", cursor: "pointer" }}
                                                     value={orderDates[item.id] || item.order_date || ""}
+                                                    onClick={() => setEditingOrderDateId(item.id)}
                                                     onChange={(e) => {
                                                         setOrderDates(prev => ({ ...prev, [item.id]: e.target.value }));
                                                         saveOrderedDate(item.id, e.target.value);
@@ -173,16 +190,32 @@ export default function ChecklistPage() {
                                                         setOrderDates(prev => ({ ...prev, [item.id]: e.target.value }));
                                                         saveOrderedDate(item.id, e.target.value);
                                                     }}
+                                                    onFocus={() => setEditingOrderDateId(item.id)}
                                                 />
                                             )}
                                             <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
-                                            {pickupDates[item.id] || item.pickup_delivery_date ? (
+                                            {editingPickupDateId === item.id ? (
+                                                <input
+                                                    id={`pickupDeliveryDate-${i}`}
+                                                    type="date"
+                                                    className="form-control form-control-sm z-3 text-muted"
+                                                    style={{ width: "min-content" }}
+                                                    value={pickupDates[item.id] || item.pickup_delivery_date || ""}
+                                                    onChange={(e) => {
+                                                        setPickupDates(prev => ({ ...prev, [item.id]: e.target.value }));
+                                                        savePickupDeliveryDate(item.id, e.target.value);
+                                                    }}
+                                                    onBlur={() => setEditingPickupDateId(null)}
+                                                    autoFocus
+                                                />
+                                            ) : pickupDates[item.id] || item.pickup_delivery_date ? (
                                                 <input
                                                     id={`pickupDeliveryDate-${i}`}
                                                     type="date"
                                                     className="form-control form-control-sm border-0 text-muted z-3"
                                                     style={{ width: "min-content", cursor: "pointer" }}
                                                     value={pickupDates[item.id] || item.pickup_delivery_date || ""}
+                                                    onClick={() => setEditingPickupDateId(item.id)}
                                                     onChange={(e) => {
                                                         setPickupDates(prev => ({ ...prev, [item.id]: e.target.value }));
                                                         savePickupDeliveryDate(item.id, e.target.value);
@@ -199,6 +232,7 @@ export default function ChecklistPage() {
                                                         setPickupDates(prev => ({ ...prev, [item.id]: e.target.value }));
                                                         savePickupDeliveryDate(item.id, e.target.value);
                                                     }}
+                                                    onFocus={() => setEditingPickupDateId(item.id)}
                                                 />
                                             )}
                                         </div>

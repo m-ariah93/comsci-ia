@@ -58,7 +58,8 @@ export async function initDb() {
       end TEXT,
       note TEXT,
       project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
-      template_id INTEGER REFERENCES booking_templates(id)
+      template_id INTEGER REFERENCES booking_templates(id),
+      checklist_id INTEGER REFERENCES checklist(id) ON DELETE SET NULL
     )
   `);
 

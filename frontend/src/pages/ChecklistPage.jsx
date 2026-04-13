@@ -30,6 +30,8 @@ export default function ChecklistPage() {
             .then(res => res.json())
             .then(data => {
                 setChecklist(data);
+                setOrderDates({});
+                setPickupDates({});
                 setChecklistLoaded(true);
             });
     }, [currentProjectId]);
@@ -68,16 +70,10 @@ export default function ChecklistPage() {
     }
 
     function savePickupDeliveryDate(itemId, dateValue) {
-        fetch(`/api/projects/${currentProjectId}/checklist/${itemId}/pickupDate`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                date: dateValue,
-            })
-        });
-
-        if (dateValue) { // create pickup/delivery event in calendar
-            const checklistItem = checklist.find(item => item.id === itemId);
+        const checklistItem = checklist.find(item => item.id === itemId);
+        
+        if (dateValue) {
+            // create or update pickup/delivery event in calendar
             if (checklistItem) {
                 fetch(`/api/projects/${currentProjectId}/checklist/${itemId}/pickupEvent`, {
                     method: "POST",
@@ -89,6 +85,15 @@ export default function ChecklistPage() {
                 });
             }
         }
+        
+        // update checklist date
+        fetch(`/api/projects/${currentProjectId}/checklist/${itemId}/pickupDate`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                date: dateValue,
+            })
+        });
     }
 
     function saveNote(itemId, noteInput) {

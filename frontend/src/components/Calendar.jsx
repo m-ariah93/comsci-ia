@@ -20,7 +20,10 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         end: info.event.endStr || null,
       })
     })
-      .then(handleEventsChanged);
+      .then(res => res.json())
+      .then(() => {
+        handleEventsChanged();
+      });
   }
 
   function handleEventReceive(info) {
@@ -50,7 +53,10 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         end: info.event.end - info.event.start === (1000 * 60 * 60 * 24) ? null : info.event.endStr || null
       })
     })
-      .then(handleEventsChanged);
+      .then(res => res.json())
+      .then(() => {
+        handleEventsChanged();
+      });
   }
 
   function handleEventsChanged() { // wrapper function
@@ -159,6 +165,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
       fetch(`/api/events/${info.event.id}`, {
         method: "DELETE",
       })
+        .then(res => res.json())
         .then(() => {
           // console.log(`Event ${info.event.id} deleted`);
           handleEventsChanged();

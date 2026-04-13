@@ -271,13 +271,30 @@ app.put("/api/events/:id", async (req, res) => {
     }
 
     try {
+        // check if checklist event
+        const eventChecklistResult = await db.execute(
+            "SELECT checklist_id FROM events WHERE id = ?",
+            [id]
+        );
+
+        if (eventChecklistResult.rows.length === 0) {
+            return res.json({ error: "Event not found" });
+        }
+
+        const checklistId = eventChecklistResult.rows[0][0];
+
+        // update event
         const result = await db.execute(
             "UPDATE events SET start = ?, end = ? WHERE id = ?",
             [start, end, id]
-        )
+        );
 
-        if (result.rowsAffected === 0) {
-            return res.json({ error: "Event not found" });
+        // if linked to a checklist, update checklist date too
+        if (checklistId) {
+            await db.execute(
+                "UPDATE checklist SET pickup_delivery_date = ? WHERE id = ?",
+                [start, checklistId]
+            );
         }
 
         res.json({ id, start, end });
@@ -306,12 +323,28 @@ app.put("/api/events/:id/note", async (req, res) => {
 app.delete("/api/events/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await db.execute(
+        // check if a checklist event
+        const eventChecklistResult = await db.execute(
+            "SELECT checklist_id FROM events WHERE id = ?",
+            [id]
+        );
+
+        if (eventChecklistResult.rows.length === 0) {
+            return res.json({ error: "Event not found" });
+        }
+
+        const checklistId = eventChecklistResult.rows[0][0];
+
+        await db.execute(
             "DELETE FROM events WHERE id = ?", [id]
         );
 
-        if (result.rowsAffected === 0) {
-            return res.json({ error: "Event not found" });
+        // if linked to a checklist, clear checklist date
+        if (checklistId) {
+            await db.execute(
+                "UPDATE checklist SET pickup_delivery_date = NULL WHERE id = ?",
+                [checklistId]
+            );
         }
 
         res.json({ deletedId: id });
@@ -483,6 +516,14 @@ app.put("/api/projects/:projectId/checklist/:checklistId/pickupDate", async (req
     const { date } = req.body;
 
     try {
+        // if clearing the date, also delete associated event
+        if (!date) {
+            await db.execute(
+                "DELETE FROM events WHERE checklist_id = ?",
+                [checklistId]
+            );
+        }
+
         const result = await db.execute(
             "UPDATE checklist SET pickup_delivery_date = ? WHERE id = ? AND project_id = ?",
             [date || null, checklistId, projectId]
@@ -511,8 +552,8 @@ app.post("/api/projects/:projectId/checklist/:checklistId/pickupEvent", async (r
         // check if event already exists for this checklist item
         const existingEvent = await db.execute(
             `SELECT id FROM events 
-             WHERE project_id = ? AND title = ? AND template_id IS NULL`,
-            [projectId, title]
+             WHERE checklist_id = ?`,
+            [checklistId]
         );
 
         let eventId;
@@ -526,13 +567,13 @@ app.post("/api/projects/:projectId/checklist/:checklistId/pickupEvent", async (r
         } else {
             // create new event
             const result = await db.execute(
-                `INSERT INTO events (title, start, project_id)
-                 VALUES (?, ?, ?)`,
-                [title, date, projectId]
+                `INSERT INTO events (title, start, project_id, checklist_id)
+                 VALUES (?, ?, ?, ?)`,
+                [title, date, projectId, checklistId]
             );
             eventId = result.lastInsertRowid;
         }
-        
+
         res.json({ eventId, projectId, checklistId, title, date });
 
     } catch (error) {

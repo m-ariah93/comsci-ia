@@ -107,10 +107,10 @@ export default function ChecklistPage() {
                                     <input className="form-check-input me-2 my-3" type="checkbox" value="" id={`check-${i}`} onChange={(e) => onChecklistChange(item.id, e.target.checked)} checked={Boolean(item.done)} />
                                     <label className={`form-check-label ${item.done ? "text-decoration-line-through" : ""}`} htmlFor={`check-${i}`}>{item.title}</label>
                                     <div className="ms-auto d-flex gap-0 column-gap-2">
-                                        <label className="col-form-label-sm ms-auto note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
-                                        <input id={`orderedDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input" style={{ width: min-content }} />
-                                        <label className="col-form-label-sm ms-auto note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
-                                        <input id={`pickupDeliveryDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input" style={{ width: min-content }} />
+                                        <label className="col-form-label col-form-label-sm ms-auto note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
+                                        <input id={`orderedDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input" style={{ width: "min-content" }} />
+                                        <label className="col-form-label col-form-label-sm ms-auto note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
+                                        <input id={`pickupDeliveryDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input" style={{ width: "min-content" }} />
                                         {editingNoteId === item.id ? (
                                             <input
                                                 type="text"

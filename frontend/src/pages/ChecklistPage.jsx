@@ -65,6 +65,13 @@ export default function ChecklistPage() {
     const [pickupDates, setPickupDates] = useState({});
 
     function saveOrderedDate(itemId, dateValue) {
+        // update local state optimistically before db updates
+        setChecklist(prev =>
+            prev.map(item =>
+                item.id === itemId ? { ...item, order_date: dateValue } : item
+            )
+        );
+
         fetch(`/api/projects/${currentProjectId}/checklist/${itemId}/orderDate`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -75,6 +82,13 @@ export default function ChecklistPage() {
     }
 
     function savePickupDeliveryDate(itemId, dateValue) {
+        // update local state optimistically before db updates
+        setChecklist(prev =>
+            prev.map(item =>
+                item.id === itemId ? { ...item, pickup_delivery_date: dateValue } : item
+            )
+        );
+
         const checklistItem = checklist.find(item => item.id === itemId);
         
         if (dateValue) {

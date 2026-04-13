@@ -54,13 +54,13 @@ export default function SettingsPage() {
 		setPasswordError("");
 		const form = e.target;
 
-		// Check if required fields are filled
+		// check if required fields are filled
 		if (!form.checkValidity()) {
 			form.classList.add("was-validated");
 			return;
 		}
 
-		// Custom validations for other errors
+		// custom validations for other errors
 		if (newPassword !== confirmPassword) {
 			setPasswordError("Passwords don't match :(");
 			form.classList.add("was-validated");

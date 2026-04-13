@@ -38,6 +38,9 @@ export default function ChecklistPage() {
 
     const location = useLocation();
 
+    const currentProject = activeProjects.find(p => p.id === currentProjectId);
+    const minDate = currentProject ? `${currentProject.start_month}-01` : "";
+
     function onChecklistChange(itemId, checked) {
         // update local state optimistically before db updates
         setChecklist(prev =>
@@ -158,6 +161,7 @@ export default function ChecklistPage() {
                                                     type="date"
                                                     className="form-control form-control-sm z-3 text-muted"
                                                     style={{ width: "min-content" }}
+                                                    min={minDate}
                                                     value={orderDates[item.id] || item.order_date || ""}
                                                     onChange={(e) => {
                                                         setOrderDates(prev => ({ ...prev, [item.id]: e.target.value }));
@@ -172,6 +176,7 @@ export default function ChecklistPage() {
                                                     type="date"
                                                     className="form-control form-control-sm border-0 text-muted z-3"
                                                     style={{ width: "min-content", cursor: "pointer" }}
+                                                    min={minDate}
                                                     value={orderDates[item.id] || item.order_date || ""}
                                                     onClick={() => setEditingOrderDateId(item.id)}
                                                     onChange={(e) => {
@@ -185,6 +190,7 @@ export default function ChecklistPage() {
                                                     type="date"
                                                     className="form-control form-control-sm z-3 note-input text-muted"
                                                     style={{ width: "min-content" }}
+                                                    min={minDate}
                                                     value=""
                                                     onChange={(e) => {
                                                         setOrderDates(prev => ({ ...prev, [item.id]: e.target.value }));
@@ -200,6 +206,7 @@ export default function ChecklistPage() {
                                                     type="date"
                                                     className="form-control form-control-sm z-3 text-muted"
                                                     style={{ width: "min-content" }}
+                                                    min={minDate}
                                                     value={pickupDates[item.id] || item.pickup_delivery_date || ""}
                                                     onChange={(e) => {
                                                         setPickupDates(prev => ({ ...prev, [item.id]: e.target.value }));
@@ -214,6 +221,7 @@ export default function ChecklistPage() {
                                                     type="date"
                                                     className="form-control form-control-sm border-0 text-muted z-3"
                                                     style={{ width: "min-content", cursor: "pointer" }}
+                                                    min={minDate}
                                                     value={pickupDates[item.id] || item.pickup_delivery_date || ""}
                                                     onClick={() => setEditingPickupDateId(item.id)}
                                                     onChange={(e) => {
@@ -227,6 +235,7 @@ export default function ChecklistPage() {
                                                     type="date"
                                                     className="form-control form-control-sm z-3 note-input text-muted"
                                                     style={{ width: "min-content" }}
+                                                    min={minDate}
                                                     value=""
                                                     onChange={(e) => {
                                                         setPickupDates(prev => ({ ...prev, [item.id]: e.target.value }));

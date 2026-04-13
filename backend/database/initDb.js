@@ -32,6 +32,8 @@ export async function initDb() {
     CREATE TABLE IF NOT EXISTS checklist (
       id INTEGER PRIMARY KEY,
       title TEXT NOT NULL,
+      order_date TEXT,
+      pickup_delivery_date TEXT,
       note TEXT,
       done INTEGER DEFAULT 0 CHECK (done=0 OR done=1),
       project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE

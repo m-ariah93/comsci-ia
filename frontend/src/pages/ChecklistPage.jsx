@@ -54,6 +54,42 @@ export default function ChecklistPage() {
     }
 
     const [editingNoteId, setEditingNoteId] = useState(null);
+    const [orderDates, setOrderDates] = useState({});
+    const [pickupDates, setPickupDates] = useState({});
+
+    function saveOrderedDate(itemId, dateValue) {
+        fetch(`/api/projects/${currentProjectId}/checklist/${itemId}/orderDate`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                date: dateValue,
+            })
+        });
+    }
+
+    function savePickupDeliveryDate(itemId, dateValue) {
+        fetch(`/api/projects/${currentProjectId}/checklist/${itemId}/pickupDate`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                date: dateValue,
+            })
+        });
+
+        if (dateValue) { // create pickup/delivery event in calendar
+            const checklistItem = checklist.find(item => item.id === itemId);
+            if (checklistItem) {
+                fetch(`/api/projects/${currentProjectId}/checklist/${itemId}/pickupEvent`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        title: `${checklistItem.title} - pickup/delivery`,
+                        date: dateValue,
+                    })
+                });
+            }
+        }
+    }
 
     function saveNote(itemId, noteInput) {
         // update local state optimistically before db updates
@@ -109,9 +145,29 @@ export default function ChecklistPage() {
                                     <div className="ms-auto d-flex gap-2 flex-nowrap align-items-center z-3">
                                         <div className="d-none d-lg-flex gap-0 column-gap-2 flex-nowrap align-items-center">
                                             <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`orderedDate-${i}`}>Ordered:</label>
-                                            <input id={`orderedDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input text-muted" style={{ width: "min-content" }} />
+                                            <input
+                                                id={`orderedDate-${i}`}
+                                                type="date"
+                                                className="form-control form-control-sm z-3 note-input text-muted"
+                                                style={{ width: "min-content" }}
+                                                value={orderDates[item.id] || item.order_date || ""}
+                                                onChange={(e) => {
+                                                    setOrderDates(prev => ({ ...prev, [item.id]: e.target.value }));
+                                                    saveOrderedDate(item.id, e.target.value);
+                                                }}
+                                            />
                                             <label className="col-form-label col-form-label-sm z-3 note-input" htmlFor={`pickupDeliveryDate-${i}`}>Pickup/delivery:</label>
-                                            <input id={`pickupDeliveryDate-${i}`} type="date" className="form-control form-control-sm z-3 note-input text-muted" style={{ width: "min-content" }} />
+                                            <input
+                                                id={`pickupDeliveryDate-${i}`}
+                                                type="date"
+                                                className="form-control form-control-sm z-3 note-input text-muted"
+                                                style={{ width: "min-content" }}
+                                                value={pickupDates[item.id] || item.pickup_delivery_date || ""}
+                                                onChange={(e) => {
+                                                    setPickupDates(prev => ({ ...prev, [item.id]: e.target.value }));
+                                                    savePickupDeliveryDate(item.id, e.target.value);
+                                                }}
+                                            />
                                         </div>
                                         {editingNoteId === item.id ? (
                                             <input

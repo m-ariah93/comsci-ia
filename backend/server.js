@@ -392,7 +392,7 @@ app.get("/api/projects/:id/checklist", async (req, res) => {
 
     try {
         const result = await db.execute(`
-            SELECT id, title, note, done
+            SELECT id, title, note, done, order_date, pickup_delivery_date
             FROM checklist
             WHERE project_id = ?`, [id]
         );
@@ -457,6 +457,90 @@ app.put("/api/projects/:projectId/checklistNote/:checklistId", async (req, res) 
 
 import bookingsTemplate from "./templates/bookingsTemplate.js";
 import checklistTemplate from "./templates/checklistTemplate.js";
+app.put("/api/projects/:projectId/checklist/:checklistId/orderDate", async (req, res) => {
+    const { projectId, checklistId } = req.params;
+    const { date } = req.body;
+
+    try {
+        const result = await db.execute(
+            "UPDATE checklist SET order_date = ? WHERE id = ? AND project_id = ?",
+            [date || null, checklistId, projectId]
+        );
+
+        if (result.rowsAffected === 0) {
+            return res.json({ error: "Checklist not found" });
+        }
+
+        res.json({ projectId, checklistId, order_date: date });
+    } catch (error) {
+        console.error("Error updating order date:", error);
+        res.json({ error: "Failed to update order date" });
+    }
+});
+
+app.put("/api/projects/:projectId/checklist/:checklistId/pickupDate", async (req, res) => {
+    const { projectId, checklistId } = req.params;
+    const { date } = req.body;
+
+    try {
+        const result = await db.execute(
+            "UPDATE checklist SET pickup_delivery_date = ? WHERE id = ? AND project_id = ?",
+            [date || null, checklistId, projectId]
+        );
+
+        if (result.rowsAffected === 0) {
+            return res.json({ error: "Checklist not found" });
+        }
+
+        res.json({ projectId, checklistId, pickup_delivery_date: date });
+    } catch (error) {
+        console.error("Error updating pickup delivery date:", error);
+        res.json({ error: "Failed to update pickup delivery date" });
+    }
+});
+
+app.post("/api/projects/:projectId/checklist/:checklistId/pickupEvent", async (req, res) => {
+    const { projectId, checklistId } = req.params;
+    const { title, date } = req.body;
+
+    if (!title || !date) {
+        return res.json({ error: "Title and date are required" });
+    }
+
+    try {
+        // check if event already exists for this checklist item
+        const existingEvent = await db.execute(
+            `SELECT id FROM events 
+             WHERE project_id = ? AND title = ? AND template_id IS NULL`,
+            [projectId, title]
+        );
+
+        let eventId;
+        if (existingEvent.rows.length > 0) {
+            // update existing event
+            const result = await db.execute(
+                "UPDATE events SET start = ? WHERE id = ?",
+                [date, existingEvent.rows[0][0]]
+            );
+            eventId = existingEvent.rows[0][0];
+        } else {
+            // create new event
+            const result = await db.execute(
+                `INSERT INTO events (title, start, project_id)
+                 VALUES (?, ?, ?)`,
+                [title, date, projectId]
+            );
+            eventId = result.lastInsertRowid;
+        }
+        
+        res.json({ eventId, projectId, checklistId, title, date });
+
+    } catch (error) {
+        console.error("Error creating/updating pickup event:", error);
+        res.json({ error: "Failed to create/update pickup event" });
+    }
+});
+
 app.post("/api/projects", async (req, res) => {
     const { title, address, start_month, colour } = req.body;
 

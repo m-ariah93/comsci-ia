@@ -488,8 +488,6 @@ app.put("/api/projects/:projectId/checklistNote/:checklistId", async (req, res) 
     }
 });
 
-import bookingsTemplate from "./templates/bookingsTemplate.js";
-import checklistTemplate from "./templates/checklistTemplate.js";
 app.put("/api/projects/:projectId/checklist/:checklistId/orderDate", async (req, res) => {
     const { projectId, checklistId } = req.params;
     const { date } = req.body;
@@ -582,6 +580,8 @@ app.post("/api/projects/:projectId/checklist/:checklistId/pickupEvent", async (r
     }
 });
 
+import bookingsTemplate from "./templates/BookingsTemplate.js";
+import checklistTemplate from "./templates/ChecklistTemplate.js";
 app.post("/api/projects", async (req, res) => {
     const { title, address, start_month, colour } = req.body;
 

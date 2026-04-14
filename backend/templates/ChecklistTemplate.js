@@ -6,6 +6,7 @@ const checklistTemplate = [
     "Pods",
     "WC hire",
     "Bolts tie down",
+    "Frame and truss",
     "Gas fitter rough in",
     "Gas fitter fit off",
     "Phone rough in",

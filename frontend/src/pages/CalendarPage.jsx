@@ -118,6 +118,9 @@ export default function CalendarPage() {
         setSelectedDate(dateStr);
         const modal = new bootstrap.Modal(document.getElementById('customEventModal'));
         modal.show();
+
+        // reset the selected date separately so the dateStr dependency changes
+        setTimeout(() => setSelectedDate(null), 0);
     }
 
     const secondaryColour = "#6F6D6B";

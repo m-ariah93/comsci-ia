@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { addDay } from "../utils/DateUtils";
+import { useEffect } from "react";
 
-export default function CustomEventModal({ projectId, onEventsChanged }) {
+export default function CustomEventModal({ projectId, onEventsChanged, dateStr }) {
     const [name, setName] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+
+    useEffect(() => {
+        if (dateStr) {
+            setStartDate(dateStr);
+        }
+    }, []);
 
     const NAME_MAX_LENGTH = 30;
 

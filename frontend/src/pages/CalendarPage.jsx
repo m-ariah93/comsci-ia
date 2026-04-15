@@ -112,6 +112,14 @@ export default function CalendarPage() {
             .then(data => setTemplateBookings(data));
     }
 
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    function handleDateClick(dateStr) {
+        setSelectedDate(dateStr);
+        const modal = new bootstrap.Modal(document.getElementById('customEventModal'));
+        modal.show();
+    }
+
     const secondaryColour = "#6F6D6B";
 
     const handleEventsChanged = () => {
@@ -245,6 +253,7 @@ export default function CalendarPage() {
                         keyBookingsRef={keyBookingsRef}
                         events={events}
                         onEventsChanged={handleEventsChanged} // callback to update events
+                        onDateClick={handleDateClick}
                         mailtoLink={mailtoLink}
                     />
                 </div>
@@ -311,7 +320,7 @@ export default function CalendarPage() {
                     </div>
                 </div>
             </div>
-            <CustomEventModal projectId={currentProjectId} onEventsChanged={handleEventsChanged} />
+            <CustomEventModal projectId={currentProjectId} onEventsChanged={handleEventsChanged} dateStr={selectedDate} />
         </div>
     );
 }

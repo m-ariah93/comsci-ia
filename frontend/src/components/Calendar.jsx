@@ -4,8 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import { useRef, useEffect } from "react";
 
-
-export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, events, onEventsChanged, mailtoLink }) {
+export default function Calendar({ currentProjectId, currentProject, keyBookingsRef, events, onEventsChanged, mailtoLink, onDateClick }) {
 
   useEffect(() => {
     handleEventsChanged();
@@ -216,7 +215,12 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         }
       </div>
     )
+  }
 
+  function handleDateClick(info) {
+    if (onDateClick) {
+      onDateClick(info.dateStr);
+    }
   }
 
   return (
@@ -241,6 +245,7 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
         eventDragStop={handleEventDragStop}
         eventClick={handleEventClick}
         eventContent={renderEventContent}
+        dateClick={handleDateClick}
         dragRevertDuration={0}
         validRange={currentProject ? { start: `${currentProject.start_month}-01` } : null}
       />

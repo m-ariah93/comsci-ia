@@ -118,10 +118,17 @@ export default function CalendarPage() {
         setSelectedDate(dateStr);
         const modal = new bootstrap.Modal(document.getElementById('customEventModal'));
         modal.show();
-        modal.addEventListener('hidden.bs.modal', event => {
-            setSelectedDate(null);
-        });
     }
+
+    useEffect(() => {
+        const modal = document.getElementById('customEventModal');
+        // reset dateStr to reset modal start date on close
+        const handleModalHidden = () => setSelectedDate(null);
+        modal?.addEventListener('hidden.bs.modal', handleModalHidden);
+        return () => { // clean up event listener to hopefully fix weird bugs
+            modal?.removeEventListener('hidden.bs.modal', handleModalHidden);
+        };
+    }, []);
 
     const secondaryColour = "#6F6D6B";
 

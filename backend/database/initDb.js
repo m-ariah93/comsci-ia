@@ -45,8 +45,8 @@ export async function initDb() {
       id INTEGER PRIMARY KEY,
       username TEXT UNIQUE,
       password TEXT, 
-      email_greeting TEXT,
-      email_closing TEXT
+      email_greeting TEXT DEFAULT '',
+      email_closing TEXT DEFAULT ''
     )
   `);
 

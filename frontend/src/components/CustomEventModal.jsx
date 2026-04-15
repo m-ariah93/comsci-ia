@@ -20,7 +20,7 @@ export default function CustomEventModal({ projectId, onEventsChanged, dateStr }
             setName("");
             setStartDate("");
             setEndDate("");
-            const form = modalElement.querySelector("form");
+            const form = modal.querySelector("form");
             if (form) {
                 form.classList.remove("was-validated");
             }

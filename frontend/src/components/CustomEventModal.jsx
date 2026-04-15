@@ -13,6 +13,20 @@ export default function CustomEventModal({ projectId, onEventsChanged, dateStr }
         }
     }, [dateStr]);
 
+    useEffect(() => {
+        // clear form on modal close
+        const modal = document.getElementById('customEventModal')
+        modal.addEventListener('hidden.bs.modal', event => {
+            setName("");
+            setStartDate("");
+            setEndDate("");
+            const form = modalElement.querySelector("form");
+            if (form) {
+                form.classList.remove("was-validated");
+            }
+        });
+    }, []);
+
     const NAME_MAX_LENGTH = 30;
 
     const [loading, setLoading] = useState(false);

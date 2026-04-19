@@ -10,8 +10,12 @@ export default function LoginPage() {
 	const [password, setPassword] = useState("");
 	const [showError, setShowError] = useState(false);
 
+	const [loading, setLoading] = useState(false);
+
 	const handleLogin = async (e) => {
 		e.preventDefault();
+
+		setLoading(true);
 
 		const response = await fetch("/api/login", {
 			method: "POST",
@@ -25,6 +29,7 @@ export default function LoginPage() {
 			navigate("/calendar");
 		} else {
 			setShowError(true);
+			setLoading(false);
 		}
 	};
 
@@ -60,7 +65,13 @@ export default function LoginPage() {
             <label className="form-check-label" htmlFor="rememberCheck">Remember me</label>
           </div> */}
 						<div className="d-grid mt-4">
-							<button type="submit" className="btn btn-primary">Login</button>
+							<button type="submit" className="btn btn-primary" disabled={loading}>
+								{loading ? (
+									<span className="spinner-border spinner-border-sm" role="status" />
+								) : (
+									"Login"
+								)}
+							</button>
 						</div>
 					</form>
 				</div>

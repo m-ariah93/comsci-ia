@@ -34,6 +34,7 @@ export default function CalendarPage() {
 
     }, []); // runs once on page load
 
+    // call hook to access projects list
     const { activeProjects } = useProjects();
 
     // track which calendar is open 

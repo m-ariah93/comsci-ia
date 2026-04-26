@@ -10,25 +10,27 @@ import {
 const ProjectsContext = createContext();
 
 export function ProjectsProvider({ children }) {
+
+    // initialise project state variables
     const [activeProjects, setActiveProjects] = useState([]);
     const [archivedProjects, setArchivedProjects] = useState([]);
-    const location = useLocation();
 
-    const refreshProjects = () => {
-        fetch("/api/projects?archived=0") // only active projects
-            .then((res) => res.json())
-            .then((data) => setActiveProjects(data))
+    function refreshProjects() {
+        fetch("/api/projects?archived=0") // get only active projects
+            .then((res) => res.json()) // parse json input into JS object
+            .then((data) => setActiveProjects(data)) // update state
             .catch(console.error);
 
-        fetch("/api/projects?archived=1") // only archived projects
-            .then((res) => res.json())
-            .then((data) => setArchivedProjects(data))
+        fetch("/api/projects?archived=1") // get only archived projects
+            .then((res) => res.json()) // parse json input into JS object
+            .then((data) => setArchivedProjects(data)) // update state
             .catch(console.error);
     }
 
+    const location = useLocation(); // React Router hook, returns location object
     useEffect(() => {
         refreshProjects();
-    }, [location]);
+    }, [location]); // re-runs whenever page changes
 
     const archiveProject = (id) =>
         dbArchive(id).then(refreshProjects);

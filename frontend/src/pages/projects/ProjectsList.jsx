@@ -8,6 +8,7 @@ import { filterProjects } from "/src/utils/FilterProjects";
 
 export default function ProjectsList() {
 
+    // call hook to access projects list
     const { activeProjects, archiveProject } = useProjects();
 
     const [sortChoice, setSortChoice] = useState("Start, latest");

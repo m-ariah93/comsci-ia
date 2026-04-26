@@ -103,7 +103,7 @@ export default function Archive() {
                                         <p className="card-text">{project.address}</p>
                                         <p className="card-text">Start: {formatMonth(project.start_month)}</p>
                                         <div className="d-flex gap-2">
-                                            <button type="button" className="btn btn-secondary" onClick={() => { unarchiveProject(project.id); showArchiveToast(); }}>Unarchive</button>
+                                            <button type="button" className="btn btn-secondary" onClick={async () => { await unarchiveProject(project.id); showArchiveToast(); }}>Unarchive</button>
                                             <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                         </div>
                                     </div>

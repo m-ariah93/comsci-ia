@@ -144,7 +144,7 @@ export default function ProjectsList() {
                                             <Link to={`/projects/edit/${project.id}`} state={{ fromList: true }} className="btn btn-primary">
                                                 Edit
                                             </Link>
-                                            <button type="button" className="btn btn-secondary" onClick={() => { archiveProject(project.id); showArchiveToast(); }}>Archive</button>
+                                            <button type="button" className="btn btn-secondary" onClick={async () => { await archiveProject(project.id); showArchiveToast(); }}>Archive</button>
                                             <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" onClick={() => setSelectedProject(project.id)}>Delete</button>
                                         </div>
                                     </div>

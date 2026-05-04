@@ -178,7 +178,6 @@ app.get("/api/events/next", async (req, res) => {
                 LIMIT 1
             )
             AND (projects.archived = 0 OR events.project_id IS NULL)
-            ORDER BY events.start ASC
         `);
         const events = rowsToObjects(result);
         res.json(events);
@@ -312,7 +311,7 @@ app.put("/api/events/:id/note", async (req, res) => {
             "UPDATE events SET note = ? WHERE id = ?",
             [note, id]
         );
-        
+
         res.json({ id, note });
     } catch (error) {
         console.error("Error saving event note: ", error);
@@ -629,23 +628,21 @@ app.post("/api/projects", async (req, res) => {
 
         // parallel inserts (faster than for loops)
 
-        await Promise.all(
-            bookingsTemplate.map(title =>
-                db.execute(
-                    "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)",
-                    [projectId, title]
-                )
-            )
-        );
+        // create 2D arrays containing pairs of project id and items
+        const bookingValues = bookingsTemplate.map(title => [projectId, title]);
+        const checklistValues = checklistTemplate.map(task => [projectId, task]);
+        
+        await Promise.all([ // parallel asynchronous operations
+            bookingValues.length && db.execute(
+                "INSERT INTO booking_templates (project_id, title) VALUES ?",
+                [bookingValues] // batch insert in one query
+            ),
 
-        await Promise.all(
-            checklistTemplate.map(task =>
-                db.execute(
-                    "INSERT INTO checklist (project_id, title) VALUES (?, ?)",
-                    [projectId, task]
-                )
+            checklistValues.length && db.execute(
+                "INSERT INTO checklist (project_id, title) VALUES ?",
+                [checklistValues]
             )
-        );
+        ]);
 
         res.json({ id: projectId, title, address, start_month, colour });
     } catch (error) {

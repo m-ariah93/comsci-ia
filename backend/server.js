@@ -598,51 +598,25 @@ app.post("/api/projects", async (req, res) => {
 
         // insert new sets of template bookings and checklist tasks
 
-        // const insertBookingTemplate = db.prepare(
-        //     "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)"
-        // );
-        // for (const title of bookingsTemplate) {
-        //     insertBookingTemplate.run(projectId, title);
-        // }
-
-        // for (const title of bookingsTemplate) {
-        //     await db.execute({
-        //         sql: "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)",
-        //         args: [projectId, title],
-        //     });
-        // }
-
-        // const insertChecklistTemplate = db.prepare(
-        //     "INSERT INTO checklist (project_id, title) VALUES (?, ?)"
-        // );
-        // for (const task of checklistTemplate) {
-        // insertChecklistTemplate.run(projectId, task);
-        // }
-
-        // for (const task of checklistTemplate) {
-        //     await db.execute({
-        //         sql: "INSERT INTO checklist (project_id, title) VALUES (?, ?)",
-        //         args: [projectId, task],
-        //     });
-        // }
-
-        // parallel inserts (faster than for loops)
-
-        // create 2D arrays containing pairs of project id and items
-        const bookingValues = bookingsTemplate.map(title => [projectId, title]);
-        const checklistValues = checklistTemplate.map(task => [projectId, task]);
-        
-        await Promise.all([ // parallel asynchronous operations
-            bookingValues.length && db.execute(
-                "INSERT INTO booking_templates (project_id, title) VALUES ?",
-                [bookingValues] // batch insert in one query
-            ),
-
-            checklistValues.length && db.execute(
-                "INSERT INTO checklist (project_id, title) VALUES ?",
-                [checklistValues]
-            )
-        ]);
+        await db.execute("BEGIN"); // start new transaction
+        try {
+            for (const title of bookingsTemplate) { // insert bookings
+                await db.execute( // ensure query finishes before next starts
+                    "INSERT INTO booking_templates (project_id, title) VALUES (?, ?)",
+                    [projectId, title]
+                );
+            }
+            for (const task of checklistTemplate) { // insert checklist tasks
+                await db.execute(
+                    "INSERT INTO checklist (project_id, title) VALUES (?, ?)",
+                    [projectId, task]
+                );
+            }
+            await db.execute("COMMIT"); // finalise transaction and write changes
+        } catch (error) {
+            await db.execute("ROLLBACK"); // undo and revert if it fails
+            throw error; // rethrow error to outer catch block
+        }
 
         res.json({ id: projectId, title, address, start_month, colour });
     } catch (error) {

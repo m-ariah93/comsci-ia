@@ -81,7 +81,7 @@ app.post("/api/login", async (req, res) => {
 
     } catch (error) {
         console.error("Login error:", error);
-        res.json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: "Server error" });
     }
 
 });
@@ -100,7 +100,7 @@ app.get("/api/settings", async (req, res) => {
         });
     } catch (error) {
         console.error("Error fetching email template:", error);
-        res.json({ error: "Failed to fetch email template" });
+        res.status(500).json({ error: "Failed to fetch email template" });
     }
 });
 
@@ -118,7 +118,7 @@ app.put("/api/settings", async (req, res) => {
         res.json({ greeting, closing });
     } catch (error) {
         console.error("Error updating email template:", error);
-        res.json({ error: "Failed to update email greeting and closing" });
+        res.status(500).json({ error: "Failed to update email greeting and closing" });
     }
 });
 
@@ -135,7 +135,7 @@ app.put("/api/changePassword", async (req, res) => {
         const user = result.rows[0];
 
         if (!user) {
-            return res.json({ success: false, message: "No users found" });
+            return res.status(500).json({ success: false, message: "No users found" });
         }
 
         // check old password matches stored password
@@ -154,7 +154,7 @@ app.put("/api/changePassword", async (req, res) => {
         res.json({ success: true, message: "Password updated successfully" });
     } catch (error) {
         console.error("Error changing password:", error);
-        res.json({ success: false, message: "Failed to change password" });
+        res.status(500).json({ success: false, message: "Failed to change password" });
     }
 });
 
@@ -183,7 +183,7 @@ app.get("/api/events/next", async (req, res) => {
         res.json(events);
     } catch (err) {
         console.error(err);
-        res.json({ error: "Failed to fetch next events" });
+        res.status(500).json({ error: "Failed to fetch next events" });
     }
 });
 
@@ -212,7 +212,7 @@ app.get("/api/events", async (req, res) => {
         res.json(events);
     } catch (err) {
         console.error(err);
-        res.json({ error: "Failed to fetch events" });
+        res.status(500).json({ error: "Failed to fetch events" });
     }
 });
 
@@ -236,7 +236,7 @@ app.get("/api/events/:id", async (req, res) => {
         res.json(thisEvent);
     } catch (error) {
         console.error("Error fetching event:", error);
-        res.json({ error: "Failed to fetch event" });
+        res.status(500).json({ error: "Failed to fetch event" });
     }
 });
 
@@ -257,7 +257,7 @@ app.post("/api/events", async (req, res) => {
         res.json({ id: result.lastInsertRowid, title, start, end, project_id, template_id });
     } catch (error) {
         console.error("Error inserting event:", error);
-        res.json({ error: "Failed to insert event" });
+        res.status(500).json({ error: "Failed to insert event" });
     }
 });
 
@@ -299,7 +299,7 @@ app.put("/api/events/:id", async (req, res) => {
         res.json({ id, start, end });
     } catch (error) {
         console.error("Error updating event:", error);
-        res.json({ error: "Failed to update event" });
+        res.status(500).json({ error: "Failed to update event" });
     }
 });
 
@@ -315,7 +315,7 @@ app.put("/api/events/:id/note", async (req, res) => {
         res.json({ id, note });
     } catch (error) {
         console.error("Error saving event note: ", error);
-        res.json({ error: "Failed to save event note" });
+        res.status(500).json({ error: "Failed to save event note" });
     }
 });
 
@@ -329,7 +329,7 @@ app.delete("/api/events/:id", async (req, res) => {
         );
 
         if (eventChecklistResult.rows.length === 0) {
-            return res.json({ error: "Event not found" });
+            return res.status(404).json({ error: "Event not found" });
         }
 
         const checklistId = eventChecklistResult.rows[0][0];
@@ -349,7 +349,7 @@ app.delete("/api/events/:id", async (req, res) => {
         res.json({ deletedId: id });
     } catch (error) {
         console.error("Error deleting event:", error);
-        res.json({ error: "Failed to delete event" });
+        res.status(500).json({ error: "Failed to delete event" });
     }
 });
 
@@ -372,7 +372,7 @@ app.get("/api/projects", async (req, res) => {
         res.json(projects);
     } catch (err) {
         console.error(err);
-        res.json({ error: "Failed to fetch projects" });
+        res.status(500).json({ error: "Failed to fetch projects" });
     }
 });
 
@@ -393,7 +393,7 @@ app.get("/api/projects/:id", async (req, res) => {
         res.json(project);
     } catch (error) {
         console.error("Error fetching project:", error);
-        res.json({ error: "Failed to fetch project" });
+        res.status(500).json({ error: "Failed to fetch project" });
     }
 });
 
@@ -415,7 +415,7 @@ app.get("/api/projects/:id/templates", async (req, res) => {
         res.json(templates);
     } catch (error) {
         console.error("Error fetching project template bookings:", error);
-        res.json({ error: "Failed to fetch project template bookings" });
+        res.status(500).json({ error: "Failed to fetch project template bookings" });
     }
 });
 
@@ -432,7 +432,7 @@ app.get("/api/projects/:id/checklist", async (req, res) => {
         res.json(checklist);
     } catch (error) {
         console.error("Error fetching project checklist:", error);
-        res.json({ error: "Failed to fetch project checklist" });
+        res.status(500).json({ error: "Failed to fetch project checklist" });
     }
 });
 
@@ -458,7 +458,7 @@ app.put("/api/projects/:projectId/checklist/:checklistId", async (req, res) => {
         res.json({ projectId, checklistId, done });
     } catch (error) {
         console.error("Error updating done value of checklist:", error);
-        res.json({ error: "Failed to update checklist" });
+        res.status(500).json({ error: "Failed to update checklist" });
     }
 });
 
@@ -483,7 +483,7 @@ app.put("/api/projects/:projectId/checklistNote/:checklistId", async (req, res) 
         res.json({ projectId, checklistId, note });
     } catch (error) {
         console.error("Error updating done value of checklist:", error);
-        res.json({ error: "Failed to update checklist" });
+        res.status(500).json({ error: "Failed to update checklist" });
     }
 });
 
@@ -504,7 +504,7 @@ app.put("/api/projects/:projectId/checklist/:checklistId/orderDate", async (req,
         res.json({ projectId, checklistId, order_date: date });
     } catch (error) {
         console.error("Error updating order date:", error);
-        res.json({ error: "Failed to update order date" });
+        res.status(500).json({ error: "Failed to update order date" });
     }
 });
 
@@ -533,7 +533,7 @@ app.put("/api/projects/:projectId/checklist/:checklistId/pickupDate", async (req
         res.json({ projectId, checklistId, pickup_delivery_date: date });
     } catch (error) {
         console.error("Error updating pickup delivery date:", error);
-        res.json({ error: "Failed to update pickup delivery date" });
+        res.status(500).json({ error: "Failed to update pickup delivery date" });
     }
 });
 
@@ -575,7 +575,7 @@ app.post("/api/projects/:projectId/checklist/:checklistId/pickupEvent", async (r
 
     } catch (error) {
         console.error("Error creating/updating pickup event:", error);
-        res.json({ error: "Failed to create/update pickup event" });
+        res.status(500).json({ error: "Failed to create/update pickup event" });
     }
 });
 
@@ -621,7 +621,7 @@ app.post("/api/projects", async (req, res) => {
         res.json({ id: projectId, title, address, start_month, colour });
     } catch (error) {
         console.error("Error creating project:", error);
-        res.json({ error: "Failed to insert project" });
+        res.status(500).json({ error: "Failed to insert project" });
     }
 });
 
@@ -649,7 +649,7 @@ app.put("/api/projects/:id", async (req, res) => {
         res.json({ id, ...updates });
     } catch (error) {
         console.error("Error updating project: ", error);
-        res.json({ error: "Failed to update project" });
+        res.status(500).json({ error: "Failed to update project" });
     }
 });
 
@@ -667,7 +667,7 @@ app.delete("/api/projects/:id", async (req, res) => {
         res.json({ deletedId: id });
     } catch (error) {
         console.error("Error deleting project:", error);
-        res.json({ error: "Failed to delete project" });
+        res.status(500).json({ error: "Failed to delete project" });
     }
 });
 

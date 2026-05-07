@@ -63,10 +63,10 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
   };
 
   function isOverElement(jsEvent, ref) {
-    const rectangle = ref.current?.getBoundingClientRect();
-    if (!rectangle) return false;
+    const rectangle = ref.current?.getBoundingClientRect(); // get size and position of ref
+    if (!rectangle) return false; // exit function if null or undefined
 
-    return (
+    return ( // return true if event occurred within rectangle bounds
       jsEvent.clientX >= rectangle.left &&
       jsEvent.clientX <= rectangle.right &&
       jsEvent.clientY >= rectangle.top &&
@@ -74,21 +74,19 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     );
   }
 
-  function handleEventDragStop(info) {
+  function handleEventDragStop(info) { // called when event dragging ends
     const templateId = info.event.extendedProps.template_id;
-    if (isOverElement(info.jsEvent, keyBookingsRef) && templateId) {
-      const eventId = info.event.id;
 
-      info.event.remove();
+    // check event dropped inside list area, and non-custom event
+    if (isOverElement(info.jsEvent, keyBookingsRef) && templateId) {
+      const eventId = info.event.id; // store event ID
+
+      info.event.remove(); // optimistically remove event from frontend
 
       fetch(`/api/events/${eventId}`, {
-        method: "DELETE", // delete from events table
+        method: "DELETE", // delete from events table (backend)
       })
-        .then(() => {
-          info.event.remove();
-          handleEventsChanged();
-        })
-        // .then(console.log(`event removed, title: ${info.event.title}, id: ${currentProjectId}`))
+        .then(handleEventsChanged) // refresh calendar
         .catch(console.error);
     }
   }

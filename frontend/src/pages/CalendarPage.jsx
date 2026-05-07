@@ -85,7 +85,8 @@ export default function CalendarPage() {
             .then(data => setTemplateBookings(data));
     }, [currentProjectId]);
 
-    const keyBookingsRef = useRef(null);
+    // declare ref with useRef hook
+    const keyBookingsRef = useRef(null); // initially null
 
     const [events, setEvents] = useState([]);
     const [eventsLoading, setEventsLoading] = useState(false);
@@ -133,26 +134,29 @@ export default function CalendarPage() {
 
     const secondaryColour = "#6F6D6B";
 
-    const handleEventsChanged = () => {
-        setEventsLoading(true);
-        refreshExternalEvents();
-        const url = currentProjectId === 0 ? "/api/events" : `/api/events?project_id=${currentProjectId}`;
-        fetch(url)
-            .then(res => res.json())
+    function handleEventsChanged() {
+        setEventsLoading(true); // show loading spinner
+        refreshExternalEvents(); // refresh event data in calendar side panel
+        const url = currentProjectId === 0 // ternary conditional
+            ? "/api/events" // all events
+            : `/api/events?project_id=${currentProjectId}`; // events from one project only
+        fetch(url) // send request to API endpoint
+            .then(res => res.json()) // parse json output into JS object
             .then(data => {
-                setEvents(data.map(event => ({
-                    ...event,
-                    // set event colour to associated project colour
+                setEvents(data.map(event => ({ // update events array state
+                    ...event, // spread operator, copies existing properties
+
+                    // set event colour props to match associated project
                     // default to secondary colour if projectColour is undefined
                     backgroundColor: event.projectColour || secondaryColour,
                     borderColor: event.projectColour || secondaryColour,
-                    extendedProps: {
+                    extendedProps: { // extra information, used elsewhere - REMOVE IN IA DOCUMENTATION SS
                         project_id: event.project_id,
                         template_id: event.template_id,
                         note: event.note
                     }
                 })));
-                setEventsLoading(false);
+                setEventsLoading(false); // remove loading spinner
             });
     };
 
@@ -192,14 +196,20 @@ export default function CalendarPage() {
 
     function mailtoLink(event) {
         let dateText;
-        if (event.end) {
-            // multi day event
+        if (event.end) { // multi day event            
             dateText = `from ${formatBookingDate(event.start)} to ${formatBookingDate(subtractDay(event.end))}`;
-        } else {
+        } else { // single day event
             dateText = `on ${formatBookingDate(event.start)}`;
         }
-        const body = encodeURIComponent(emailGreeting + "\r\n\r\n" + `Could you please confirm the booking for the ${event.title} ` + dateText + `${event.address ? `, at ${event.address}` : ""}` + "?\r\n\r\n" + emailClosing);
-        const link = "mailto:?subject=Booking%20confirmation&body=" + body;
+        const body = encodeURIComponent( // replaces special characters with escape sequences for URL safety
+            emailGreeting + "\r\n\r\n" + // greeting and 2x newlines
+            `Could you please confirm the booking for the ${event.title} ` + 
+            dateText + 
+            `${event.address ? `, at ${event.address}` : ""}` + // address clause if project address exists
+            "?\r\n\r\n" + // 2x newlines
+            emailClosing
+        );
+        const link = "mailto:?subject=Booking%20confirmation&body=" + body; // preset subject "Booking confirmation"
         return link;
     }
 
@@ -277,6 +287,7 @@ export default function CalendarPage() {
                                     <span className="visually-hidden">Loading...</span>
                                 </div>
                             ) : (
+                                // bookings template parent container
                                 <div className="overflow-auto border d-grid gap-0 row-gap-1 mt-2" ref={keyBookingsRef}>
                                     {templateBookings.map((event) => (
                                         event.used ? (

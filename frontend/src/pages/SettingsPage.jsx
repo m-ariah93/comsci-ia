@@ -21,8 +21,12 @@ export default function SettingsPage() {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [passwordError, setPasswordError] = useState("");
 
+	const [savingEmail, setSavingEmail] = useState(false);
+
 	function saveEmail(e) {
 		e.preventDefault();
+
+		setSavingEmail(true);
 
 		fetch("/api/settings", {
 			method: "PUT",
@@ -40,7 +44,8 @@ export default function SettingsPage() {
 					bsToast.show();
 				}
 			})
-			.catch(console.error);
+			.catch(console.error)
+			.finally(() => setSavingEmail(false));
 	}
 
 	function validatePassword(password) {
@@ -109,7 +114,7 @@ export default function SettingsPage() {
 
 	return (
 		<div className="ps-1 pe-4 overflow-auto h-100">
-			<form className="pt-4" onSubmit={saveEmail}>
+			<form className={`pt-4 ${savingEmail ? "opacity-50" : ""}`} onSubmit={saveEmail}>
 				<h4>Confirmation emails to subcontractors</h4>
 				{!emailLoaded ? (
 					<div className="spinner-border my-3" role="status">
@@ -136,7 +141,16 @@ export default function SettingsPage() {
 								</div>
 							</div>
 						</div>
-						<button type="submit" className="btn btn-primary">Save changes</button>
+						<button type="submit" className="btn btn-primary" disabled={savingEmail}>
+							{savingEmail ? (
+								<>
+									<span className="spinner-border spinner-border-sm me-2" role="status" />
+									Saving...
+								</>
+							) : (
+								"Save changes"
+							)}
+						</button>
 					</>
 				)}
 			</form>
@@ -177,8 +191,7 @@ export default function SettingsPage() {
 						<button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 					</div>
 				</div>
-			</div>
-			<div className="toast-container position-fixed bottom-0 end-0 p-3">
+
 				<div id="passwordChangedToast" className="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
 					<div className="d-flex">
 						<div className="toast-body">

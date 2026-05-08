@@ -121,7 +121,7 @@ export default function SettingsPage() {
 						<span className="visually-hidden">Loading...</span>
 					</div>
 				) : (
-					<>
+					<fieldset disabled={savingEmail}>
 						<div className="container-fluid mb-3 px-0 mt-3">
 							<div className="row mb-2">
 								<div className="col-12 col-md-auto pb-2" style={{ maxWidth: "200px", width: "100%" }}>
@@ -151,7 +151,7 @@ export default function SettingsPage() {
 								"Save changes"
 							)}
 						</button>
-					</>
+					</fieldset>
 				)}
 			</form>
 			<hr className="mx-2 my-4" />

@@ -66,7 +66,7 @@ export async function initDb() {
   const username = "admin";
   const plainPassword = "123";
 
-  const hash = bcrypt.hashSync(plainPassword, 10);
+  const hash = bcrypt.hashSync(plainPassword, 12);
 
   await db.execute(
     "INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)",

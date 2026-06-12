@@ -64,14 +64,13 @@ app.post("/api/login", async (req, res) => {
             return res.json({ success: false, message: "Invalid credentials" });
         }
 
-        const passwordMatches = bcrypt.compareSync(password, user.password);
+        const passwordMatches = await bcrypt.compare(password, user.password);
 
         if (!passwordMatches) {
             return res.json({ success: false, message: "Incorrect password" });
         }
 
-        // successful login
-        res.json({
+        res.json({ // successful login
             success: true,
             user: {
                 id: user.id,
@@ -140,12 +139,13 @@ app.put("/api/changePassword", async (req, res) => {
 
         // check old password matches stored password
         const passwordMatches = await bcrypt.compare(oldPassword, user.password);
+
         if (!passwordMatches) {
             return res.json({ success: false, message: "Incorrect old password :(" });
         }
 
         // hash and update new password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
         await db.execute(
             "UPDATE users SET password = ? WHERE id = ?",
             [hashedPassword, user.id]

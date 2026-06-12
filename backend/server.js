@@ -139,13 +139,13 @@ app.put("/api/changePassword", async (req, res) => {
         }
 
         // check old password matches stored password
-        const passwordMatches = bcrypt.compareSync(oldPassword, user.password);
+        const passwordMatches = await bcrypt.compare(oldPassword, user.password);
         if (!passwordMatches) {
             return res.json({ success: false, message: "Incorrect old password :(" });
         }
 
         // hash and update new password
-        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
         await db.execute(
             "UPDATE users SET password = ? WHERE id = ?",
             [hashedPassword, user.id]

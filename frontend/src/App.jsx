@@ -12,7 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthLayout from "./pages/layouts/AuthLayout";
 import AppLayout from "./pages/layouts/AppLayout";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ProjectsProvider } from "./contexts/ProjectsContext";
 
 function App() {
@@ -39,6 +39,8 @@ function App() {
             </Route>
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
+          
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </ProjectsProvider>
     </BrowserRouter>

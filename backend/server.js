@@ -145,10 +145,10 @@ app.put("/api/changePassword", async (req, res) => {
         }
 
         // hash and update new password
-        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        const hashedPassword = await bcrypt.hash(newPassword, 12); // 12 hashing rounds
         await db.execute(
-            "UPDATE users SET password = ? WHERE id = ?",
-            [hashedPassword, user.id]
+            "UPDATE users SET password = ? WHERE id = ?", // update hash in database
+            [hashedPassword, user.id] // values to insert into parameterised query
         );
 
         res.json({ success: true, message: "Password updated successfully" });
@@ -168,16 +168,16 @@ app.get("/api/events/next", async (req, res) => {
                    projects.colour AS projectColour
             FROM events
             LEFT JOIN projects ON events.project_id = projects.id
-            WHERE date(events.start) = (
+            WHERE date(events.start) = ( -- subquery to filter date
                 SELECT date(events.start)
                 FROM events
                 LEFT JOIN projects ON events.project_id = projects.id
-                WHERE date(events.start) >= date('now') 
-                  AND (projects.archived = 0 OR events.project_id IS NULL)
+                WHERE date(events.start) >= date('now') -- dates after today
+                  AND (projects.archived = 0 OR events.project_id IS NULL) -- active events only
                 ORDER BY date(events.start) ASC
-                LIMIT 1
+                LIMIT 1 -- get only next date
             )
-            AND (projects.archived = 0 OR events.project_id IS NULL)
+            AND (projects.archived = 0 OR events.project_id IS NULL) -- active events only
         `);
         const events = rowsToObjects(result);
         res.json(events);

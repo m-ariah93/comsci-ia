@@ -40,6 +40,7 @@ function App() {
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
           
+          {/* catch-all route for non-existent paths */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </ProjectsProvider>

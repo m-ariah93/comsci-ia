@@ -10,19 +10,17 @@ export default function Calendar({ currentProjectId, currentProject, keyBookings
     handleEventsChanged();
   }, [currentProjectId]);
 
-  function handleEventDrop(info) {
-    fetch(`/api/events/${info.event.id}`, {
+  function handleEventDrop(info) { // called when event changes date
+    fetch(`/api/events/${info.event.id}`, { // update database
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        start: info.event.startStr,
-        end: info.event.endStr || null,
+      body: JSON.stringify({ // convert values to JSON
+        start: info.event.startStr, // start date string
+        end: info.event.endStr || null, // optional end date string
       })
     })
-      .then(res => res.json())
-      .then(() => {
-        handleEventsChanged();
-      });
+      .then(handleEventsChanged) // callback to refresh calendar
+      .catch(console.error);
   }
 
   function handleEventReceive(info) {

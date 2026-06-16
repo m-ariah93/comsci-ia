@@ -60,10 +60,7 @@ export default function LoginPage() {
 							<label htmlFor="inputPassword" className="form-label">Password</label>
 							<input type="password" className="form-control" id="inputPassword" onChange={(e) => setPassword(e.target.value)} />
 						</div>
-						{/* <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id="rememberCheck" />
-            <label className="form-check-label" htmlFor="rememberCheck">Remember me</label>
-          </div> */}
+						
 						<div className="d-grid mt-4">
 							<button type="submit" className="btn btn-primary" disabled={loading}>
 								{loading ? (
